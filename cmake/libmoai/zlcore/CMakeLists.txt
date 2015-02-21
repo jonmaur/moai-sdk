@@ -22,11 +22,11 @@ file ( GLOB ZLGFX_HEADERS "${CMAKE_CURRENT_SOURCE_DIR}/zl-gfx/*.h" )
 file ( GLOB ZLCOMMON_HEADERS "${CMAKE_CURRENT_SOURCE_DIR}/zl-common/*.h")
 
 
-if (BUILD_WINDOWS)   
+if (BUILD_WINDOWS OR BUILD_WINDOWS_PHONE)   
   list(REMOVE_ITEM ZLUTIL_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/zl-util/zl_usocket.cpp")
-else (BUILD_WINDOWS)
+else (BUILD_WINDOWS OR BUILD_WINDOWS_PHONE)
  list(REMOVE_ITEM ZLUTIL_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/zl-util/zl_wsocket.cpp")
-endif (BUILD_WINDOWS)
+endif (BUILD_WINDOWS OR BUILD_WINDOWS_PHONE)
  
 
 
@@ -46,7 +46,9 @@ if ( MOAI_EXPAT )
   target_link_libraries( zlcore expat)
 endif ( MOAI_EXPAT )
 
-
+if ( BUILD_WINDOWS_PHONE )
+  target_link_libraries( zlcore angle )
+endif ( BUILD_WINDOWS_PHONE )
 
 # compulsory li
 

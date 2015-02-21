@@ -7,7 +7,13 @@
 #include <zl-util/ZLAdapterInfo.h>
 
 #include <winsock2.h>
+#if (WINAPI_PARTITION_APP)		
+#include <Rpc.h>
+#include <objbase.h>
+#else
 #include <iphlpapi.h>
+#endif
+
 
 
 //================================================================//
@@ -36,7 +42,11 @@ STLString ZLAdapterInfo::GetMACAddress () {
 	memset ( address , 0 , 13 );
 
 	UUID uuid;
+#if (WINAPI_PARTITION_APP)		 
+	CoCreateGuid(&uuid);
+#else
 	UuidCreateSequential ( &uuid );
+#endif
 
 	sprintf ( address, "%02X%02X%02X%02X%02X%02X", uuid.Data4[2], uuid.Data4[3], uuid.Data4[4], uuid.Data4[5], uuid.Data4[6], uuid.Data4[7]);
 	STLString macString = address;
@@ -48,7 +58,7 @@ STLString ZLAdapterInfo::GetMACAddress () {
 
 //----------------------------------------------------------------//
 void USAdapterInfoList::EnumerateAdapters () {
-
+#if !(WINAPI_PARTITION_APP)
 	this->Clear ();
 
 	DWORD result;
@@ -104,6 +114,7 @@ void USAdapterInfoList::EnumerateAdapters () {
 	}
 	
 	free ( pAdapterAddress );
+#endif
 }
 
 #endif

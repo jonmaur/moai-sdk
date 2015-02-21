@@ -135,7 +135,11 @@ int ZLVfsFileSystem::ChangeDir ( const char* path ) {
 		}
 	}
 	else {
-		result = chdir ( path );
+#if (WINAPI_PARTITION_APP)   //no chdir in base runtime
+		result = 0;
+#else
+		result = chdir(path);
+#endif
 	}
 
 	if ( result == 0 ) {

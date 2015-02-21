@@ -15,8 +15,11 @@
 
 	//----------------------------------------------------------------//
 	ZL_MUTEX* zl_mutex_create () {
-
-		return ( ZL_MUTEX* )CreateMutex ( NULL, FALSE, NULL );
+		#if (WINAPI_PARTITION_APP) 
+			return (ZL_MUTEX*)CreateMutexEx(NULL, NULL,0 , SYNCHRONIZE);
+		#else
+			return ( ZL_MUTEX* )CreateMutex ( NULL, FALSE, NULL );
+		#endif
 	}
 
 	//----------------------------------------------------------------//
@@ -28,7 +31,7 @@
 	//----------------------------------------------------------------//
 	void zl_mutex_lock ( ZL_MUTEX* mutex ) {
 
-		WaitForSingleObject (( HANDLE )mutex, INFINITE );
+		WaitForSingleObjectEx (( HANDLE )mutex, INFINITE, FALSE );
 	}
 
 	//----------------------------------------------------------------//

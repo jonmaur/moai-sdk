@@ -67,6 +67,11 @@ if (BUILD_LINUX OR BUILD_OSX OR BUILD_WINDOWS)
   add_subdirectory ( glew )
 endif (BUILD_LINUX OR BUILD_OSX OR BUILD_WINDOWS)
 
+if (BUILD_WINDOWS_PHONE)
+  add_subdirectory ( angle )
+endif (BUILD_WINDOWS_PHONE)
+
+
 #Build platform specific untz
 if (BUILD_ANDROID)
   add_subdirectory (untz-android)

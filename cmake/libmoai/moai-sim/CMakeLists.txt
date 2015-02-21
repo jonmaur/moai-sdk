@@ -57,9 +57,9 @@ if (MOAI_BOX2D)
  target_link_libraries ( moai-sim moai-box2d)
 endif (MOAI_BOX2D)
 
-if (BUILD_WINDOWS)
+if (BUILD_WINDOWS OR BUILD_WINDOWS_PHONE)
  target_link_libraries ( moai-sim  psapi rpcrt4 ) #GetProcessMemoryInfo and UuidCreateSequential
-endif (BUILD_WINDOWS)
+endif (BUILD_WINDOWS OR BUILD_WINDOWS_PHONE)
 
 install(TARGETS moai-sim EXPORT libmoai ARCHIVE DESTINATION lib)
 
