@@ -1,1 +1,0 @@
-cd ..\.. && call ms\setVSVars.bat wp8.1%2 && nmake -f vsout\NT-Phone-8.1-Static-Unicode\nt-%1-%2.mak init && nmake -f vsout\NT-Phone-8.1-Static-Unicode\nt-%1-%2.mak

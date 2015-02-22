@@ -1,1 +1,0 @@
-cd ..\.. && call ms\setVSVars.bat ws8.1%2 && nmake -f vsout\NT-Store-8.1-Dll-Unicode\nt-%1-%2.mak init && nmake -f vsout\NT-Store-8.1-Dll-Unicode\nt-%1-%2.mak

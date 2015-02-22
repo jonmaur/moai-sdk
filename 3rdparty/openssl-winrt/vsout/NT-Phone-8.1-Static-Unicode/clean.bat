@@ -1,1 +1,0 @@
-cd ..\.. && nmake -f vsout\NT-Phone-8.1-Static-Unicode\nt-%1-%2.mak reallyclean

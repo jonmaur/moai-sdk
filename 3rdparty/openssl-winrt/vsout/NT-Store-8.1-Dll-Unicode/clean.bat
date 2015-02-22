@@ -1,1 +1,0 @@
-cd ..\.. && nmake -f vsout\NT-Store-8.1-Dll-Unicode\nt-%1-%2.mak reallyclean
