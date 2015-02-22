@@ -3,7 +3,7 @@
 rem ---- SETTINGS -------
 rem * edit or remove these to suit your setup
 
-set CMAKE_PATH=K:\dev\mobile\moaiforge\cmake\bin
+set CMAKE_PATH=K:\dev\mobile\moaiforge\cmake-3.1\bin
 set NDK_PATH=K:\dev\mobile\moaiforge\android-ndk-r9d
 set MINGW_PATH=K:\dev\mobile\moaiforge\mingw64\bin
 set EMSDK_PATH=K:\dev\mobile\moaiforge\emsdk-1.25
