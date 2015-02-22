@@ -13,9 +13,15 @@ add_subdirectory ( moai-sim )
 add_subdirectory ( moai-crypto )
 
 add_subdirectory ( moai-box2d )
+if ( NOT BUILD_WINDOWS_PHONE )
 add_subdirectory ( moai-untz )
+endif ( NOT BUILD_WINDOWS_PHONE )
 add_subdirectory ( moai-http-client )
+
+if (NOT BUILD_WINDOWS_PHONE)
 add_subdirectory ( moai-http-server )
+endif (NOT BUILD_WINDOWS_PHONE)
+
 add_subdirectory ( moai-luaext )
 add_subdirectory ( moai-audiosampler )
  

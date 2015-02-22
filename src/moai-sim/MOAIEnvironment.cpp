@@ -4,9 +4,11 @@
 #include "pch.h"
 #include <moai-sim/MOAIEnvironment.h>
 
-#ifdef _WIN32
+#ifdef _WIN32 
+#if (!WINAPI_PARTITION_APP)
 	#include <shlobj.h>
 	typedef void (WINAPI *PGNSI)(LPSYSTEM_INFO);
+#endif
 #endif
 
 //================================================================//
@@ -70,7 +72,7 @@ void MOAIEnvironment::DetectEnvironment () {
 
 	RTTI_SINGLE ( MOAIGlobalEventSource )
 	
-	#if defined( MOAI_OS_WINDOWS )
+#if defined( MOAI_OS_WINDOWS ) && (!WINAPI_PARTITION_APP)
 	
 		//printf ( "Env Windows\n" );
 		this->SetValue ( MOAI_ENV_osBrand, "Windows" );
@@ -146,7 +148,9 @@ void MOAIEnvironment::DetectEnvironment () {
 		else {
 			this->SetValue ( MOAI_ENV_osVersion, "WinUnknown" );
 		}
-		
+   #elif defined(MOAI_OS_WINDOWS) && WINAPI_PARTITION_APP 
+		this->SetValue(MOAI_ENV_osBrand, "Windows");
+		this->SetValue(MOAI_ENV_osVersion, "WinRT");
 	#elif defined( MOAI_OS_LINUX )
 	
 		//printf ( "Env Linux\n" );

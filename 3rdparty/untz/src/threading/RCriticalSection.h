@@ -112,7 +112,12 @@ public:
 private:
 	void init(){
 #ifdef WIN32
+#if (!WINAPI_PARTITION_APP)
 		InitializeCriticalSection(&mMutex);
+#else
+		InitializeCriticalSectionEx(&mMutex,0,0);
+#endif
+
 #else
 		pthread_mutexattr_t attr;
 		pthread_mutexattr_init(&attr);

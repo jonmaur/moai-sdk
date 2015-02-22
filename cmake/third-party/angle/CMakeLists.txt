@@ -12,5 +12,10 @@ target_include_directories(angle INTERFACE ${ANGLE_BIN}/include)
 
 install(TARGETS angle EXPORT libmoai ARCHIVE DESTINATION lib)
 install(DIRECTORY ${ANGLE_BIN}/include/ DESTINATION include/angle)
-install(FILES ${ANGLE_LIB}/libGLESv2.lib ${ANGLE_LIB}/libEGL.lib DESTINATION lib)
+install(FILES 
+            ${ANGLE_LIB}/libGLESv2.lib 
+            ${ANGLE_LIB}/libGLESv2.exp 
+            ${ANGLE_LIB}/libEGL.lib 
+            ${ANGLE_LIB}/libEGL.exp 
+            DESTINATION lib)
 install(FILES ${ANGLE_LIB}/../libGLESv2.dll ${ANGLE_LIB}/../libEGL.dll DESTINATION bin)

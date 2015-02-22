@@ -17,13 +17,18 @@ void MOAIMutexImpl::Init () {
 //----------------------------------------------------------------//
 void MOAIMutexImpl::Lock () {
 
-	WaitForSingleObject ( mMutexHandle, INFINITE );
+	WaitForSingleObjectEx ( mMutexHandle, INFINITE, FALSE );
 }
 
 //----------------------------------------------------------------//
 MOAIMutexImpl::MOAIMutexImpl () {
+#if (WINAPI_PARTITION_APP)
+	mMutexHandle = CreateMutexEx(NULL, NULL, 0, SYNCHRONIZE );
+#else
+	mMutexHandle = CreateMutex(NULL, FALSE, NULL );
+#endif
 
-	mMutexHandle = CreateMutex ( NULL, FALSE, NULL );
+	
 	assert ( mMutexHandle );
 }
 

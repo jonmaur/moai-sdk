@@ -1,0 +1,1 @@
+cd ..\.. && call ms\setVSVars.bat wp8.0%2 && nmake -f vsout\NT-Phone-8.0-Dll-Unicode\nt-%1-%2.mak init && nmake -f vsout\NT-Phone-8.0-Dll-Unicode\nt-%1-%2.mak

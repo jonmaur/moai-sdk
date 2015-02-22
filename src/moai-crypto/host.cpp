@@ -24,7 +24,7 @@
 		(void) file;
 
 		if (mode & 1) {  // 1 is CRYPTO_LOCK
-			WaitForSingleObject ( ssl_mutexes[mutex_num], INFINITE ) == WAIT_OBJECT_0? 0 : -1;
+			WaitForSingleObjectEx ( ssl_mutexes[mutex_num], INFINITE, FALSE ) == WAIT_OBJECT_0? 0 : -1;
 		} else {
 			ReleaseMutex( ssl_mutexes[mutex_num]);
 		}

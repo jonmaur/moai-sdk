@@ -43,7 +43,11 @@ set (LUA_LIB ${LUA_LIB} PARENT_SCOPE)
 set (LUA_LIB_DIR ${LUA_LIB_DIR} PARENT_SCOPE)
 
 add_subdirectory ( luaext )
+
+if (NOT BUILD_WINDOWS_PHONE)
 add_subdirectory ( mongoose )
+endif (NOT BUILD_WINDOWS_PHONE)
+
 add_subdirectory ( ogg )
 add_subdirectory ( png )
 add_subdirectory ( sfmt )
@@ -79,6 +83,8 @@ elseif (BUILD_IOS OR BUILD_OSX)
   add_subdirectory (untz-ios)
 elseif (BUILD_WINDOWS)
   add_subdirectory (untz-windows)
+elseif (BUILD_WINDOWS_PHONE)
+  #TODO add untz for winrt using XAudio2
 elseif (BUILD_HTML)
   add_subdirectory (untz-html)
 else ()

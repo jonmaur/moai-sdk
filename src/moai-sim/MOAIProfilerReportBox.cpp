@@ -10,7 +10,9 @@
 
 #if defined ( MOAI_OS_WINDOWS )
 	#include <windows.h>
+#if (!WINAPI_PARTITION_APP)
 	#include <Psapi.h>
+#endif
 #endif
 
 #if defined ( MOAI_OS_IPHONE )
@@ -787,7 +789,7 @@ void MOAIProfilerReportBox::_GetMemoryStats ( u32& availableMainMem, u32& usedMa
 	availableMainMem = 0;
 	usedMainMem = 0;
 	
-	#if defined ( MOAI_OS_WINDOWS )
+	#if defined ( MOAI_OS_WINDOWS ) && (!WINAPI_PARTITION_APP)
 
 		MEMORYSTATUSEX memStatus;
 		memset ( &memStatus, 0, sizeof ( MEMORYSTATUSEX ) );

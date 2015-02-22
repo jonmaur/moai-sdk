@@ -23,12 +23,12 @@ project ( curl )
   endif (BUILD_LINUX)
 
 
-  if (BUILD_WINDOWS)
+  if (BUILD_WINDOWS OR BUILD_WINDOWS_PHONE)
       set ( CURL_INCLUDES 
         "${MOAI_ROOT}/3rdparty/curl-7.19.7/include/" 
      
       )
-  endif (BUILD_WINDOWS)
+  endif (BUILD_WINDOWS OR BUILD_WINDOWS_PHONE)
   
   if (BUILD_OSX)
         set ( CURL_INCLUDES
@@ -195,8 +195,8 @@ project ( curl )
      target_link_libraries( curl ssl )
   endif (MOAI_OPENSSL)
  
-  if (BUILD_WINDOWS)
+  if (BUILD_WINDOWS OR BUILD_WINDOWS_PHONE)
     target_link_libraries( curl ws2_32 )
-  endif (BUILD_WINDOWS)
+  endif (BUILD_WINDOWS OR BUILD_WINDOWS_PHONE)
 
   install(TARGETS curl EXPORT libmoai ARCHIVE DESTINATION lib)

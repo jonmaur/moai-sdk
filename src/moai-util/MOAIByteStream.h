@@ -10,6 +10,9 @@
 // MOAIByteStream
 //================================================================//
 // TODO: doxygen
+
+#pragma warning( disable : 4250 )
+
 class MOAIByteStream :
 	public virtual ZLByteStream,
 	public virtual MOAIStream {
@@ -34,5 +37,6 @@ public:
 	void			RegisterLuaClass	( MOAILuaState& state );
 	void			RegisterLuaFuncs	( MOAILuaState& state );
 };
+
 
 #endif

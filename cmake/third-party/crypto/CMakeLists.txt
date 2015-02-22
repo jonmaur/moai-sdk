@@ -1,8 +1,12 @@
 cmake_minimum_required ( VERSION 2.8.5 )
 project ( crypto )
 
-
+if ( BUILD_WINDOWS_PHONE )
+  set ( OPENSSL_ROOT "${MOAI_ROOT}/3rdparty/openssl-winrt")
+else ( BUILD_WINDOWS_PHONE )
   set ( OPENSSL_ROOT "${MOAI_ROOT}/3rdparty/openssl-1.0.0m")
+endif ( BUILD_WINDOWS_PHONE )
+  
   set ( CMAKE_CURRENT_SOURCE_DIR "${OPENSSL_ROOT}/crypto/" )
   
   #set ( CMAKE_C_FLAGS "${CMAKE_C_FLAGS}  -DOPENSSL_NO_ASM" )
@@ -28,7 +32,14 @@ project ( crypto )
         set ( PLATFORM_INCLUDE "include-linux")
     endif ( BUILD_LINUX )
 
-    if ( BUILD_WINDOWS OR BUILD_WINDOWS_PHONE )
+
+    if ( BUILD_WINDOWS_PHONE )
+      set ( CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DOPENSSL_THREADS  -W3 -Gs0 -GF -Gy -nologo -DWIN32_LEAN_AND_MEAN -DWINAPI_FAMILY=WINAPI_FAMILY_PHONE_APP -DOPENSSL_NO_ASM -DOPENSSL_NO_INLINE_ASM -DOPENSSL_WINAPP -FIsdkddkver.h -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DOPENSSL_NO_RC5 -DOPENSSL_NO_MD2 -DOPENSSL_NO_KRB5 -DOPENSSL_NO_HW -DOPENSSL_NO_JPAKE -DOPENSSL_NO_DYNAMIC_ENGINE -FIwinrtdef.h -DMK1MF_BUILD -DMK1MF_PLATFORM_VC_WINPHONE" )
+      set ( PLATFORM_INCLUDE "inc32")
+      set ( CRYPTO_INCLUDES ${CRYPTO_INCLUDES} "${OPENSSL_ROOT}/crypto/modes" "${OPENSSL_ROOT}/ms")
+    endif ( BUILD_WINDOWS_PHONE )
+
+    if ( BUILD_WINDOWS )
   	  	set ( CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DL_ENDIAN -DOPENSSL_SYSNAME_WIN32  -DOPENSSL_NO_RC5 -DOPENSSL_NO_MD2 -DOPENSSL_NO_KRB5 -DOPENSSL_NO_JPAKE -DOPENSSL_NO_STATIC_ENGINE -DMK1MF_BUILD" )
         if (MSVC)
             set ( CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DWIN32 -DDSO_WIN32 -DWIN32_LEAN_AND_MEAN -D_LIB -D_CRT_SECURE_NO_WARNINGS -D_CRT_SECURE_NO_DEPRECATE -DMK1MF_PLATFORM_VC_WIN32")
@@ -36,7 +47,7 @@ project ( crypto )
         else ()
             set ( PLATFORM_INCLUDE "include-mingw")
         endif(MSVC)
-    endif ( BUILD_WINDOWS OR BUILD_WINDOWS_PHONE )
+    endif ( BUILD_WINDOWS )
 
     if ( BUILD_ANDROID )
         set ( PLATFORM_INCLUDE "include-android")
@@ -599,12 +610,16 @@ project ( crypto )
     ${CMAKE_CURRENT_SOURCE_DIR}/bf/bf_ecb.c  
    )
 
+  if ( BUILD_WINDOWS_PHONE )
+     list( REMOVE_ITEM CRYPTO_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/aes/aes_ctr.c )
+  endif ( BUILD_WINDOWS_PHONE )
+
    add_library( crypto STATIC ${CRYPTO_SOURCES} )  
    target_include_directories ( crypto PUBLIC "$<BUILD_INTERFACE:${CRYPTO_INCLUDES}>" )
 set_target_properties( crypto PROPERTIES FOLDER Third-Party )
 
-   if (BUILD_WINDOWS)
+   if ( BUILD_WINDOWS OR BUILD_WINDOWS_PHONE )
      target_link_libraries( crypto ws2_32 )
-   endif (BUILD_WINDOWS)
+   endif ( BUILD_WINDOWS OR BUILD_WINDOWS_PHONE )
 
    install(TARGETS crypto EXPORT libmoai ARCHIVE DESTINATION lib)
