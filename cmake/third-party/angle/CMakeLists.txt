@@ -3,9 +3,11 @@ project ( angle )
 
 
 set ( ANGLE_BIN "${MOAI_ROOT}/3rdparty/angle-bin" )
-
+if (CMAKE_GENERATOR_PLATFORM EQUAL ARM)
 set ( ANGLE_LIB "${ANGLE_BIN}/windowsphone/Release_ARM/lib")
-
+else()
+  set ( ANGLE_LIB "${ANGLE_BIN}/windowsphone/Debug_Win32/lib")
+endif()
 add_library(angle INTERFACE)
 
 target_include_directories(angle INTERFACE ${ANGLE_BIN}/include)

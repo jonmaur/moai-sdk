@@ -19,7 +19,10 @@ file ( GLOB ZLUTIL_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/zl-util/*.cpp" )
 file ( GLOB ZLUTIL_HEADERS "${CMAKE_CURRENT_SOURCE_DIR}/zl-util/*.h" )
 file ( GLOB ZLGFX_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/zl-gfx/*.cpp" )
 file ( GLOB ZLGFX_HEADERS "${CMAKE_CURRENT_SOURCE_DIR}/zl-gfx/*.h" )
-file ( GLOB ZLCOMMON_HEADERS "${CMAKE_CURRENT_SOURCE_DIR}/zl-common/*.h")
+set ( ZLCOMMON_HEADERS 
+  "${CMAKE_CURRENT_SOURCE_DIR}/zl-common/zl_types.h"
+  "${CMAKE_CURRENT_SOURCE_DIR}/zl-common/zl_platform.h"
+)
 
 
 if (BUILD_WINDOWS OR BUILD_WINDOWS_PHONE)   
@@ -27,12 +30,18 @@ if (BUILD_WINDOWS OR BUILD_WINDOWS_PHONE)
 else (BUILD_WINDOWS OR BUILD_WINDOWS_PHONE)
  list(REMOVE_ITEM ZLUTIL_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/zl-util/zl_wsocket.cpp")
 endif (BUILD_WINDOWS OR BUILD_WINDOWS_PHONE)
- 
+
+if (BUILD_WINDOWS_PHONE) 
+  set(ZLCOMMON_HEADERS ${ZLCOMMON_HEADERS} 
+      "${CMAKE_CURRENT_SOURCE_DIR}/zl-common/zl_winrt_shim.h"
+      "${CMAKE_CURRENT_SOURCE_DIR}/zl-common/zl_winrt_shim.cpp"
+    )
+endif (BUILD_WINDOWS_PHONE)
 
 
 include_directories ( ${ZLCORE_INCLUDES} )
 
-add_library ( zlcore STATIC ${ZLUTIL_SOURCES} ${ZLUTIL_HEADERS} ${ZLGFX_SOURCES} ${ZLGFX_HEADERS} )
+add_library ( zlcore STATIC ${ZLUTIL_SOURCES} ${ZLUTIL_HEADERS} ${ZLGFX_SOURCES} ${ZLGFX_HEADERS} ${ZLCOMMON_HEADERS} )
 
 add_dependencies ( zlcore liblua-static)
 set (ZLCORE_TARGET_INCLUDES "${MOAI_ROOT}/src/" "${MOAI_ROOT}/3rdparty/expat-2.1.0/lib")

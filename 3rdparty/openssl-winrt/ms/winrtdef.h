@@ -28,21 +28,33 @@
 # define GetTickCount winrt_GetTickCount
 # define FindFirstFile(lpFileName, lpFindFileData) FindFirstFileEx(lpFileName, FindExInfoStandard, lpFindFileData, FindExSearchNameMatch, NULL, 0);
 
-int winrt_GetTickCount(void);
+#ifdef __cplusplus
+extern "C"
+{
+#endif
 
-void* winrt_LoadLibraryA(
-    const char* lpFileName
-  );
-char* winrt_getenv(const char* varname);
-int _kbhit();
+	int winrt_GetTickCount(void);
 
-int MoveFile(
-    const wchar_t* lpExistingFileName,
-    const wchar_t* lpNewFileName
-    );
+	void* winrt_LoadLibraryA(
+		const char* lpFileName
+		);
+	char* winrt_getenv(const char* varname);
+	int _kbhit();
 
-void* GetModuleHandle(
-    const wchar_t* lpModuleName
-    );
+	int MoveFile(
+		const wchar_t* lpExistingFileName,
+		const wchar_t* lpNewFileName
+		);
+
+	void* GetModuleHandle(
+		const wchar_t* lpModuleName
+		);
+
+#ifdef __cplusplus
+}
+#endif
+
+
+
 
 #endif
