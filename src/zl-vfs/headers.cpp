@@ -815,6 +815,10 @@ int zl_vprintf ( const char * format, va_list arg ) {
 	
 	#ifdef ANDROID
 		result = __android_log_vprint ( ANDROID_LOG_INFO, "MoaiLog", format, arg );
+	#elif WINAPI_PARTITION_APP
+		char buffer[2048];
+		result = _vsnprintf_s(buffer, 2048, format, arg);
+		OutputDebugStringA(buffer);
 	#else
 		result = vprintf ( format, arg );
 	#endif

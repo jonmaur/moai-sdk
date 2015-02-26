@@ -45,7 +45,7 @@ cmake -G "%generator%" ^
 -DCMAKE_INSTALL_PREFIX=%libprefix%\Win32 ^
 %rootpath%\cmake || exit /b 1
 
-cmake --build . --target INSTALL --config Release || exit /b 1
+cmake --build . --target INSTALL --config Debug || exit /b 1
 
 
 

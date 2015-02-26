@@ -362,8 +362,10 @@ void ZLVfsFileSystem::Init () {
 
 	this->mMutex = zl_mutex_create ();;
 	
-	#if defined(ANDROID) || WINAPI_PARTITION_APP
+	#if defined(ANDROID) 
 		this->mWorkingPath = this->NormalizeDirPath ( "/" );
+	#elif WINAPI_PARTITION_APP
+		this->mWorkingPath = "";
 	#else
 		char buffer [ FILENAME_MAX ];
 	
