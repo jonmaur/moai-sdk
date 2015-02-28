@@ -3,11 +3,8 @@ project ( angle )
 
 
 set ( ANGLE_BIN "${MOAI_ROOT}/3rdparty/angle-bin" )
-if (CMAKE_GENERATOR_PLATFORM EQUAL ARM)
-set ( ANGLE_LIB "${ANGLE_BIN}/windowsphone/Release_ARM/lib")
-else()
-  set ( ANGLE_LIB "${ANGLE_BIN}/windowsphone/Debug_Win32/lib")
-endif()
+set ( ANGLE_LIB "${ANGLE_BIN}/windowsphone/$<CONFIG>_${CMAKE_GENERATOR_PLATFORM}")
+
 add_library(angle INTERFACE)
 
 target_include_directories(angle INTERFACE ${ANGLE_BIN}/include)
@@ -15,9 +12,9 @@ target_include_directories(angle INTERFACE ${ANGLE_BIN}/include)
 install(TARGETS angle EXPORT libmoai ARCHIVE DESTINATION lib)
 install(DIRECTORY ${ANGLE_BIN}/include/ DESTINATION include/angle)
 install(FILES 
-            ${ANGLE_LIB}/libGLESv2.lib 
-            ${ANGLE_LIB}/libGLESv2.exp 
-            ${ANGLE_LIB}/libEGL.lib 
-            ${ANGLE_LIB}/libEGL.exp 
+            ${ANGLE_LIB}/lib/libGLESv2.lib 
+            ${ANGLE_LIB}/lib/libGLESv2.exp 
+            ${ANGLE_LIB}/lib/libEGL.lib 
+            ${ANGLE_LIB}/lib/libEGL.exp 
             DESTINATION lib)
-install(FILES ${ANGLE_LIB}/../libGLESv2.dll ${ANGLE_LIB}/../libEGL.dll DESTINATION bin)
+install(FILES ${ANGLE_LIB}/libGLESv2.dll ${ANGLE_LIB}/libEGL.dll DESTINATION bin)

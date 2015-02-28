@@ -36,10 +36,12 @@ endif (MOAI_PLUGINS)
 #platform specific libs
 if ( BUILD_IOS )
   add_subdirectory ( moai-iphone )
- 
 endif ( BUILD_IOS )
 
 if ( BUILD_ANDROID )
     add_subdirectory ( moai-android )
 endif (BUILD_ANDROID)
 
+if ( BUILD_WINDOWS_PHONE )
+  add_subdirectory ( moai-winrt )
+endif ( BUILD_WINDOWS_PHONE )

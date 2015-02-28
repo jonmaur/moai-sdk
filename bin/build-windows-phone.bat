@@ -24,7 +24,7 @@ cmake -G "%generator%" ^
 -DMOAI_LUAJIT=false ^
 -DCMAKE_SYSTEM_NAME=WindowsPhone ^
 -DCMAKE_SYSTEM_VERSION=8.1 ^
--DCMAKE_INSTALL_PREFIX=%libprefix%\ARM ^
+-DCMAKE_INSTALL_PREFIX=%libprefix%\ARM\Release ^
 %rootpath%\cmake || exit /b 1
 
 cmake --build . --target INSTALL --config Release || exit /b 1
@@ -33,7 +33,7 @@ cd ..
 mkdir Win32
 cd Win32
 
-echo Creating Win32 Libs
+echo Creating Win32 Debug Libs
 cmake -G "%generator%" ^
 -A Win32 ^
 -DBUILD_WINDOWS_PHONE=true ^
@@ -42,11 +42,16 @@ cmake -G "%generator%" ^
 -DMOAI_LUAJIT=false ^
 -DCMAKE_SYSTEM_NAME=WindowsPhone ^
 -DCMAKE_SYSTEM_VERSION=8.1 ^
--DCMAKE_INSTALL_PREFIX=%libprefix%\Win32 ^
+-DCMAKE_INSTALL_PREFIX=%libprefix%\Win32\Debug ^
 %rootpath%\cmake || exit /b 1
 
 cmake --build . --target INSTALL --config Debug || exit /b 1
 
+cmake -G "%generator%" ^
+-DCMAKE_INSTALL_PREFIX=%libprefix%\Win32\Release ^
+%rootpath%\cmake || exit /b 1
+
+cmake --build . --target INSTALL --config Release || exit /b 1
 
 
 echo "Build complete"

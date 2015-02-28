@@ -31,6 +31,18 @@
 #endif
 
 
+#if AKU_WITH_WINRT
+
+	//----------------------------------------------------------------//
+	extern void		AKUModulesWinRTAppFinalize			();
+	extern void		AKUModulesWinRTAppInitialize			();
+	extern void		AKUModulesWinRTContextInitialize		();
+	extern void		AKUModulesWinRTPause					( bool pause );
+	extern void		AKUModulesWinRTUpdate					();
+
+#endif
+
+
 
 #if AKU_WITH_PLUGINS
 
@@ -110,9 +122,15 @@ void AKUModulesAppFinalize () {
 		AKUModulesAndroidAppFinalize ();
 	#endif
 	
+	#if AKU_WITH_WINRT
+		AKUModulesWinRTAppFinalize();
+	#endif
+
 	#if AKU_WITH_PLUGINS
 		AKUPluginsAppFinalize ();
 	#endif
+
+
 }
 
 //----------------------------------------------------------------//
@@ -176,6 +194,10 @@ void AKUModulesAppInitialize () {
 	
 	#if AKU_WITH_ANDROID
 		AKUModulesAndroidAppInitialize ();
+	#endif
+
+	#if AKU_WITH_WINRT
+		AKUModulesWinRTAppInitialize();
 	#endif
 
 	#if AKU_WITH_PLUGINS
@@ -245,7 +267,11 @@ void AKUModulesContextInitialize () {
 	#if AKU_WITH_ANDROID
 		AKUModulesAndroidContextInitialize ();
 	#endif
-	
+
+	#if AKU_WITH_WINRT
+		AKUModulesWinRTContextInitialize();
+	#endif
+
 	#if AKU_WITH_PLUGINS
 		AKUPluginsContextInitialize ();
 	#endif
@@ -268,6 +294,10 @@ void AKUModulesPause ( bool pause ) {
 	
 	#if AKU_WITH_ANDROID
 		AKUModulesAndroidPause ( pause );
+	#endif
+
+	#if AKU_WITH_WINRT
+		AKUModulesWinRTPause( pause );
 	#endif
 	
 	#if AKU_WITH_PLUGINS
@@ -306,6 +336,10 @@ void AKUModulesUpdate () {
 		AKUModulesAndroidUpdate ();
 	#endif
 	
+	#if AKU_WITH_WINRT
+		AKUModulesWinRTUpdate();
+	#endif
+
 	#if AKU_WITH_PLUGINS
 		AKUPluginsUpdate ();
 	#endif
