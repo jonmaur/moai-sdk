@@ -14,6 +14,12 @@ namespace Moai
 
 		void Pause(bool paused);
 
+		void PointerDown();
+		void PointerUp();
+		void PointerMove(int x, int y);
+
+	private:
+		void SetupEnvironment();
 		
 	};
 }

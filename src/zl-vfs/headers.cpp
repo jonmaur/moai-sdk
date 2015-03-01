@@ -816,17 +816,18 @@ int zl_vprintf ( const char * format, va_list arg ) {
 	#ifdef ANDROID
 		result = __android_log_vprint ( ANDROID_LOG_INFO, "MoaiLog", format, arg );
 	#elif WINAPI_PARTITION_APP
-		wchar_t buffer[2048];
 
-		size_t newsize = strlen(format) + 1;
-		wchar_t * wformat = new wchar_t[newsize];
+		char buffer[1024];
+		_vsnprintf_s(buffer, 1024, format, arg);
+
+		size_t newsize = strlen(buffer) + 1;
+		wchar_t * wbuffer = new wchar_t[newsize];
 		size_t convertedChars = 0;
-		mbstowcs_s(&convertedChars, wformat, newsize, format, _TRUNCATE);
-
-		result = _vsnwprintf_s(buffer, 2048, wformat, arg);
-
-		OutputDebugString(buffer);
-		delete[] wformat;
+		mbstowcs_s(&convertedChars, wbuffer, newsize, buffer, _TRUNCATE);
+		result = convertedChars;
+		OutputDebugString(wbuffer);
+		delete[] wbuffer;
+	
 	#else
 		result = vprintf ( format, arg );
 	#endif

@@ -46,3 +46,51 @@ end
 
 thread = MOAIThread.new ()
 thread:run ( twirlingTowardsFreedom )
+
+
+local function printf ( ... )
+	print ( string.format ( ... ))
+end 
+
+print ( MOAIInputMgr.configuration )
+
+----------------------------------------------------------------
+-- keyboard events
+
+function onKeyboardEvent ( key, down )
+
+	if down == true then
+		printf ( "keyboard: %d down\n", key )
+	else
+		printf ( "keyboard: %d up\n", key )
+	end
+end
+if MOAIInputMgr.device then
+	MOAIInputMgr.device.keyboard:setCallback ( onKeyboardEvent )
+else
+	print( "No Keyboard")
+end
+
+----------------------------------------------------------------
+-- pointer events
+
+function onPointerEvent ( x, y )
+	printf ( "pointer: %d %d\n", x, y )
+end
+
+MOAIInputMgr.device.pointer:setCallback ( onPointerEvent )
+
+----------------------------------------------------------------
+-- mouse left button events
+
+function onMouseLeftEvent ( down )
+
+	if down == true then
+		printf ( "touch down\n" )
+	else
+		printf ( "touch up up\n" )
+	end
+end
+
+MOAIInputMgr.device.touch:setCallback ( onMouseLeftEvent )
+

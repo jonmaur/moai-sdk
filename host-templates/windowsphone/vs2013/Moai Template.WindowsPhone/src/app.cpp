@@ -69,6 +69,15 @@ void App::SetWindow(CoreWindow^ window)
     window->SizeChanged += 
         ref new TypedEventHandler<CoreWindow^, WindowSizeChangedEventArgs^>(this, &App::OnWindowSizeChanged);
 
+	window->PointerPressed +=
+		ref new TypedEventHandler<CoreWindow^, PointerEventArgs^>(this, &App::OnPointerPressed);
+
+	window->PointerReleased +=
+		ref new TypedEventHandler<CoreWindow^, PointerEventArgs^>(this, &App::OnPointerReleased);
+	
+	window->PointerMoved +=
+		ref new TypedEventHandler<CoreWindow^, PointerEventArgs^>(this, &App::OnPointerMoved);
+
 #if !(WINAPI_FAMILY == WINAPI_FAMILY_PHONE_APP)
     // Disable all pointer visual feedback for better performance when touching.
     // This is not supported on Windows Phone applications.
@@ -183,6 +192,23 @@ void App::OnWindowSizeChanged(CoreWindow^ sender, WindowSizeChangedEventArgs^ ar
     // The default framebuffer will not be automatically resized when this occurs.
     // It is therefore up to the app to handle rotation-specific logic in its rendering code.
 #endif
+}
+
+
+void App::OnPointerPressed(CoreWindow^ sender, PointerEventArgs^ args)
+{
+	mMoaiHost->PointerDown();
+}
+
+void App::OnPointerReleased(CoreWindow^ sender, PointerEventArgs^ args)
+{
+	mMoaiHost->PointerUp();
+}
+
+void App::OnPointerMoved(CoreWindow^ sender, PointerEventArgs^ args)
+{
+	Point p = args->CurrentPoint->Position;
+	mMoaiHost->PointerMove((int) p.X, (int) p.Y );
 }
 
 void App::InitializeEGL(CoreWindow^ window)
