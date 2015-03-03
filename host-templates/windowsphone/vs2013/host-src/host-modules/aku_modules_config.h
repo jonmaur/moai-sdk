@@ -46,7 +46,7 @@
 	#endif
 
 	#ifndef AKU_WITH_UNTZ
-		#define AKU_WITH_UNTZ 0
+		#define AKU_WITH_UNTZ 1
 	#endif
 
 	#ifndef AKU_WITH_UTIL

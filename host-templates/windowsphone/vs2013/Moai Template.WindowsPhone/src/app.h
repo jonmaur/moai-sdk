@@ -39,6 +39,9 @@ namespace Moai
 		void OnPointerReleased(Windows::UI::Core::CoreWindow^ sender, Windows::UI::Core::PointerEventArgs^ args);
 		void OnPointerMoved(Windows::UI::Core::CoreWindow^ sender, Windows::UI::Core::PointerEventArgs^ args);
 
+		void OnSuspending(Object^ sender, Windows::ApplicationModel::SuspendingEventArgs^ args);
+		void OnResuming(Object^ sender, Object^ args);
+
         void UpdateWindowSize(Windows::Foundation::Size size);
         void InitializeEGL(Windows::UI::Core::CoreWindow^ window);
         void CleanupEGL();

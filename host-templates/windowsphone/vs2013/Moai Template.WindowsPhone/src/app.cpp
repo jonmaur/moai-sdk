@@ -7,6 +7,7 @@
 #include "HelloTriangleRenderer.h"
 #include <host-modules/aku_modules.h>
 
+using namespace Windows::ApplicationModel;
 using namespace Windows::ApplicationModel::Core;
 using namespace Windows::ApplicationModel::Activation;
 using namespace Windows::UI::Core;
@@ -55,12 +56,18 @@ void App::Initialize(CoreApplicationView^ applicationView)
     // Logic for other event handlers could go here.
     // Information about the Suspending and Resuming event handlers can be found here:
     // http://msdn.microsoft.com/en-us/library/windows/apps/xaml/hh994930.aspx
+
+	CoreApplication::Suspending +=
+		ref new EventHandler<SuspendingEventArgs^>(this, &App::OnSuspending);
+	CoreApplication::Resuming +=
+		ref new EventHandler<Object^>(this, &App::OnResuming);
 }
 
 // Called when the CoreWindow object is created (or re-created).
 void App::SetWindow(CoreWindow^ window)
 {
-    window->VisibilityChanged +=
+
+	window->VisibilityChanged +=
         ref new TypedEventHandler<CoreWindow^, VisibilityChangedEventArgs^>(this, &App::OnVisibilityChanged);
 
     window->Closed += 
@@ -209,6 +216,15 @@ void App::OnPointerMoved(CoreWindow^ sender, PointerEventArgs^ args)
 {
 	Point p = args->CurrentPoint->Position;
 	mMoaiHost->PointerMove((int) p.X, (int) p.Y );
+}
+
+void App::OnSuspending(Object^ sender, SuspendingEventArgs ^args)
+{
+	mMoaiHost->OnSuspend();
+}
+
+void App::OnResuming(Object^ sender, Object^ args) {
+	mMoaiHost->OnResume();
 }
 
 void App::InitializeEGL(CoreWindow^ window)

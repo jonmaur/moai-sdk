@@ -18,6 +18,9 @@ namespace Moai
 		void PointerUp();
 		void PointerMove(int x, int y);
 
+		void OnSuspend();
+		void OnResume();
+
 	private:
 		void SetupEnvironment();
 		

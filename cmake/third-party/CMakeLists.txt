@@ -84,7 +84,7 @@ elseif (BUILD_IOS OR BUILD_OSX)
 elseif (BUILD_WINDOWS)
   add_subdirectory (untz-windows)
 elseif (BUILD_WINDOWS_PHONE)
-  #TODO add untz for winrt using XAudio2
+  add_subdirectory (untz-winrt)
 elseif (BUILD_HTML)
   add_subdirectory (untz-html)
 else ()

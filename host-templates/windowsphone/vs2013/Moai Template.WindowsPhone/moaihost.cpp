@@ -109,6 +109,14 @@ void MoaiHost::PointerUp() {
 }
 
 
+void MoaiHost::OnSuspend() {
+	AKUModulesPause(true);
+}
+void MoaiHost::OnResume() {
+	AKUModulesPause(false);
+}
+
+
 
 static std::string PlatformStringToCString(Platform::String ^platformString) {
 	std::wstring strW(platformString->Data());

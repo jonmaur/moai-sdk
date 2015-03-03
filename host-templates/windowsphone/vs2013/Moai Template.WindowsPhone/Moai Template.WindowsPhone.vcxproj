@@ -51,7 +51,7 @@
   <ItemDefinitionGroup Condition="'$(Platform)'=='Win32'">
     <Link>
       <AdditionalLibraryDirectories>$(ProjectDir)\..\libmoai\$(Platform)\$(Configuration)\lib;%(AdditionalLibraryDirectories);$(WindowsPhoneSDK_LibraryPath_x86)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>libGLESv2.lib;libEGL.lib;ws2_32.lib;box2d.lib;contrib.lib;crypto.lib;curl.lib;expat.lib;freetype.lib;jansson.lib;jpg.lib;liblua-static.lib;luacrypto.lib;luacurl.lib;luafilesystem.lib;luasocket.lib;luasql.lib;moai-winrt.lib;moai-audiosampler.lib;moai-box2d.lib;moai-core.lib;moai-crypto.lib;moai-http-client.lib;moai-luaext.lib;moai-sim.lib;moai-util.lib;ogg.lib;png.lib;sfmt.lib;sqlite3.lib;ssl.lib;tess.lib;tinyxml.lib;tlsf.lib;vorbis.lib;webp.lib;zlcore.lib;zlcrypto.lib;zlib.lib;zlvfs.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>libGLESv2.lib;libEGL.lib;ws2_32.lib;box2d.lib;contrib.lib;crypto.lib;curl.lib;expat.lib;freetype.lib;jansson.lib;jpg.lib;liblua-static.lib;luacrypto.lib;luacurl.lib;luafilesystem.lib;luasocket.lib;luasql.lib;moai-winrt.lib;moai-audiosampler.lib;moai-box2d.lib;moai-core.lib;moai-crypto.lib;moai-http-client.lib;moai-luaext.lib;moai-sim.lib;moai-util.lib;moai-untz.lib;ogg.lib;png.lib;sfmt.lib;sqlite3.lib;ssl.lib;tess.lib;tinyxml.lib;tlsf.lib;untz.lib;vorbis.lib;webp.lib;zlcore.lib;zlcrypto.lib;zlib.lib;zlvfs.lib;Xaudio2.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
     </Link>
     <ClCompile>
@@ -66,7 +66,7 @@
   <ItemDefinitionGroup Condition="'$(Platform)'=='ARM'">
     <Link>
       <AdditionalLibraryDirectories>$(ProjectDir)\..\libmoai\$(Platform)\$(Configuration)\lib;%(AdditionalLibraryDirectories);$(WindowsPhoneSDK_LibraryPath_arm)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>libGLESv2.lib;libEGL.lib;ws2_32.lib;box2d.lib;contrib.lib;crypto.lib;curl.lib;expat.lib;freetype.lib;jansson.lib;jpg.lib;liblua-static.lib;luacrypto.lib;luacurl.lib;luafilesystem.lib;luasocket.lib;luasql.lib;moai-winrt.lib;moai-audiosampler.lib;moai-box2d.lib;moai-core.lib;moai-crypto.lib;moai-http-client.lib;moai-luaext.lib;moai-sim.lib;moai-util.lib;ogg.lib;png.lib;sfmt.lib;sqlite3.lib;ssl.lib;tess.lib;tinyxml.lib;tlsf.lib;vorbis.lib;webp.lib;zlcore.lib;zlcrypto.lib;zlib.lib;zlvfs.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>libGLESv2.lib;libEGL.lib;ws2_32.lib;box2d.lib;contrib.lib;crypto.lib;curl.lib;expat.lib;freetype.lib;jansson.lib;jpg.lib;liblua-static.lib;luacrypto.lib;luacurl.lib;luafilesystem.lib;luasocket.lib;luasql.lib;moai-winrt.lib;moai-audiosampler.lib;moai-box2d.lib;moai-core.lib;moai-crypto.lib;moai-http-client.lib;moai-luaext.lib;moai-sim.lib;moai-util.lib;moai-untz.lib;ogg.lib;png.lib;sfmt.lib;sqlite3.lib;ssl.lib;tess.lib;tinyxml.lib;tlsf.lib;untz.lib;vorbis.lib;webp.lib;zlcore.lib;zlcrypto.lib;zlib.lib;zlvfs.lib;Xaudio2.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
     </Link>
     <ClCompile>
