@@ -28,6 +28,11 @@ project ( curl )
         "${MOAI_ROOT}/3rdparty/curl-7.19.7/include/" 
      
       )
+      if (BUILD_WINDOWS_PHONE)
+        set ( CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DCURL_DISABLE_TELNET" )   
+        set ( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DCURL_DISABLE_TELNET" )
+      endif (BUILD_WINDOWS_PHONE)
+
   endif (BUILD_WINDOWS OR BUILD_WINDOWS_PHONE)
   
   if (BUILD_OSX)

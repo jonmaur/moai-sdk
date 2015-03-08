@@ -4,7 +4,7 @@
   <mp:PhoneIdentity PhoneProductId="e8022591-05de-46dd-a1dc-92866af6b144" PhonePublisherId="00000000-0000-0000-0000-000000000000" />
   <Properties>
     <DisplayName>Moai Template.WindowsPhone</DisplayName>
-    <PublisherDisplayName>David</PublisherDisplayName>
+    <PublisherDisplayName>Zipline Games</PublisherDisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>
   <Prerequisites>

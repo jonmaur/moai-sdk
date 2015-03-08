@@ -8,12 +8,6 @@
     <Filter Include="Binaries">
       <Extensions>dll;</Extensions>
     </Filter>
-    <Filter Include="lua">
-      <UniqueIdentifier>{6a7a39e1-2665-44c6-9dea-bae8604928c7}</UniqueIdentifier>
-      <ParseFiles>false</ParseFiles>
-      <SourceControlFiles>False</SourceControlFiles>
-      <Extensions>*</Extensions>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Assets\Logo.scale-240.png">
@@ -39,52 +33,32 @@
     <AppxManifest Include="Package.appxmanifest" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="lua\**\*">
-      <Filter>lua</Filter>
-    </None>
-    <None Include="lua\**\*" />
-    <None Include="lua\**\*" />
-    <None Include="..\..\..\..\build\build-vs2013-phone\Win32\moai.sln" />
-    <None Include="lua\**\*" />
-    <None Include="lua\**\*" />
     <None Include="init.lua" />
-    <None Include="lua\**\*" />
-    <None Include="lua\**\*" />
     <None Include="$(ProjectDir)\..\libmoai\$(Platform)\$(Configuration)\bin\libGLESv2.dll">
       <Filter>Binaries</Filter>
     </None>
     <None Include="$(ProjectDir)\..\libmoai\$(Platform)\$(Configuration)\bin\libEGL.dll">
       <Filter>Binaries</Filter>
     </None>
-    <None Include="lua\**\*" />
-    <None Include="lua\arialbd.ttf">
-      <Filter>Assets</Filter>
-    </None>
-    <None Include="lua\main.lua" />
-    <None Include="lua\moai.png" />
-    <None Include="lua\Thumbs.db" />
-    <None Include="lua\**\*" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\app.cpp" />
-    <ClCompile Include="src\HelloTriangleRenderer.cpp" />
-    <ClCompile Include="pch.cpp" />
     <ClCompile Include="..\host-src\host-modules\aku_modules.cpp" />
     <ClCompile Include="..\host-src\host-modules\aku_modules_util.cpp" />
-    <ClCompile Include="app_main.cpp" />
-    <ClCompile Include="moaihost.cpp" />
     <ClCompile Include="..\host-src\host-modules\aku_modules_winrt.cpp" />
+    <ClCompile Include="src\moaihost.cpp" />
+    <ClCompile Include="src\pch.cpp" />
+    <ClCompile Include="src\app_main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\app.h" />
-    <ClInclude Include="src\HelloTriangleRenderer.h" />
-    <ClInclude Include="pch.h" />
     <ClInclude Include="..\host-src\host-modules\aku_modules.h" />
     <ClInclude Include="..\host-src\host-modules\aku_modules_config.h" />
     <ClInclude Include="..\host-src\host-modules\aku_modules_util.h" />
-    <ClInclude Include="moaihost.h" />
     <ClInclude Include="..\host-src\host-modules\aku_modules_winrt.h" />
     <ClInclude Include="..\host-src\host-modules\aku_modules_winrt_config.h" />
+    <ClInclude Include="src\moaihost.h" />
+    <ClInclude Include="src\pch.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="bootstrap.lua" />

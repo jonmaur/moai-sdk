@@ -26,7 +26,8 @@ hosts = {
     ["ios"] = "host-ios",
     ["linux"] = "host-linux",
     ["osx"] = "host-osx-app",
-    ["windows"] = "host-windows-vs2013"
+    ["windows"] = "host-windows-vs2013",
+    ["windows-phone"] = "host-windows-phone-vs2013"
   }
 
 function printValidHosts()
