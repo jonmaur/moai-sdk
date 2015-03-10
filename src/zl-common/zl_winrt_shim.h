@@ -38,17 +38,47 @@
 #define GetTickCount (DWORD) GetTickCount64
 #endif
 
+#ifndef CreateFile
+#define CreateFile zl_winrt_createfile
+#endif
+
+#ifndef _beginthreadex
+#define _beginthreadex CreateThread
+#endif
+
+#ifndef WaitForMultipleObjects
+#define WaitForMultipleObjects(count,handles,wait,ms) WaitForMultipleObjectsEx(count,handles,wait,ms,FALSE)
+#endif
+
+#ifndef TerminateThread
+#define TerminateThread(handle,arg)  ((void)0)
+#endif
+
+#ifndef ExpandEnvironmentStrings
+#define ExpandEnvironmentStrings(src,dest,size) ((void)0)
+#endif
 
 #ifdef  __cplusplus
   extern "C" {
 #endif
+	  typedef struct ZL_SECURITY_ATTRIBUTES {
+		  unsigned long nLength;
+		  void * lpSecurityDescriptor;
+		  long bInheritHandle;
+	  } ZL_SECURITY_ATTRIBUTES, *PZL_SECURITY_ATTRIBUTES, *LPZL_SECURITY_ATTRIBUTES;
 
-  extern int zl_winrt_system(const char *command);
+
+
+extern int zl_winrt_system(const char *command);
   extern char *zl_winrt_getenv(const char *name);
-  extern HANDLE zl_winrt_createmutex(LPSECURITY_ATTRIBUTES lpMutexAttributes,
-	  BOOL bInitialOwner,
-	  LPCTSTR lpName
-	  );
+  extern void * zl_winrt_createfile(const wchar_t *lpFileName,
+									unsigned long dwDesiredAccess, 
+									unsigned long dwShareMode,
+									LPZL_SECURITY_ATTRIBUTES lpSecurityAttributes,
+									unsigned long dwCreationDisposition,
+									unsigned long dwFlagsAndAttributes,
+									void *hTemplateFile
+									);
 
 #ifdef  __cplusplus
   }

@@ -185,7 +185,10 @@ project ( curl )
 
    )
 
-
+if (BUILD_WINDOWS_PHONE)
+#this should trigger the correct code path to skip usage of WSAPoll which isnt supported in winrt
+ set_source_files_properties(${CMAKE_CURRENT_SOURCE_DIR}/select.c PROPERTIES COMPILE_FLAGS -U_WIN32_WINNT)
+ endif(BUILD_WINDOWS_PHONE)
  
   add_library(curl STATIC ${CURL_SOURCES} ${CURL_HEADERS})
   target_include_directories (curl PUBLIC "$<BUILD_INTERFACE:${CURL_INCLUDES}>" PRIVATE "${CMAKE_CURRENT_BINARY_DIR}")

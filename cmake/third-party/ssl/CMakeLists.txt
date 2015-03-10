@@ -112,7 +112,18 @@ set ( SSL_SOURCES
   ${CMAKE_CURRENT_SOURCE_DIR}ssl/t1_meth.c
   ${CMAKE_CURRENT_SOURCE_DIR}ssl/t1_reneg.c
   ${CMAKE_CURRENT_SOURCE_DIR}ssl/t1_srvr.c
+  
 )
+  
+  
+if ( BUILD_WINDOWS_PHONE )
+  set( SSL_SOURCES ${SSL_SOURCES}
+    ${CMAKE_CURRENT_SOURCE_DIR}ssl/tls_srp.c
+    ${CMAKE_CURRENT_SOURCE_DIR}ssl/t1_ext.c
+    ${CMAKE_CURRENT_SOURCE_DIR}ssl/d1_srtp.c
+  
+  )
+endif ( BUILD_WINDOWS_PHONE )
   
 add_library (ssl STATIC ${SSL_SOURCES})
 target_include_directories (ssl PUBLIC "$<BUILD_INTERFACE:${SSL_INCLUDES}>")

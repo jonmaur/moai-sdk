@@ -631,8 +631,23 @@ endif (NOT BUILD_WINDOWS_PHONE)
        ${CMAKE_CURRENT_SOURCE_DIR}/modes/xts128.c
        ${CMAKE_CURRENT_SOURCE_DIR}/modes/wrap128.c
        ${CMAKE_CURRENT_SOURCE_DIR}/cmac/cm_ameth.c
+       ${CMAKE_CURRENT_SOURCE_DIR}/cmac/cm_pmeth.c
+       ${CMAKE_CURRENT_SOURCE_DIR}/cmac/cmac.c
+       ${CMAKE_CURRENT_SOURCE_DIR}/ecdh/ech_kdf.c
        ${CMAKE_CURRENT_SOURCE_DIR}/ec/ec_oct.c
+       ${CMAKE_CURRENT_SOURCE_DIR}/ec/ecp_oct.c
+       ${CMAKE_CURRENT_SOURCE_DIR}/ec/ec2_oct.c
+       ${CMAKE_CURRENT_SOURCE_DIR}/dh/dh_rfc5114.c
+       ${CMAKE_CURRENT_SOURCE_DIR}/dh/dh_kdf.c
        ${CMAKE_CURRENT_SOURCE_DIR}/cms/cms_kari.c
+       ${CMAKE_CURRENT_SOURCE_DIR}/cms/cms_pwri.c
+       ${CMAKE_CURRENT_SOURCE_DIR}/o_init.c
+       ${CMAKE_CURRENT_SOURCE_DIR}/o_fips.c
+       ${CMAKE_CURRENT_SOURCE_DIR}/x509v3/v3_scts.c
+       
+       ${CMAKE_CURRENT_SOURCE_DIR}/srp/srp_lib.c
+       ${CMAKE_CURRENT_SOURCE_DIR}/srp/srp_vfy.c
+       
      )
   endif ( BUILD_WINDOWS_PHONE )
 
