@@ -8,9 +8,9 @@
 #if (!WINAPI_PARTITION_APP)
 	#include <shlobj.h>
 	typedef void (WINAPI *PGNSI)(LPSYSTEM_INFO);
+#endif
 #elif defined( MOAI_OS_LINUX )
 	#include <sys/utsname.h>
-#endif
 #endif
 
 //================================================================//
