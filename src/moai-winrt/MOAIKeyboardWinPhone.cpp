@@ -150,7 +150,7 @@ void MOAIKeyboardWinPhone::PushText ( MOAILuaState& state ) {
 void MOAIKeyboardWinPhone::ShowKeyboard(cc8* text, int type, int returnKey, bool secure, int autocap, int appearance) {
 
 	auto view = Windows::ApplicationModel::Core::CoreApplication::GetCurrentView();
-	view->CoreWindow->GetForCurrentThread()
+	//view->CoreWindow->GetForCurrentThread()
 
 }
 

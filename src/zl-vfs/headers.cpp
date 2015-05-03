@@ -549,7 +549,7 @@ int zl_fputc ( int c, ZLFILE* fp ) {
 
 #if WINAPI_PARTITION_APP
 int zl_vprintf_winrt(const char* format, va_list arg) {
-
+  
 	char buffer[1024];
 	_vsnprintf_s(buffer, 1024, format, arg);
 
@@ -557,10 +557,10 @@ int zl_vprintf_winrt(const char* format, va_list arg) {
 	wchar_t * wbuffer = new wchar_t[newsize];
 	size_t convertedChars = 0;
 	mbstowcs_s(&convertedChars, wbuffer, newsize, buffer, _TRUNCATE);
-	result = convertedChars;
+	int result = convertedChars;
 	OutputDebugString(wbuffer);
 	delete[] wbuffer;
-	return result
+	return result;
 }
 #endif
 
@@ -573,7 +573,7 @@ int zl_fputs ( const char* string, ZLFILE* fp ) {
 		#ifdef ANDROID
 			return __android_log_print ( ANDROID_LOG_INFO, "MoaiLog", "%s", string );
 		#elif WINAPI_PARTITION_APP
-			return zl_vprintf_winrt("%s", string)
+			return zl_printf("%s", string);
 		#else
 			return printf ( "%s", string );
 		#endif
@@ -759,7 +759,7 @@ int zl_puts ( const char* string ) {
 	#ifdef ANDROID
 		return __android_log_print ( ANDROID_LOG_INFO, "MoaiLog", "%s\n", string );
 	#elif WINAPI_PARTITION_APP
-		return zl_vprintf_winrt("%s\n", string)
+		return zl_printf("%s\n", string);
 	#else
 		return printf ( "%s\n", string );
 	#endif
@@ -849,7 +849,7 @@ int zl_vfprintf ( ZLFILE* fp, const char* format, va_list arg ) {
 		#ifdef ANDROID
 			return __android_log_vprint ( ANDROID_LOG_INFO, "MoaiLog", format, arg );
 		#elif WINAPI_PARTITION_APP
-			return zl_vprintf_winrt(format, arg)
+			return zl_vprintf_winrt(format, arg);
 		#else
 			return vprintf ( format, arg );
 		#endif

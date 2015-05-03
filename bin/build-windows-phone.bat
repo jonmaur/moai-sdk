@@ -48,8 +48,8 @@ cmake -G "%generator%" ^
 cmake --build . --target INSTALL --config Debug || exit /b 1
 
 rem cmake -G "%generator%" ^
--DCMAKE_INSTALL_PREFIX=%libprefix%\Win32\Release ^
-%rootpath%\cmake || exit /b 1
+rem -DCMAKE_INSTALL_PREFIX=%libprefix%\Win32\Release ^
+rem %rootpath%\cmake || exit /b 1
 
 rem cmake --build . --target INSTALL --config Release || exit /b 1
 

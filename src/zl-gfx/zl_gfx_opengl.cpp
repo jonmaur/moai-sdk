@@ -1350,7 +1350,7 @@ u32 zglCreateBuffer () {
 void* zglMapBuffer ( u32 target ) {
 
 	ASSERT_OPERATION_DEPTH ();
-	#if defined(MOAI_OS_ANDROID) || defined(MOAI_OS_HTML)
+	#if defined(MOAI_OS_ANDROID) || defined(MOAI_OS_HTML) || WINAPI_PARTITION_APP
 		return 0;
 	#else
 		return glMapBuffer ( _remapEnum ( target ), GL_WRITE_ONLY );

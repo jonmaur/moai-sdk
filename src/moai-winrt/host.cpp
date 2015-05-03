@@ -1,7 +1,7 @@
 #include "host.h"
 #include <stdio.h>
 #include <moai-core/headers.h>
-#include <moai-sim/MOAIEnvironment.h>
+#include <moai-core/MOAIEnvironment.h>
 #include <string>
 
 static std::string PlatformStringToCString(Platform::String ^platformString);
