@@ -1,10 +1,10 @@
 project ( luasocket )
 
-  if ( BUILD_WINDOWS )
+  if ( BUILD_WINDOWS OR BUILD_WINDOWS_PHONE )
     set ( LUASOCKET_PLAT ${MOAI_ROOT}/3rdparty/luasocket-2.0.2/src/wsocket.c )
-  else ( BUILD_WINDOWS )
+  else ( BUILD_WINDOWS OR BUILD_WINDOWS_PHONE )
     set ( LUASOCKET_PLAT ${MOAI_ROOT}/3rdparty/luasocket-2.0.2/src/usocket.c )
-  endif ( BUILD_WINDOWS )
+  endif ( BUILD_WINDOWS OR BUILD_WINDOWS_PHONE )
 
  include_directories ( ${MOAI_ROOT}/3rdparty/luasocket-2.0.2/src ${LUA_HEADERS})
   
@@ -33,7 +33,7 @@ project ( luasocket )
   add_dependencies ( luasocket liblua-static)
   set_target_properties( luasocket PROPERTIES FOLDER Third-Party )
 
-   if ( BUILD_WINDOWS )
+   if ( BUILD_WINDOWS OR BUILD_WINDOWS_PHONE )
      target_link_libraries( luasocket Ws2_32 )
-   endif (BUILD_WINDOWS)
+   endif (BUILD_WINDOWS OR BUILD_WINDOWS_PHONE )
 install(TARGETS luasocket EXPORT libmoai ARCHIVE DESTINATION lib)

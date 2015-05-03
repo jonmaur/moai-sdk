@@ -14,7 +14,7 @@
 #include "UserAudioSource.h"
 #include "MemoryAudioSource.h"
 #include "OggAudioSource.h"
-#if defined(WIN32)
+#if defined(WIN32) && !WINAPI_PARTITION_APP
 	#include <Native/Win/DShowAudioSource.h>
 #else
 	#if defined(__APPLE__)
@@ -65,7 +65,7 @@ Sound* Sound::create(const RString& path, bool loadIntoMemory)
 	}
 	else
 	{
-#if defined(WIN32)
+#if defined(WIN32) && !WINAPI_PARTITION_APP
 		DShowAudioSource* source;
 		if(prevSound && loadIntoMemory && prevSound->getData()->getSource()->isLoadedInMemory())
 			source = (DShowAudioSource*)prevSound->getData()->getSource().get();
@@ -169,7 +169,7 @@ bool Sound::decode(const RString& path, SoundInfo& info, float** data)
 		source = as;
 		if(as->init(path, true))
 			decoded = true;
-#elif defined(WIN32)
+#elif defined(WIN32) && !WINAPI_PARTITION_APP
 	DShowAudioSource* as = new DShowAudioSource();
 		source = as;
 		if(as->init(path, true))

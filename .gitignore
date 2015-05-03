@@ -38,3 +38,12 @@ bin/api-reference-parser/vendor
 docs/api-reference
 moai-sdk/
 /lib/
+host-templates/windowsphone/vs2013/AppPackages/
+host-templates/windowsphone/vs2013/ARM/
+host-templates/windowsphone/vs2013/Debug/
+host-templates/windowsphone/vs2013/ipch/
+host-templates/windowsphone/vs2013/libmoai/
+host-templates/windowsphone/vs2013/Moai Template.WindowsPhone/ARM/
+host-templates/windowsphone/vs2013/Moai Template.WindowsPhone/Debug/
+host-templates/windowsphone/vs2013/Moai Template.WindowsPhone/Release/
+host-templates/windowsphone/vs2013/Release/

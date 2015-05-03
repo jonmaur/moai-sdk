@@ -122,7 +122,11 @@ int ZLVfsFileSystem::ChangeDir ( const char* path ) {
 		}
 	}
 	else {
-		result = chdir ( path );
+#if (WINAPI_PARTITION_APP)   //no chdir in base runtime
+		result = 0;
+#else
+		result = chdir(path);
+#endif
 	}
 
 	if ( result == 0 ) {
@@ -345,8 +349,10 @@ void ZLVfsFileSystem::Init () {
 
 	this->mMutex = zl_mutex_create ();;
 	
-	#ifdef ANDROID
+	#if defined(ANDROID) 
 		this->mWorkingPath = this->NormalizeDirPath ( "/" );
+	#elif WINAPI_PARTITION_APP
+		this->mWorkingPath = "";
 	#else
 		char buffer [ FILENAME_MAX ];
 	

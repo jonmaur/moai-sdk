@@ -35,4 +35,5 @@ public:
 	void			RegisterLuaFuncs	( MOAILuaState& state );
 };
 
+
 #endif

@@ -58,7 +58,11 @@ int ZLVfsFile::CloseProcess () {
 	}
 	
 	#ifdef MOAI_OS_WINDOWS
-		return _pclose ( stdFile );
+		#if !(WINAPI_PARTITION_APP)		
+			return _pclose ( stdFile );
+		#else
+			return -1;
+		#endif 
 	#else
 		return pclose ( stdFile );
 	#endif
@@ -203,7 +207,9 @@ int ZLVfsFile::OpenProcess ( const char *command, const char *mode ) {
 	FILE* stdFile = 0;
 
 	#ifdef MOAI_OS_WINDOWS
-		stdFile = _popen ( command, mode );	
+		#if !(WINAPI_PARTITION_APP) 
+			stdFile = _popen ( command, mode );	
+		#endif
 	#else
 		stdFile = popen ( command, mode );
 	#endif

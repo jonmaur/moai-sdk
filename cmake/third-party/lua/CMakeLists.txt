@@ -5,7 +5,10 @@ project(lua)
 set ( CMAKE_CURRENT_SOURCE_DIR "${MOAI_ROOT}/3rdparty/lua-5.1.3/src/" )
 
 set ( LUA_INCLUDES "${MOAI_ROOT}/3rdparty/lua-5.1.3/src/"  )
-
+if ( BUILD_WINDOWS_PHONE )
+  #we aren't allowed to load dlls anyway.
+  set ( CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DLUA_ANSI" )
+endif ( BUILD_WINDOWS_PHONE )
 
 set ( LUA_SOURCES
   ${CMAKE_CURRENT_SOURCE_DIR}lapi.c

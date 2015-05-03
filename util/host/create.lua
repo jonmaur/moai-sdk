@@ -17,7 +17,7 @@ end
 
 --we get here if we don't exist and we are a valid host
 print("creating host: "..hostname)
-os.execute("moaiutil "..hosts[hostname].." -c hostconfig.lua -o "..hostsFolder..hostname)
+os.execute("moaiutil "..hosts[hostname].." -c hostconfig.lua -o "..hostsFolder..hostname.." "..arg[6])
 print("\n Host created ")
 
   

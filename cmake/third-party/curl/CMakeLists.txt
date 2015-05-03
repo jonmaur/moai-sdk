@@ -23,12 +23,17 @@ project ( curl )
   endif (BUILD_LINUX)
 
 
-  if (BUILD_WINDOWS)
+  if (BUILD_WINDOWS OR BUILD_WINDOWS_PHONE)
       set ( CURL_INCLUDES 
         "${MOAI_ROOT}/3rdparty/curl-7.19.7/include/" 
      
       )
-  endif (BUILD_WINDOWS)
+      if (BUILD_WINDOWS_PHONE)
+        set ( CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DCURL_DISABLE_TELNET" )   
+        set ( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DCURL_DISABLE_TELNET" )
+      endif (BUILD_WINDOWS_PHONE)
+
+  endif (BUILD_WINDOWS OR BUILD_WINDOWS_PHONE)
   
   if (BUILD_OSX)
         set ( CURL_INCLUDES
@@ -180,7 +185,10 @@ project ( curl )
 
    )
 
-
+if (BUILD_WINDOWS_PHONE)
+#this should trigger the correct code path to skip usage of WSAPoll which isnt supported in winrt
+ set_source_files_properties(${CMAKE_CURRENT_SOURCE_DIR}/select.c PROPERTIES COMPILE_FLAGS -U_WIN32_WINNT)
+ endif(BUILD_WINDOWS_PHONE)
  
   add_library(curl STATIC ${CURL_SOURCES} ${CURL_HEADERS})
   target_include_directories (curl PUBLIC "$<BUILD_INTERFACE:${CURL_INCLUDES}>" PRIVATE "${CMAKE_CURRENT_BINARY_DIR}")
@@ -195,8 +203,8 @@ project ( curl )
      target_link_libraries( curl ssl )
   endif (MOAI_OPENSSL)
  
-  if (BUILD_WINDOWS)
+  if (BUILD_WINDOWS OR BUILD_WINDOWS_PHONE)
     target_link_libraries( curl ws2_32 )
-  endif (BUILD_WINDOWS)
+  endif (BUILD_WINDOWS OR BUILD_WINDOWS_PHONE)
 
   install(TARGETS curl EXPORT libmoai ARCHIVE DESTINATION lib)

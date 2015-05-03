@@ -96,7 +96,11 @@ public:
  		if(!mIsRunning)
 			return false;
 #ifdef WIN32
-		return WaitForSingleObject(mThread,INFINITE) == 0x00000000L;
+#if WINAPI_PARTITION_APP
+	return WaitForSingleObjectEx(mThread,INFINITE, FALSE) == 0x00000000L;
+#else
+	return WaitForSingleObject(mThread,INFINITE) == 0x00000000L;
+#endif
 #else
 		return pthread_join(mThread, NULL) == 0;
 #endif
@@ -108,7 +112,11 @@ public:
 			return false;	
         mIsRunning = false;
 #ifdef WIN32
+#if !WINAPI_PARTITION_APP
 		bool success = TerminateThread(mThread,1) && CloseHandle(mThread);
+#else
+		bool success = true;
+#endif
 		mThread = NULL;
  		return success;
 #else

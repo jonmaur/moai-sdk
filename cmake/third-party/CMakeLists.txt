@@ -43,7 +43,11 @@ set (LUA_LIB ${LUA_LIB} PARENT_SCOPE)
 set (LUA_LIB_DIR ${LUA_LIB_DIR} PARENT_SCOPE)
 
 add_subdirectory ( luaext )
+
+if (NOT BUILD_WINDOWS_PHONE)
 add_subdirectory ( mongoose )
+endif (NOT BUILD_WINDOWS_PHONE)
+
 add_subdirectory ( ogg )
 add_subdirectory ( png )
 add_subdirectory ( pvr )
@@ -68,6 +72,11 @@ if (BUILD_LINUX OR BUILD_OSX OR BUILD_WINDOWS)
   add_subdirectory ( glew )
 endif (BUILD_LINUX OR BUILD_OSX OR BUILD_WINDOWS)
 
+if (BUILD_WINDOWS_PHONE)
+  add_subdirectory ( angle )
+endif (BUILD_WINDOWS_PHONE)
+
+
 #Build platform specific untz
 if (BUILD_ANDROID)
   add_subdirectory (untz-android)
@@ -75,6 +84,8 @@ elseif (BUILD_IOS OR BUILD_OSX)
   add_subdirectory (untz-ios)
 elseif (BUILD_WINDOWS)
   add_subdirectory (untz-windows)
+elseif (BUILD_WINDOWS_PHONE)
+  add_subdirectory (untz-winrt)
 elseif (BUILD_HTML)
   add_subdirectory (untz-html)
 else ()

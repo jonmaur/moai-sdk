@@ -42,7 +42,7 @@ void MOAIThreadImpl::Cleanup () {
 //----------------------------------------------------------------//
 void MOAIThreadImpl::Join () {
 
-	WaitForSingleObject ( this->mThread, INFINITE );
+	WaitForSingleObjectEx ( this->mThread, INFINITE, FALSE );
 }
 
 //----------------------------------------------------------------//

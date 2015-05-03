@@ -43,7 +43,7 @@ public:
 	RSyncEvent()
 	{
 #ifdef WIN32
-		mEvent = CreateEvent(NULL, false, false, NULL);
+		mEvent = CreateEventEx(NULL, NULL, 0, SYNCHRONIZE);
 #else
 		pthread_mutexattr_t attr;
 		pthread_mutexattr_init(&attr);
@@ -67,7 +67,11 @@ public:
 	void wait()
 	{ 
 #ifdef WIN32
+#if WINAPI_PARTITION_APP
+		WaitForSingleObjectEx(static_cast<HANDLE>(mEvent), INFINITE, FALSE);
+#else
 		WaitForSingleObject(static_cast<HANDLE>(mEvent), INFINITE);
+#endif
 #else
 		pthread_mutex_lock(&mMutex);
 		pthread_cond_wait(&mCondition, &mMutex);

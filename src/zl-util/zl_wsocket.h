@@ -38,8 +38,11 @@
 /*=========================================================================*\
 * WinSock include files
 \*=========================================================================*/
-#include <winsock.h>
-
+#if (WINAPI_PARTITION_APP)	
+	#include <winsock2.h>
+#else
+	#include <winsock.h>
+#endif
 typedef int socklen_t;
 typedef SOCKET zl_socket;
 

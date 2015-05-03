@@ -4,11 +4,13 @@
 #include "pch.h"
 #include <moai-core/MOAIEnvironment.h>
 
-#ifdef _WIN32
+#ifdef _WIN32 
+#if (!WINAPI_PARTITION_APP)
 	#include <shlobj.h>
 	typedef void (WINAPI *PGNSI)(LPSYSTEM_INFO);
 #elif defined( MOAI_OS_LINUX )
 	#include <sys/utsname.h>
+#endif
 #endif
 
 //================================================================//
@@ -70,7 +72,7 @@ int MOAIEnvironment::_setValue ( lua_State* L ) {
 //----------------------------------------------------------------//
 void MOAIEnvironment::DetectEnvironment () {
 	
-	#if defined( MOAI_OS_WINDOWS )
+#if defined( MOAI_OS_WINDOWS ) && (!WINAPI_PARTITION_APP)
 	
 		//printf ( "Env Windows\n" );
 		this->SetValue ( MOAI_ENV_osBrand, "Windows" );
@@ -146,7 +148,9 @@ void MOAIEnvironment::DetectEnvironment () {
 		else {
 			this->SetValue ( MOAI_ENV_osVersion, "WinUnknown" );
 		}
-		
+   #elif defined(MOAI_OS_WINDOWS) && WINAPI_PARTITION_APP 
+		this->SetValue(MOAI_ENV_osBrand, "Windows");
+		this->SetValue(MOAI_ENV_osVersion, "WinRT");
 	#elif defined( MOAI_OS_LINUX )
 		
 		utsname sysID;

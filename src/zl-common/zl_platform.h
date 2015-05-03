@@ -86,6 +86,9 @@
 		#define PATH_MAX 1024
 	#endif
 
+	#if WINAPI_PARTITION_APP
+		#include "zl_winrt_shim.h"
+	#endif
 #endif
 
 #ifdef MOAI_OS_NACL

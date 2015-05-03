@@ -12,7 +12,9 @@
 
 #if defined(_WIN32)
 	#include <windows.h>
+#if (!WINAPI_PARTITION_APP)
 	#include <Psapi.h>
+#endif
 #elif defined(__APPLE__) //&& defined(TARGET_IPHONE_SIMULATOR)
 	// Not sure if using mach API is disallowed in the app store. :/
 	#include <mach/mach.h>
@@ -233,7 +235,7 @@ int MOAISim::_getMemoryUsage ( lua_State* L ) {
 	lua_setfield ( L, -2, "texture" );
 	total += count;
 	
-	#if defined(_WIN32)
+#if defined(_WIN32) && (!WINAPI_PARTITION_APP)
 	
 		PROCESS_MEMORY_COUNTERS pmc;
 

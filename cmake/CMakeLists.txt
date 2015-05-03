@@ -34,6 +34,10 @@ if (BUILD_WINDOWS)
   include(cmake-modules/platform-windows.cmake)
 endif (BUILD_WINDOWS)
 
+if (BUILD_WINDOWS_PHONE)
+  include(cmake-modules/platform-windows-phone.cmake)
+endif (BUILD_WINDOWS_PHONE)
+
 if (BUILD_HTML)
   include(cmake-modules/platform-html.cmake) 
 endif (BUILD_HTML)
