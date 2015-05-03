@@ -20,6 +20,8 @@ include_directories ( ${MOAI_WINRT_INCLUDES} )
 add_library ( moai-winrt STATIC ${MOAI_WINRT_SRC}  )
 
 target_link_libraries ( moai-winrt moai-sim moai-util moai-core)
+add_dependencies( moai-winrt anglebin )
+
 
 target_include_directories( moai-winrt PUBLIC
   "$<BUILD_INTERFACE:${MOAI_WINRT_INCLUDES}>"
