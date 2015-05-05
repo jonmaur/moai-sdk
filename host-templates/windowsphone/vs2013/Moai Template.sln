@@ -3,52 +3,32 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
 VisualStudioVersion = 12.0.31101.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Moai Template.WindowsPhone", "Moai Template.WindowsPhone\Moai Template.WindowsPhone.vcxproj", "{778E21BC-95C8-4DD1-BEE9-4DC1D0DEB0ED}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Moai Template.WindowsPhone", "Moai Template.WindowsPhone\Moai Template.WindowsPhone.vcxproj", "{B5E25507-AABD-4911-9843-DD5A073EFD03}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|ARM = Debug|ARM
 		Debug|Win32 = Debug|Win32
 		Debug|x64 = Debug|x64
-		MinSizeRel|ARM = MinSizeRel|ARM
-		MinSizeRel|Win32 = MinSizeRel|Win32
-		MinSizeRel|x64 = MinSizeRel|x64
 		Release|ARM = Release|ARM
 		Release|Win32 = Release|Win32
 		Release|x64 = Release|x64
-		RelWithDebInfo|ARM = RelWithDebInfo|ARM
-		RelWithDebInfo|Win32 = RelWithDebInfo|Win32
-		RelWithDebInfo|x64 = RelWithDebInfo|x64
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{778E21BC-95C8-4DD1-BEE9-4DC1D0DEB0ED}.Debug|ARM.ActiveCfg = Debug|ARM
-		{778E21BC-95C8-4DD1-BEE9-4DC1D0DEB0ED}.Debug|ARM.Build.0 = Debug|ARM
-		{778E21BC-95C8-4DD1-BEE9-4DC1D0DEB0ED}.Debug|ARM.Deploy.0 = Debug|ARM
-		{778E21BC-95C8-4DD1-BEE9-4DC1D0DEB0ED}.Debug|Win32.ActiveCfg = Debug|Win32
-		{778E21BC-95C8-4DD1-BEE9-4DC1D0DEB0ED}.Debug|Win32.Build.0 = Debug|Win32
-		{778E21BC-95C8-4DD1-BEE9-4DC1D0DEB0ED}.Debug|Win32.Deploy.0 = Debug|Win32
-		{778E21BC-95C8-4DD1-BEE9-4DC1D0DEB0ED}.Debug|x64.ActiveCfg = Debug|Win32
-		{778E21BC-95C8-4DD1-BEE9-4DC1D0DEB0ED}.MinSizeRel|ARM.ActiveCfg = Release|ARM
-		{778E21BC-95C8-4DD1-BEE9-4DC1D0DEB0ED}.MinSizeRel|ARM.Build.0 = Release|ARM
-		{778E21BC-95C8-4DD1-BEE9-4DC1D0DEB0ED}.MinSizeRel|ARM.Deploy.0 = Release|ARM
-		{778E21BC-95C8-4DD1-BEE9-4DC1D0DEB0ED}.MinSizeRel|Win32.ActiveCfg = Release|Win32
-		{778E21BC-95C8-4DD1-BEE9-4DC1D0DEB0ED}.MinSizeRel|Win32.Build.0 = Release|Win32
-		{778E21BC-95C8-4DD1-BEE9-4DC1D0DEB0ED}.MinSizeRel|Win32.Deploy.0 = Release|Win32
-		{778E21BC-95C8-4DD1-BEE9-4DC1D0DEB0ED}.MinSizeRel|x64.ActiveCfg = Release|Win32
-		{778E21BC-95C8-4DD1-BEE9-4DC1D0DEB0ED}.Release|ARM.ActiveCfg = Release|ARM
-		{778E21BC-95C8-4DD1-BEE9-4DC1D0DEB0ED}.Release|ARM.Build.0 = Release|ARM
-		{778E21BC-95C8-4DD1-BEE9-4DC1D0DEB0ED}.Release|ARM.Deploy.0 = Release|ARM
-		{778E21BC-95C8-4DD1-BEE9-4DC1D0DEB0ED}.Release|Win32.ActiveCfg = Release|Win32
-		{778E21BC-95C8-4DD1-BEE9-4DC1D0DEB0ED}.Release|Win32.Build.0 = Release|Win32
-		{778E21BC-95C8-4DD1-BEE9-4DC1D0DEB0ED}.Release|Win32.Deploy.0 = Release|Win32
-		{778E21BC-95C8-4DD1-BEE9-4DC1D0DEB0ED}.Release|x64.ActiveCfg = Release|Win32
-		{778E21BC-95C8-4DD1-BEE9-4DC1D0DEB0ED}.RelWithDebInfo|ARM.ActiveCfg = Release|ARM
-		{778E21BC-95C8-4DD1-BEE9-4DC1D0DEB0ED}.RelWithDebInfo|ARM.Build.0 = Release|ARM
-		{778E21BC-95C8-4DD1-BEE9-4DC1D0DEB0ED}.RelWithDebInfo|ARM.Deploy.0 = Release|ARM
-		{778E21BC-95C8-4DD1-BEE9-4DC1D0DEB0ED}.RelWithDebInfo|Win32.ActiveCfg = Release|Win32
-		{778E21BC-95C8-4DD1-BEE9-4DC1D0DEB0ED}.RelWithDebInfo|Win32.Build.0 = Release|Win32
-		{778E21BC-95C8-4DD1-BEE9-4DC1D0DEB0ED}.RelWithDebInfo|Win32.Deploy.0 = Release|Win32
-		{778E21BC-95C8-4DD1-BEE9-4DC1D0DEB0ED}.RelWithDebInfo|x64.ActiveCfg = Release|Win32
+		{B5E25507-AABD-4911-9843-DD5A073EFD03}.Debug|ARM.ActiveCfg = Debug|ARM
+		{B5E25507-AABD-4911-9843-DD5A073EFD03}.Debug|ARM.Build.0 = Debug|ARM
+		{B5E25507-AABD-4911-9843-DD5A073EFD03}.Debug|ARM.Deploy.0 = Debug|ARM
+		{B5E25507-AABD-4911-9843-DD5A073EFD03}.Debug|Win32.ActiveCfg = Debug|Win32
+		{B5E25507-AABD-4911-9843-DD5A073EFD03}.Debug|Win32.Build.0 = Debug|Win32
+		{B5E25507-AABD-4911-9843-DD5A073EFD03}.Debug|Win32.Deploy.0 = Debug|Win32
+		{B5E25507-AABD-4911-9843-DD5A073EFD03}.Debug|x64.ActiveCfg = Debug|Win32
+		{B5E25507-AABD-4911-9843-DD5A073EFD03}.Release|ARM.ActiveCfg = Release|ARM
+		{B5E25507-AABD-4911-9843-DD5A073EFD03}.Release|ARM.Build.0 = Release|ARM
+		{B5E25507-AABD-4911-9843-DD5A073EFD03}.Release|ARM.Deploy.0 = Release|ARM
+		{B5E25507-AABD-4911-9843-DD5A073EFD03}.Release|Win32.ActiveCfg = Release|Win32
+		{B5E25507-AABD-4911-9843-DD5A073EFD03}.Release|Win32.Build.0 = Release|Win32
+		{B5E25507-AABD-4911-9843-DD5A073EFD03}.Release|Win32.Deploy.0 = Release|Win32
+		{B5E25507-AABD-4911-9843-DD5A073EFD03}.Release|x64.ActiveCfg = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -19,7 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{778e21bc-95c8-4dd1-bee9-4dc1d0deb0ed}</ProjectGuid>
+    <ProjectGuid>{b5e25507-aabd-4911-9843-dd5a073efd03}</ProjectGuid>
     <RootNamespace>Moai_Template</RootNamespace>
     <DefaultLanguage>en-US</DefaultLanguage>
     <MinimumVisualStudioVersion>12.0</MinimumVisualStudioVersion>
@@ -51,37 +51,24 @@
   <ItemDefinitionGroup Condition="'$(Platform)'=='Win32'">
     <Link>
       <AdditionalLibraryDirectories>$(ProjectDir)\..\libmoai\$(Platform)\$(Configuration)\lib;%(AdditionalLibraryDirectories);$(WindowsPhoneSDK_LibraryPath_x86)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>libGLESv2.lib;libEGL.lib;ws2_32.lib;box2d.lib;contrib.lib;crypto.lib;curl.lib;expat.lib;freetype.lib;jansson.lib;jpg.lib;liblua-static.lib;luacrypto.lib;luacurl.lib;luafilesystem.lib;luasocket.lib;luasql.lib;moai-winrt.lib;moai-audiosampler.lib;moai-box2d.lib;moai-core.lib;moai-crypto.lib;moai-http-client.lib;moai-luaext.lib;moai-sim.lib;moai-util.lib;moai-untz.lib;ogg.lib;png.lib;sfmt.lib;sqlite3.lib;ssl.lib;tess.lib;tinyxml.lib;tlsf.lib;untz.lib;vorbis.lib;webp.lib;zlcore.lib;zlcrypto.lib;zlib.lib;zlvfs.lib;Xaudio2.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>libGLESv2.lib;libEGL.lib;ws2_32.lib;box2d.lib;contrib.lib;crypto.lib;curl.lib;expat.lib;freetype.lib;jansson.lib;jpg.lib;liblua-static.lib;luacrypto.lib;luacurl.lib;luafilesystem.lib;luasocket.lib;luasql.lib;moai-audiosampler.lib;moai-box2d.lib;moai-core.lib;moai-crypto.lib;moai-http-client.lib;moai-luaext.lib;moai-sim.lib;moai-util.lib;moai-untz.lib;ogg.lib;png.lib;sfmt.lib;sqlite3.lib;ssl.lib;tess.lib;tinyxml.lib;tlsf.lib;untz.lib;vorbis.lib;webp.lib;zlcore.lib;zlcrypto.lib;zlib.lib;zlvfs.lib;Xaudio2.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
     </Link>
     <ClCompile>
       <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)..\host-src;$(ProjectDir)\src;$(IntermediateOutputPath);$(ProjectDir)\..\libmoai\$(Platform)\$(Configuration)\include;$(ProjectDir)\..\libmoai\$(Platform)\$(Configuration)\include\angle;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">pch.h</PrecompiledHeaderFile>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Use</PrecompiledHeader>
-      <PrecompiledHeaderOutputFile Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" />
-      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">AKU_WITH_WINRT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AKU_WITH_WINRT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Platform)'=='ARM'">
     <Link>
       <AdditionalLibraryDirectories>$(ProjectDir)\..\libmoai\$(Platform)\$(Configuration)\lib;%(AdditionalLibraryDirectories);$(WindowsPhoneSDK_LibraryPath_arm)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>libGLESv2.lib;libEGL.lib;ws2_32.lib;box2d.lib;contrib.lib;crypto.lib;curl.lib;expat.lib;freetype.lib;jansson.lib;jpg.lib;liblua-static.lib;luacrypto.lib;luacurl.lib;luafilesystem.lib;luasocket.lib;luasql.lib;moai-winrt.lib;moai-audiosampler.lib;moai-box2d.lib;moai-core.lib;moai-crypto.lib;moai-http-client.lib;moai-luaext.lib;moai-sim.lib;moai-util.lib;moai-untz.lib;ogg.lib;png.lib;sfmt.lib;sqlite3.lib;ssl.lib;tess.lib;tinyxml.lib;tlsf.lib;untz.lib;vorbis.lib;webp.lib;zlcore.lib;zlcrypto.lib;zlib.lib;zlvfs.lib;Xaudio2.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>libGLESv2.lib;libEGL.lib;ws2_32.lib;box2d.lib;contrib.lib;crypto.lib;curl.lib;expat.lib;freetype.lib;jansson.lib;jpg.lib;liblua-static.lib;luacrypto.lib;luacurl.lib;luafilesystem.lib;luasocket.lib;luasql.lib;moai-audiosampler.lib;moai-box2d.lib;moai-core.lib;moai-crypto.lib;moai-http-client.lib;moai-luaext.lib;moai-sim.lib;moai-util.lib;moai-untz.lib;ogg.lib;png.lib;sfmt.lib;sqlite3.lib;ssl.lib;tess.lib;tinyxml.lib;tlsf.lib;untz.lib;vorbis.lib;webp.lib;zlcore.lib;zlcrypto.lib;zlib.lib;zlvfs.lib;Xaudio2.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
     </Link>
     <ClCompile>
       <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)..\host-src;$(ProjectDir)\src;$(IntermediateOutputPath);$(ProjectDir)\..\libmoai\$(Platform)\$(Configuration)\include;$(ProjectDir)\..\libmoai\$(Platform)\$(Configuration)\include\angle;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">pch.h</PrecompiledHeaderFile>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">Use</PrecompiledHeader>
-      <PrecompiledHeaderOutputFile Condition="'$(Configuration)|$(Platform)'=='Release|ARM'" />
-      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">AKU_WITH_WINRT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">AKU_WITH_WINRT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
   </ItemDefinitionGroup>
-  <PropertyGroup Label="UserMacros">
-    <AppxAutoIncrementPackageRevision>True</AppxAutoIncrementPackageRevision>
-    <AppxBundlePlatforms>x86|arm</AppxBundlePlatforms>
-  </PropertyGroup>
+  <PropertyGroup Label="UserMacros" />
   <ItemGroup>
     <Image Include="Assets\Logo.scale-240.png" />
     <Image Include="Assets\SmallLogo.scale-240.png" />
@@ -95,44 +82,13 @@
       <SubType>Designer</SubType>
     </AppxManifest>
   </ItemGroup>
-  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
-  <ItemGroup Label="ANGLE">
-    <None Include="$(ProjectDir)\..\libmoai\$(Platform)\$(Configuration)\bin\libGLESv2.dll">
-      <DeploymentContent>true</DeploymentContent>
-    </None>
-    <None Include="$(ProjectDir)\..\libmoai\$(Platform)\$(Configuration)\bin\libEGL.dll">
-      <DeploymentContent>true</DeploymentContent>
-    </None>
-    <Text Include="bootstrap.lua">
-      <DeploymentContent>true</DeploymentContent>
-      <FileType>Document</FileType>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">false</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">false</ExcludedFromBuild>
-    </Text>
-    <None Include="init.lua">
-      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</DeploymentContent>
-      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</DeploymentContent>
-      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">true</DeploymentContent>
-      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">true</DeploymentContent>
-    </None>
-    <None Include="lua\**\*.*">
-      <Link>lua\%(RecursiveDir)%(FileName)%(Extension)</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <DeploymentContent>true</DeploymentContent>
-  
-    </None>
+  <ItemGroup>
+    <ApplicationDefinition Include="App.xaml">
+      <SubType>Designer</SubType>
+    </ApplicationDefinition>
+    <Page Include="OpenGLESPage.xaml" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\host-src\host-modules\aku_modules.h" />
-    <ClInclude Include="..\host-src\host-modules\aku_modules_config.h" />
-    <ClInclude Include="..\host-src\host-modules\aku_modules_util.h" />
-    <ClInclude Include="..\host-src\host-modules\aku_modules_winrt.h" />
-    <ClInclude Include="..\host-src\host-modules\aku_modules_winrt_config.h" />
-    <ClInclude Include="src\moaihost.h" />
-    <ClInclude Include="src\pch.h" />
-    <ClInclude Include="src\app.h" />
     <ClCompile Include="..\host-src\host-modules\aku_modules.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
@@ -145,14 +101,62 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">NotUsing</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="..\host-src\host-modules\aku_modules_winrt.cpp" />
-    <ClCompile Include="src\app_main.cpp" />
-    <ClCompile Include="src\pch.cpp">
-      <PrecompiledHeader>Create</PrecompiledHeader>
+    <ClCompile Include="..\host-src\host-modules\aku_plugins.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="App.xaml.cpp">
+      <DependentUpon>App.xaml</DependentUpon>
+    </ClCompile>
+    <ClCompile Include="OpenGLES.cpp" />
+    <ClCompile Include="OpenGLESPage.xaml.cpp">
+      <DependentUpon>OpenGLESPage.xaml</DependentUpon>
+    </ClCompile>
+    <ClCompile Include="pch.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="src\moaihost.cpp" />
-    <ClCompile Include="src\app.cpp">
-    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\host-src\host-modules\aku_modules.h" />
+    <ClInclude Include="..\host-src\host-modules\aku_modules_config.h" />
+    <ClInclude Include="..\host-src\host-modules\aku_modules_util.h" />
+    <ClInclude Include="..\host-src\host-modules\aku_plugins.h" />
+    <ClInclude Include="App.xaml.h">
+      <DependentUpon>App.xaml</DependentUpon>
+    </ClInclude>
+    <ClInclude Include="OpenGLES.h" />
+    <ClInclude Include="OpenGLESPage.xaml.h">
+      <DependentUpon>OpenGLESPage.xaml</DependentUpon>
+    </ClInclude>
+    <ClInclude Include="pch.h" />
+    <ClInclude Include="src\moaihost.h" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ItemGroup Label="ANGLE">
+    <None Include="$(ProjectDir)\..\libmoai\$(Platform)\$(Configuration)\bin\libGLESv2.dll">
+      <DeploymentContent>true</DeploymentContent>
+    </None>
+    <None Include="$(ProjectDir)\..\libmoai\$(Platform)\$(Configuration)\bin\libEGL.dll">
+      <DeploymentContent>true</DeploymentContent>
+    </None>
+    <None Include="bootstrap.lua">
+      <DeploymentContent>true</DeploymentContent>
+    </None>
+    <None Include="init.lua">
+      <DeploymentContent>true</DeploymentContent>
+    </None>
+    <None Include="lua\**\*.*">
+     <Link>lua\%(RecursiveDir)%(FileName)%(Extension)</Link>
+     <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+     <DeploymentContent>true</DeploymentContent>
+ 
+   </None>
   </ItemGroup>
   <ImportGroup Label="ExtensionTargets">
     <Import Project="$(VSINSTALLDIR)\Common7\IDE\Extensions\Microsoft\VsGraphics\ImageContentTask.targets" />

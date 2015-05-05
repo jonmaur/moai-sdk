@@ -77,16 +77,16 @@ copyhostfiles = function()
 
     local hostsrc = MOAI_SDK_HOME..'src/host-windows-phone/'
     local hostmodules = MOAI_SDK_HOME..'src/host-modules/'
-    MOAIFileSystem.copy(hostsrc, output..'Moai Template.WindowsPhone/src')
+  --  MOAIFileSystem.copy(hostsrc, output..'Moai Template.WindowsPhone/src')
     MOAIFileSystem.copy(hostmodules, output..'host-src/host-modules')
-
+    MOAIFileSystem.copy(output..'host-src/host-modules/aku_plugins.cpp.in',output..'host-src/host-modules/aku_plugins.cpp')
     --don't want these ones
-    MOAIFileSystem.deleteFile(output..'host-modules/aku_modules_ios.h')
-    MOAIFileSystem.deleteFile(output..'host-modules/aku_modules_ios_config.h')
-    MOAIFileSystem.deleteFile(output..'host-modules/aku_modules_ios.mm')
-    MOAIFileSystem.deleteFile(output..'host-modules/aku_modules_android.h')
-    MOAIFileSystem.deleteFile(output..'host-modules/aku_modules_android_config.h')
-    MOAIFileSystem.deleteFile(output..'host-modules/aku_modules_android.cpp')
+    MOAIFileSystem.deleteFile(output..'host-src/host-modules/aku_modules_ios.h')
+    MOAIFileSystem.deleteFile(output..'host-src/host-modules/aku_modules_ios_config.h')
+    MOAIFileSystem.deleteFile(output..'host-src/host-modules/aku_modules_ios.mm')
+    MOAIFileSystem.deleteFile(output..'host-src/host-modules/aku_modules_android.h')
+    MOAIFileSystem.deleteFile(output..'host-src/host-modules/aku_modules_android_config.h')
+    MOAIFileSystem.deleteFile(output..'host-src/host-modules/aku_modules_android.cpp')
 
 end
 
@@ -107,7 +107,11 @@ print("config dest",output..'Moai Template.WindowsPhone/Moai Template.vcxproj')
 util.replaceInFiles ({
   [ output..'Moai Template.WindowsPhone/Moai Template.WindowsPhone.vcxproj' ] = {
       --our lua path
-      ['lua\\%*%*\\%*.%*'] = string.gsub(relativeLua.."/**/*.*","/","\\"),
+      ['[^\"]*\\%*%*\\%*.%*'] = string.gsub(relativeLua.."/**/*.*","/","\\"),
+      --our app name
+      ['Moai_Template'] = string.gsub(hostconfig['AppName']," ","_")
+  },
+  [ output..'Moai Template.WindowsPhone/App.xaml' ] = {
       --our app name
       ['Moai_Template'] = string.gsub(hostconfig['AppName']," ","_")
   },
@@ -117,7 +121,10 @@ util.replaceInFiles ({
   [ output..'Moai Template.WindowsPhone/Package.appxmanifest'] = {
       ['Moai Template'] = hostconfig['AppName'],
       ['Moai_Template'] = string.gsub(hostconfig['AppName']," ","_"),
-      ['Zipline Games'] = hostconfig['CompanyName']
+      ['<PublisherDisplayName>.-</PublisherDisplayName>'] = "<PublisherDisplayName>"..hostconfig['CompanyName'].."</PublisherDisplayName>"
+  },
+  [output..'host-src/host-modules/aku_plugins.cpp'] = {
+    [ '@[^@]+@' ] = ""
   }
   
 })

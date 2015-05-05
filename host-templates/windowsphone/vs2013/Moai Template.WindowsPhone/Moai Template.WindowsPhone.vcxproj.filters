@@ -10,6 +10,30 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
+    <Page Include="OpenGLESPage.xaml" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="OpenGLESPage.xaml.cpp" />
+    <ClCompile Include="OpenGLES.cpp" />
+    <ClCompile Include="pch.cpp" />
+    <ClCompile Include="App.xaml.cpp" />
+    <ClCompile Include="..\host-src\host-modules\aku_modules.cpp" />
+    <ClCompile Include="..\host-src\host-modules\aku_modules_util.cpp" />
+    <ClCompile Include="..\host-src\host-modules\aku_plugins.cpp" />
+    <ClCompile Include="src\moaihost.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="OpenGLESPage.xaml.h" />
+    <ClInclude Include="OpenGLES.h" />
+    <ClInclude Include="pch.h" />
+    <ClInclude Include="App.xaml.h" />
+    <ClInclude Include="..\host-src\host-modules\aku_modules.h" />
+    <ClInclude Include="..\host-src\host-modules\aku_modules_config.h" />
+    <ClInclude Include="..\host-src\host-modules\aku_modules_util.h" />
+    <ClInclude Include="..\host-src\host-modules\aku_plugins.h" />
+    <ClInclude Include="src\moaihost.h" />
+  </ItemGroup>
+  <ItemGroup>
     <Image Include="Assets\Logo.scale-240.png">
       <Filter>Assets</Filter>
     </Image>
@@ -28,39 +52,28 @@
     <Image Include="Assets\WideLogo.scale-240.png">
       <Filter>Assets</Filter>
     </Image>
+    <Image Include="K:\dev\mobile\moaiforge\sdks\moaiforge\samples\hello-moai\moai.png">
+      <Filter>Assets</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="init.lua" />
     <None Include="$(ProjectDir)\..\libmoai\$(Platform)\$(Configuration)\bin\libGLESv2.dll">
       <Filter>Binaries</Filter>
     </None>
     <None Include="$(ProjectDir)\..\libmoai\$(Platform)\$(Configuration)\bin\libEGL.dll">
       <Filter>Binaries</Filter>
     </None>
+    <None Include="K:\dev\mobile\moaiforge\sdks\moaiforge\samples\hello-moai\main.lua" />
+    <None Include="K:\dev\mobile\moaiforge\sdks\moaiforge\host-templates\windowsphone\vs2013\Moai Template.WindowsPhone\bootstrap.lua" />
+    <None Include="K:\dev\mobile\moaiforge\sdks\moaiforge\host-templates\windowsphone\vs2013\Moai Template.WindowsPhone\init.lua" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\app.cpp" />
-    <ClCompile Include="..\host-src\host-modules\aku_modules.cpp" />
-    <ClCompile Include="..\host-src\host-modules\aku_modules_util.cpp" />
-    <ClCompile Include="..\host-src\host-modules\aku_modules_winrt.cpp" />
-    <ClCompile Include="src\moaihost.cpp" />
-    <ClCompile Include="src\pch.cpp" />
-    <ClCompile Include="src\app_main.cpp" />
+    <ApplicationDefinition Include="App.xaml" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\app.h" />
-    <ClInclude Include="..\host-src\host-modules\aku_modules.h" />
-    <ClInclude Include="..\host-src\host-modules\aku_modules_config.h" />
-    <ClInclude Include="..\host-src\host-modules\aku_modules_util.h" />
-    <ClInclude Include="..\host-src\host-modules\aku_modules_winrt.h" />
-    <ClInclude Include="..\host-src\host-modules\aku_modules_winrt_config.h" />
-    <ClInclude Include="src\moaihost.h" />
-    <ClInclude Include="src\pch.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="bootstrap.lua" />
+    <Font Include="K:\dev\mobile\moaiforge\sdks\moaiforge\samples\hello-moai\arialbd.ttf" />
   </ItemGroup>
 </Project>
