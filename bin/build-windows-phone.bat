@@ -27,7 +27,7 @@ cmake -G "%generator%" ^
 -DCMAKE_INSTALL_PREFIX=%libprefix%\ARM\Release ^
 %rootpath%\cmake || exit /b 1
 
-rem cmake --build . --target INSTALL --config Release || exit /b 1
+cmake --build . --target INSTALL --config Release || exit /b 1
 
 cd ..
 mkdir Win32
@@ -47,11 +47,11 @@ cmake -G "%generator%" ^
 
 cmake --build . --target INSTALL --config Debug || exit /b 1
 
-rem cmake -G "%generator%" ^
+cmake -G "%generator%" ^
 -DCMAKE_INSTALL_PREFIX=%libprefix%\Win32\Release ^
 %rootpath%\cmake || exit /b 1
 
-rem cmake --build . --target INSTALL --config Release || exit /b 1
+cmake --build . --target INSTALL --config Release || exit /b 1
 
 
 echo "Build complete"
