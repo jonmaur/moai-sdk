@@ -15,6 +15,11 @@ void AKUModulesAndroidAppFinalize () {
 		AKUAndroidAdColonyAppFinalize ();
 	#endif
 
+	#if AKU_WITH_ANDROID_ADMOB
+		AKUAndroidAdmobAppFinalize ();
+	#endif
+
+
 	#if AKU_WITH_ANDROID_CHARTBOOST
 		AKUAndroidChartBoostAppFinalize ();
 	#endif
@@ -54,6 +59,10 @@ void AKUModulesAndroidAppInitialize () {
 	
 	#if AKU_WITH_IOS_ADCOLONY
 		AKUAndroidAdColonyAppInitialize ();
+	#endif
+	
+	#if AKU_WITH_ANDROID_ADMOB
+		AKUAndroidAdmobAppInitialize ();
 	#endif
 
 	#if AKU_WITH_ANDROID_CHARTBOOST
@@ -95,6 +104,10 @@ void AKUModulesAndroidContextInitialize () {
 	
 	#if AKU_WITH_IOS_ADCOLONY
 		AKUAndroidAdColonyContextInitialize ();
+	#endif
+	
+	#if AKU_WITH_ANDROID_ADMOB
+		AKUAndroidAdmobContextInitialize ();
 	#endif
 	
 	#if AKU_WITH_ANDROID_CHARTBOOST

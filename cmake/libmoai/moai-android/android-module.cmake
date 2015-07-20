@@ -38,7 +38,7 @@ macro(ANDROID_MODULE MODULE_NAME MODULE_EXTERNAL)
   endif (MOAI_ANDROID_JAVA)
   
   #third-party
-  if (NOT "${MODULE_EXTERNAL}" EQUAL "")
+  if (NOT "${MODULE_EXTERNAL}" STREQUAL "")
     install(DIRECTORY ${MOAI_ROOT}/3rdparty-android/${MODULE_EXTERNAL}/ DESTINATION ../modules/external/${MODULE_NAME})
   endif ()
   
