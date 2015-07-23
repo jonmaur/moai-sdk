@@ -13,12 +13,12 @@ import android.content.IntentSender.SendIntentException;
 import android.os.Bundle;
 
 import com.google.android.gms.common.*;
-import com.google.android.gms.common.GooglePlayServicesClient.*;
+import com.google.android.gms.common.api.GoogleApiClient;
 
 //================================================================//
 // MoaiPlayServicesCallbacks
 //================================================================//
-public class MoaiPlayServicesCallbacks implements ConnectionCallbacks, OnConnectionFailedListener {
+public class MoaiPlayServicesCallbacks implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
 	//----------------------------------------------------------------//
 	@Override
@@ -28,12 +28,11 @@ public class MoaiPlayServicesCallbacks implements ConnectionCallbacks, OnConnect
 		MoaiGooglePlayServices.AKUNotifyConnectionComplete ();
 	}
 
-	//----------------------------------------------------------------//
-	@Override
-	public void onDisconnected () {
-
-		MoaiLog.i ( "MoaiPlayServicesCallbacks onDisconnected" );
-	}
+    //----------------------------------------------------------------//
+    @Override
+    public void onConnectionSuspended(int i) {
+        MoaiLog.i ( "MoaiPlayServicesCallbacks onConnectionSuspended" );
+    }
 
 	//----------------------------------------------------------------//
 	@Override

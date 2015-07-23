@@ -5,6 +5,9 @@
 //----------------------------------------------------------------//
 
 package com.ziplinegames.moai;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.games.achievement.Achievements;
+import com.google.android.gms.games.internal.constants.AchievementState;
 import com.ziplinegames.moai.*;
 
 import android.accounts.AccountManager;
@@ -19,9 +22,7 @@ import java.util.HashMap;
 
 import com.google.android.gms.auth.*;
 import com.google.android.gms.common.*;
-import com.google.android.gms.common.GooglePlayServicesClient.*;
 import com.google.android.gms.games.*;
-import com.google.android.gms.games.GamesClient;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -34,7 +35,7 @@ public class MoaiGooglePlayServices {
 
 	private static Activity 					sActivity = null;
 
-	private static GamesClient					sGameClient = null;
+	private static GoogleApiClient               sGameClient = null;
 	private static MoaiPlayServicesCallbacks 	sConnectionCallbacks = null;
 	private static MoaiPlayServicesCallbacks 	sFailedCallback = null;
 	private static String						sAccountName = null;
@@ -82,9 +83,13 @@ public class MoaiGooglePlayServices {
 		MoaiLog.i ( "MoaiGooglePlayServices onCreate" );
 		sActivity = activity;
 
-		sConnectionCallbacks = new MoaiPlayServicesCallbacks ();
-		sFailedCallback = new MoaiPlayServicesCallbacks ();
-		sGameClient = new GamesClient.Builder ( sActivity, sConnectionCallbacks, sFailedCallback ).create ();
+		MoaiPlayServicesCallbacks sCallbacks = new MoaiPlayServicesCallbacks ();
+
+		sGameClient = new GoogleApiClient.Builder(sActivity)
+                .addConnectionCallbacks(sCallbacks)
+                .addOnConnectionFailedListener(sCallbacks)
+                .addApi(Games.API).addScope(Games.SCOPE_GAMES)
+                .build();
 	}
 
 	//----------------------------------------------------------------//
@@ -212,8 +217,7 @@ public class MoaiGooglePlayServices {
 	public static void showAchievements ( ) {
 
 		if ( isServicesAvailable ( true )) {
-
-			Intent achIntent = sGameClient.getAchievementsIntent ( );
+            Intent achIntent = Games.Achievements.getAchievementsIntent(sGameClient);
 			sActivity.startActivityForResult ( achIntent, ACHIEVEMENT_REQUEST_CODE );
 		}
 	}
@@ -223,7 +227,7 @@ public class MoaiGooglePlayServices {
 
 		if ( isServicesAvailable ( true )) {
 
-			Intent lbIntent = sGameClient.getLeaderboardIntent ( leaderboardID );
+			Intent lbIntent = Games.Leaderboards.getLeaderboardIntent(sGameClient, leaderboardID);
 			sActivity.startActivityForResult ( lbIntent, LEADERBOARD_REQUEST_CODE );
 		}
 	}
@@ -233,7 +237,7 @@ public class MoaiGooglePlayServices {
 
 		if ( isServicesAvailable ( false )) {
 
-			sGameClient.submitScore ( leaderboardID, score );
+			Games.Leaderboards.submitScore(sGameClient,leaderboardID, score);
 		}
 	}
 
@@ -241,8 +245,7 @@ public class MoaiGooglePlayServices {
 	public static void unlockAchievement ( String achID ) {
 
 		if ( isServicesAvailable ( false )) {
-
-			sGameClient.unlockAchievement ( achID );
+            Games.Achievements.unlock(sGameClient, achID);
 		}
 	}
 }
