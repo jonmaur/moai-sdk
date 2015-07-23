@@ -59,8 +59,8 @@ public class MoaiKeyboard {
 		
 		// Our main container holds the EGL view as well as our fake TextEdit view for keyboard entry ..
 		mContainer = ( LinearLayoutIMETrap ) new LinearLayoutIMETrap ( mContext );
-		mContainer.setLayoutParams ( new LinearLayout.LayoutParams ( LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT ));
-		mContainer.setOrientation ( LinearLayout.VERTICAL );
+		mContainer.setLayoutParams ( new RelativeLayout.LayoutParams( RelativeLayout.LayoutParams.FILL_PARENT, RelativeLayout.LayoutParams.FILL_PARENT ));
+		//mContainer.setOrientation ( LinearLayout.VERTICAL );
 		mContainer.setMainActivity ( activity );
 
 		mKeyInTextView = new EditText ( activity );
@@ -95,10 +95,10 @@ public class MoaiKeyboard {
 		});
 		
 		// Create the fake EditText, and push it outside the margins so that its not visible.
-		LinearLayout.LayoutParams paramsKeyInTextView = new LinearLayout.LayoutParams ( LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT );
+		RelativeLayout.LayoutParams paramsKeyInTextView = new RelativeLayout.LayoutParams ( 1,1 );
 
 		// re-set the Margins so that the field is hidden.
-		paramsKeyInTextView.setMargins ( 0, 64, 0, 0 );
+		paramsKeyInTextView.setMargins ( -64, 0, 0, 0 );
 		mKeyInTextView.setLayoutParams ( paramsKeyInTextView );
 	}
 

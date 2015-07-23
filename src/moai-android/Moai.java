@@ -147,6 +147,7 @@ public class Moai {
 		"com.ziplinegames.moai.MoaiMoviePlayer",
 		"com.ziplinegames.moai.MoaiTapjoy",
 		"com.ziplinegames.moai.MoaiVungle",
+		"com.ziplinegames.moai.MoaiAdmob"
 	};
 
 	private static Activity 				sActivity = null;

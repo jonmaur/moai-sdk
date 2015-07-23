@@ -36,9 +36,10 @@ import android.widget.EditText;
 import android.text.TextWatcher;
 import android.text.Editable;
 import android.util.AttributeSet;
+import android.widget.RelativeLayout;
 
 
-public class LinearLayoutIMETrap extends LinearLayout {
+public class LinearLayoutIMETrap extends RelativeLayout {
 	Activity activityReference;
 
 	public LinearLayoutIMETrap ( Context context ) {
