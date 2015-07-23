@@ -273,7 +273,7 @@ configureHost = function()
 		[ output .. 'gradle.properties' ] = {
 			[ 'moaiLibRoot=[^\n]+' ]= "moaiLibRoot=./lib",
 			[ 'moaiLuaRoot=[^\n]+' ]= "moaiLuaRoot="..luasrc,
-      [ 'moaiModules=[^\n]+' ]= "moaiModules="..modulestr
+      [ 'moaiModules=[^\n]*' ]= "moaiModules="..modulestr
 		},
     [ output .. 'app/build.gradle'] = {
       [ 'applicationId "[^"]+"']= 'applicationId "'..hostconfig['ApplicationId']..'"'
