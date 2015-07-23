@@ -36,4 +36,5 @@ apply from: 'moai.gradle' //leave after android config block, it needs applicati
 
 dependencies {
     compile 'com.android.support:appcompat-v7:20.0.0'
+    compile 'com.google.android.gms:play-services:7.5.0'
 }
