@@ -6,7 +6,7 @@
 
 #import "MOAIAppDelegate.h"
 #import "MOAIView.h"
-
+#import <host-modules/aku_modules_ios.h>
 //================================================================//
 // AppDelegate
 //================================================================//
@@ -52,7 +52,7 @@
         
         mMoaiVC = [[ UIViewController alloc ] init ];
         mMoaiVC.view = mMoaiView;
-
+        
         mWindow = [[ UIWindow alloc ] init ];
         [ mWindow makeKeyAndVisible ];
         mWindow.rootViewController = mMoaiVC;
@@ -62,6 +62,8 @@
         
         [ mMoaiView moaiInit ];
         [ mMoaiView setWorkingDirectory:[[ NSBundle mainBundle ] resourcePath ]];
+        
+        AKUModulesIosViewControllerInitialize(mMoaiVC);
         [ mMoaiView run:@"main.lua" ];
         
         // check to see if the app was lanuched from a remote notification

@@ -20,7 +20,11 @@ void AKUModulesIosAppFinalize () {
 	#if AKU_WITH_IOS_ADCOLONY
 		AKUIosAdColonyAppFinalize ();
 	#endif
-
+    
+    #if AKU_WITH_IOS_ADMOB
+        AKUIosAdMobAppFinalize ();
+    #endif
+    
 	#if AKU_WITH_IOS_BILLING
 		AKUIosBillingAppFinalize ();
 	#endif
@@ -89,6 +93,10 @@ void AKUModulesIosAppInitialize () {
 		AKUIosAdColonyAppInitialize ();
 	#endif
 
+    #if AKU_WITH_IOS_ADMOB
+        AKUIosAdMobAppInitialize ();
+    #endif
+    
 	#if AKU_WITH_IOS_BILLING
 		AKUIosBillingAppInitialize ();
 	#endif
@@ -156,7 +164,11 @@ void AKUModulesIosContextInitialize () {
 	#if AKU_WITH_IOS_ADCOLONY
 		AKUIosAdColonyContextInitialize ();
 	#endif
-
+    
+    #if AKU_WITH_IOS_ADMOB
+        AKUIosAdMobContextInitialize ();
+    #endif
+    
 	#if AKU_WITH_IOS_BILLING
 		AKUIosBillingContextInitialize ();
 	#endif
@@ -219,6 +231,12 @@ void AKUModulesIosPause ( bool pause ) {
 	UNUSED ( pause );
 }
 
+void AKUModulesIosViewControllerInitialize ( UIViewController *viewController) {
+#if AKU_WITH_IOS_ADMOB
+    AKUIosAdMobViewControllerInitialize(viewController);
+#endif
+    
+}
 
 //----------------------------------------------------------------//
 void AKUModulesIosUpdate () {
