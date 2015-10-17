@@ -8,3 +8,7 @@ android {
         }
     }
 }
+
+dependencies {
+    compile project(':hostmodules')
+}

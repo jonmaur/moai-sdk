@@ -24,6 +24,11 @@ android {
     }
 }
 
+moai {
+    nativeLibs = [ "moai-android-tapjoy" ]
+    moduleClass = "com.moaisdk.tapjoy.MoaiTapjoy"
+}
+
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'com.android.support:appcompat-v7:22.1.1'

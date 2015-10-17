@@ -30,6 +30,7 @@ import java.io.*;
 import java.util.*;
 import java.lang.String;
 
+import com.moaisdk.hostmodules.MoaiModules;
 @SuppressWarnings("unused")
 
 //================================================================//
@@ -139,23 +140,7 @@ public class Moai {
         }
     }
 
-	private static String [] sExternalClasses = {
-		"com.moaisdk.adcolony.MoaiAdColony",
-		"com.moaisdk.amazonbilling.MoaiAmazonBilling",
-		"com.moaisdk.chartboost.MoaiChartBoost",
-		"com.moaisdk.crittercism.MoaiCrittercism",
-		"com.moaisdk.facebook.MoaiFacebook",
-        "com.moaisdk.fortumo.MoaiFortumo",
-		"com.moaisdk.flurry.MoaiFlurry",
-		"com.moaisdk.googlebilling.MoaiGoogleBilling",
-		"com.moaisdk.googleplayservices.MoaiGooglePlayServices",
-		"com.moaisdk.googlepush.MoaiGooglePush",
-		"com.moaisdk.core.MoaiKeyboard",
-		"com.moaisdk.core.MoaiMoviePlayer",
-		"com.moaisdk.tapjoy.MoaiTapjoy",
-        "com.moaisdk.twitter.MoaiTwitter",
-		"com.moaisdk.vungle.MoaiVungle",
-	};
+
 
 	private static Activity 				sActivity = null;
 	private static ApplicationState 		sApplicationState = ApplicationState.APPLICATION_UNINITIALIZED;
@@ -219,7 +204,7 @@ public class Moai {
 	//----------------------------------------------------------------//
 	static {
 
-		for ( String className : sExternalClasses )
+		for ( String className : MoaiModules.sExternalClasses )
 		{
 			Class < ? > theClass = findClass ( className );
 			if ( theClass != null ) {

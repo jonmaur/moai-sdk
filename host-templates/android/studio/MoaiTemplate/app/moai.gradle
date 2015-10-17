@@ -6,6 +6,17 @@ apply plugin: MoaiPlugin
 
 class MoaiPlugin implements Plugin<Project> {
 
+    static def getNativeLibs(proj) {
+       if (proj.extensions.findByName('moai')) {
+           println("found moai ext ${proj.name}: ${proj.moai.nativeLibs}")
+           def libs = proj.moai.nativeLibs
+           return libs == null ? [] : libs
+       }
+        println("couldnt find moai ext for ${proj.name}")
+       return []
+    }
+
+
     void apply(Project project) {
 
         project.task( type: Exec, 'runApp') {
@@ -23,28 +34,44 @@ class MoaiPlugin implements Plugin<Project> {
 
         def libRoot = project.file("../"+project.moaiLibRoot) //gradle properties are one down
 
+
+
         //def srcRoot = project.file("../"+project.moaiSrcRoot)
         //ndk build task
         project.task( type: Exec, 'libmoaiBuild' )  {
             workingDir project.file('src/main/jni')
             def ndkDir = project.plugins.getPlugin('com.android.application').sdkHandler.getNdkFolder()
 
+            inputs.file project.rootProject.file("gradle.properties")
 
-            def my_modules = project.moaiModules.replaceAll(","," ")
-            def my_flags = project.moaiModules.split(',').findAll { w -> w.trim() != ""}
-            my_flags = my_flags.collect {
-                i -> i.trim().toUpperCase().replaceAll('-','_').replaceFirst('^MOAI_','-DAKU_WITH_') + "=1"
+            inputs.dir project.file("src/main/jni")
+            outputs.dir project.file("src/main/libs")
+
+            doFirst {
+                //modules or flags could have changed we need to force the ndk to actually build something
+                def libmoais = project.fileTree('src/main/libs') {
+                    include '**/libmoai.so'
+                }
+                libmoais.visit { f -> if (!f.isDirectory()) {f.file.delete()}}
+
+                project.file('src/main/obj/local').deleteDir()
+
+                def my_modules = project.rootProject.allprojects.collect { p -> return getNativeLibs(p) }.flatten().join(" ")
+                def my_flags = project.moaiModules.split(',').findAll { w -> w.trim() != "" }
+                my_flags = my_flags.collect {
+                    i -> i.trim().toUpperCase().replaceAll('-', '_').replaceFirst('^MOAI_', '-DAKU_WITH_') + "=1"
+                }
+                def flags = my_flags.join(' ')
+                println("Building with flags: ${flags}")
+                println("Building with libs: ${my_modules}")
+                if (System.properties['os.name'].toLowerCase().contains('windows')) {
+                    def winLibRoot = libRoot.getCanonicalPath().replace('\\', '/')
+                    commandLine "$ndkDir/ndk-build.cmd", "MOAI_LIB_DIR=$winLibRoot", "MOAI_STATIC_LIBRARIES=$my_modules", "MOAI_AKU_FLAGS=$flags"
+                } else {
+                    commandLine "$ndkDir/ndk-build", "MOAI_LIB_DIR=$libRoot", "MOAI_STATIC_LIBRARIES=$my_modules", "MOAI_AKU_FLAGS=$flags"
+                }
             }
-            def flags = my_flags.join(' ')
-            println("Building with flags: ${flags}")
-            println("Building with libs: ${my_modules}")
-            if (System.properties['os.name'].toLowerCase().contains('windows')) {
-               def winLibRoot = libRoot.getCanonicalPath().replace('\\','/')
-               commandLine "$ndkDir/ndk-build.cmd", "MOAI_LIB_DIR=$winLibRoot", "MOAI_STATIC_LIBRARIES=$my_modules", "MOAI_AKU_FLAGS=$flags"
-            }
-            else {
-                commandLine "$ndkDir/ndk-build", "MOAI_LIB_DIR=$libRoot", "MOAI_STATIC_LIBRARIES=$my_modules", "MOAI_AKU_FLAGS=$flags"
-            }
+
         }
 
         project.task( type: Delete, 'libmoaiClean' ) {

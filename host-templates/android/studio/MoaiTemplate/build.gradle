@@ -61,5 +61,6 @@ class MoaiModulePlugin implements Plugin<Project> {
 }
 
 class MoaiModuleExtension {
-    String nativeLib
+    ArrayList<String> nativeLibs
+    String moduleClass
 }
