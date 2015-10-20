@@ -61,7 +61,7 @@ copy /Y %libprefix%\Release\src\*.* %libprefix%\Distribute\src\
 
 if NOT EXIST %rootpath%\util\moai.exe copy /Y %libprefix%\Release\bin\moai.exe %rootpath%\util\moai.exe
 
-rd /S/Q %libprefix%\Release
-rd /S/Q %libprefix%\Debug
+rem rd /S/Q %libprefix%\Release
+rem rd /S/Q %libprefix%\Debug
 
 echo "Build complete"

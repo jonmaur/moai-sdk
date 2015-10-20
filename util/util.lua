@@ -707,6 +707,12 @@ end
 replaceInFile = function ( filename, commands )
 
 	local fp = io.open ( filename, "r" )
+	if not fp then
+		print("File not found in replaceInFile", filename)
+		os.exit(1)
+	end
+	
+	
 	local str = fp:read ( "*all" )
 	fp:close ()
 	

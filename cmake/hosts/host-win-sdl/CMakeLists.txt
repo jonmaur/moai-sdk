@@ -23,7 +23,7 @@ include(module-setup)
 
 
 include(libmoai-setup)
-
+install(EXPORT libmoai DESTINATION cmake )
 
 add_subdirectory(../host-modules host-modules)
 

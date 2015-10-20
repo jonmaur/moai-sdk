@@ -34,6 +34,8 @@ target_include_directories (moai-core PUBLIC
     "$<BUILD_INTERFACE:${BUILD_INCLUDES}>"
     $<INSTALL_INTERFACE:$<INSTALL_PREFIX>/include>
     $<INSTALL_INTERFACE:$<INSTALL_PREFIX>/include/lua>
+    $<INSTALL_INTERFACE:$<INSTALL_PREFIX>/include/jansson>
+    $<INSTALL_INTERFACE:$<INSTALL_PREFIX>/include/config>
 )
 
 LINK_DIRECTORIES("${LUA_LIB_DIR}")
