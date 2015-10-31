@@ -79,27 +79,46 @@ local function dumpRomJs(sampleDir, outfolder)
     outfile:close()  
 end
 
-local function dumpSampleIndex(sample, sampleDir, outfolder) 
-  
+local sampleTemplate = MOAIFileSystem.loadFile(scriptDir.."/samplepage.html")
+
+local function dumpSamplePage(sample, sampleDir, outfolder) 
+   local sampleOutput = sampleTemplate:gsub("@SAMPLENAME@",sample)
+   MOAIFileSystem.saveFile(MOAIFileSystem.getAbsoluteFilePath(outfolder.."/index.html"),sampleOutput)
 end
 
+local function dumpSampleList(samples)
+  local list = "var samplelist=["
+  for k,sample in pairs(samples) do
+    list = list..'"'..sample..'",'
+  end
+  list = list.."];" 
+  
+  local outfile = MOAIFileSystem.getAbsoluteFilePath(config.OUTPUT_DIR.."/player/samplelist.js")
+  MOAIFileSystem.saveFile(outfile, list)
+end
 
-
+local samplesProcessed = {}
 for k,sample in ipairs(allSamples) do
+  
   if not config.SAMPLE_WHITELIST or config.SAMPLE_WHITELIST[sample] then
     
     local sampleDir = MOAIFileSystem.getAbsoluteDirectoryPath(config.SAMPLE_SOURCE.."/"..sample)
     local outfolder = MOAIFileSystem.getAbsoluteDirectoryPath(config.OUTPUT_DIR.."/"..sample)
+    table.insert(samplesProcessed, sample)
     
     print("building sample ",sample,"in",sampleDir)
     --dump rom js
     dumpRomJs(sampleDir, outfolder)
     
     --dump index.html
-    dumpSampleIndex(sample, sampleDir, outfolder)
+    dumpSamplePage(sample, sampleDir, outfolder)
     
   end
+  
+  
 end
+
+dumpSampleList(samplesProcessed)
 
 
 
