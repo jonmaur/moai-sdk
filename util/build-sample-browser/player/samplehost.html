@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <title>MoaiJS</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="css/style.css" rel="stylesheet">
+     <link rel='stylesheet' href="vendor/font-awesome-4.0.3/css/font-awesome.min.css" />
+</head>
+<body>
+
+
+<div id="moaiplayer" class="moai-player" data-url="moaiapp.rom" data-title="My Moai App" data-ram="64">
+    <div id="runMe"><i class="fa fa-play"></i></div>
+    <div class="moai-cpal">
+        <img src="moailogo-white.svg">
+        <a href="http://www.getmoai.com">www.getmoai.com</a>
+    </div>
+</div>
+
+<!-- we need these -->
+<script type="text/javascript" src="howler.js"></script>
+<script src="vendor/jquery-1.10.2.js"></script>
+<script src="vendor/b64.js"></script>
+<!-- the app -->
+<script type="text/javascript" src="moaihost.js"></script>
+
+
+<script>
+
+    function getUrlVars()
+    {
+        var vars = [], hash;
+        var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
+        for(var i = 0; i < hashes.length; i++)
+        {
+            hash = hashes[i].split('=');
+            vars.push(hash[0]);
+            vars[hash[0]] = hash[1];
+        }
+        return vars;
+    }
+
+
+    function appendScriptTag(path) {
+       var s = document.createElement("script");
+        s.type = "text/javascript";
+        s.src = path;
+        document.body.appendChild(s);
+        console.log("Appended script",path);
+    }
+
+    var loadDeferredScripts = function( scripts, defines, callback ) {
+        //we defer moaijs.js and our rom
+
+        for (var i = 0; i < scripts.length; i++) {
+            appendScriptTag(scripts[i]);
+        }
+        console.log("started deferred loading of scripts",scripts);
+        console.log("waiting on scripts to load by watching for ",defines);
+        var awaiter = window.setInterval(
+                function() {
+                    var finished = 0;
+                    for(var i = 0; i < defines.length; i++)  {
+                        if (window[defines[i]]) {
+                            console.log("script finished loading", scripts[i]);
+                            finished = finished + 1;
+                        }
+                    }
+                    if (finished == defines.length) {
+                        console.log("Deferred scripts loaded");
+                        window.clearInterval(awaiter);
+                        callback();
+                    }
+                }, 100);
+    };
+
+    var player = new MoaiPlayer($("#moaiplayer"));
+
+    var samplePath = getUrlVars()['sample'];
+
+    var moaiJSAjax;
+
+    function getMoaiJs(romPath, callback) {
+        if (window.CreateMoaiRuntime) {
+            callback();
+        } else {
+            if (!moaiJSAjax) {
+                var deferred = D();
+                moaiJSAjax = deferred.promise;
+                loadDeferredScripts([ "lib/moaijs.js", romPath ], ['CreateMoaiRuntime','romData' ], function() {
+                    console.log("resolving deferred scripts");
+                    deferred.resolve(true);
+                })
+            }
+            moaiJSAjax.then(callback).rethrow();
+        }
+    }
+
+    if (! player.isSupported()) {
+        $("#moai-play")[0].style.color = 'darkred';
+        $("#moai-play")[0].style.opacity = 0.2;
+    }
+
+    function doRun () {
+        if (player.isSupported()) {
+            $(".moai-window").removeClass("code");
+            $(".moai-canvas-wrapper")[0].style.display = "table-row";
+            $(".moai-info")[0].style.display = "none";
+            $("#moai-play")[0].style.display = "none";
+            getMoaiJs(
+                    "../"+samplePath+"/romdata.js",
+                    function() {
+                        console.log("in do run");
+                $("#moai-stop")[0].style.display = "inline-block";
+
+                //convert romdata to arraybuffer
+                var uint8rom = b64.base64DecToArr(window.romData);
+
+                player.loadRomRaw(uint8rom.buffer, window.romJson);
+                player.moai.run("main.lua");
+
+            });
+        } else {
+           alert("WebGL 1.0 is required but isn't supported by your current browser.\n Try the latest firefox or chrome");
+        }
+    }
+
+
+    $("#runMe").on("click",doRun);
+    $("#moai-play").on("click",doRun);
+    $("#moai-stop").on("click", function() {
+        player.stop();
+        $(".moai-canvas-wrapper")[0].style.display = "none";
+        $(".moai-info")[0].style.display = "table-row";
+        $("#moai-play")[0].style.display = "inline-block";
+        $("#moai-stop")[0].style.display = "none";
+    })
+   
+
+
+</script>
+
+</body>
+</html>

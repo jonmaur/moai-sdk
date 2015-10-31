@@ -42,3 +42,4 @@ docs/api-reference
 /**/java/build/
 /**/java/*.iml
 env.sh
+sample-index/
