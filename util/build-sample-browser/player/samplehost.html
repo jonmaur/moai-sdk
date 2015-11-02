@@ -1,30 +1,37 @@
 <!DOCTYPE html>
+
+<!--
+A custom host container for sample running, overrides the moai.html from host folder.
+* uses js files to load rom instead of ajax to allow running serverless
+* delay loads moaijs.js and rom data to help with browsing speed
+* adds a console display to help with showing samples that don't open a window. (coming soon)
+-->
 <html lang="en">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta charset="utf-8">
     <title>MoaiJS</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="css/style.css" rel="stylesheet">
-     <link rel='stylesheet' href="vendor/font-awesome-4.0.3/css/font-awesome.min.css" />
+    <link href="host/css/style.css" rel="stylesheet">
+     <link rel='stylesheet' href="host/vendor/font-awesome-4.0.3/css/font-awesome.min.css" />
 </head>
 <body>
 
 
-<div id="moaiplayer" class="moai-player" data-url="moaiapp.rom" data-title="My Moai App" data-ram="64">
+<div id="moaiplayer" class="moai-player" data-title="Moai Sample" data-ram="64">
     <div id="runMe"><i class="fa fa-play"></i></div>
     <div class="moai-cpal">
-        <img src="moailogo-white.svg">
+        <img src="host/moailogo-white.svg">
         <a href="http://www.getmoai.com">www.getmoai.com</a>
     </div>
 </div>
 
 <!-- we need these -->
-<script type="text/javascript" src="howler.js"></script>
-<script src="vendor/jquery-1.10.2.js"></script>
-<script src="vendor/b64.js"></script>
+<script type="text/javascript" src="host/howler.js"></script>
+<script src="host/vendor/jquery-1.10.2.js"></script>
+<script src="host/vendor/b64.js"></script>
 <!-- the app -->
-<script type="text/javascript" src="moaihost.js"></script>
+<script type="text/javascript" src="host/moaihost.js"></script>
 
 
 <script>
@@ -76,9 +83,17 @@
                 }, 100);
     };
 
-    var player = new MoaiPlayer($("#moaiplayer"));
-
     var samplePath = getUrlVars()['sample'];
+
+    var playerEl = $("#moaiplayer");
+
+    playerEl.attr("data-title", samplePath.replace(/-/g," "));
+
+    var player = new MoaiPlayer(playerEl);
+
+
+
+
 
     var moaiJSAjax;
 
