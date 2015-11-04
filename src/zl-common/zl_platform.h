@@ -60,6 +60,7 @@
 		#pragma warning ( disable : 4290 )
 		#pragma warning ( disable : 4995 )
 		#pragma warning ( disable : 4996 )
+		#define va_copy(dest, src) (dest = src)
 	#endif
 
 	#ifndef _CRTDBG_MAP_ALLOC

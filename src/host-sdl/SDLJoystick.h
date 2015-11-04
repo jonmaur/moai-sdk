@@ -13,8 +13,8 @@ class Joystick
         explicit Joystick(const int index);
         ~Joystick();
         
-        Joystick(const Joystick&) = delete;
-        void operator= (const Joystick&) = delete;
+       // Joystick(const Joystick&) = delete;
+       // void operator= (const Joystick&) = delete;
     
         struct AXIS_MOTION {
             int x;
