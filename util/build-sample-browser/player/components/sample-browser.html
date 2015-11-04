@@ -1,0 +1,29 @@
+<sample-browser>
+    <sample-list samples="{opts.samples}" onselected="{doselected}"/>
+    <file-display files="{files}"/>
+
+    <player sample="{sample}"/>
+
+    <script>
+        this.files = [];
+
+        this.loadSample = function(sample) {
+            this.sample = sample;
+            loadDeferredScripts(["../"+sample+"/romdata.js"],['romData'], function() {
+                this.files = romJson.files;
+                this.update();
+            }.bind(this))
+        };
+
+
+        this.on("mount", function() {
+            this.tags['sample-list'].on("selected", this.loadSample.bind(this))
+
+
+        })
+
+
+    </script>
+
+
+</sample-browser>

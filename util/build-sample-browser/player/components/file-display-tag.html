@@ -1,0 +1,14 @@
+<file-display>
+    <h2 if="{file}">{file.filename}</h2>
+    <file-list files="{opts.files}"></file-list>
+
+    <script>
+        this.file = null;
+
+        this.on("update", function() {
+            if (!this.file && opts.files && opts.files.length > 0) {
+                this.file = opts.files[0];
+            }
+        })
+    </script>
+</file-display>
