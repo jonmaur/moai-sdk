@@ -6,20 +6,19 @@
 <body>                                         
 	<sample-browser> 
 	<header>
-		<h2>Sample Browser</h2>
+		<h2>Sample Browser2</h2>
 	</header>
 	<sample-list>
 		<ul>
-		<li class="selected">anim-basic</li>
-		<li>hello-moai</li>
-		<li>zipfs-test</li>
+			<li class="selected">anim-basic</li>
+			<li>hello-moai</li>
+			<li>zipfs-test</li>
+		</ul>
 	</sample-list>
 	<file-display>             
 		<file-item-display>
 		
-		<pre>  
-		<code>
-		  ----------------------------------------------------------------
+		<pre><code>----------------------------------------------------------------
 -- Copyright (c) 2010-2011 Zipline Games, Inc. 
 -- All Rights Reserved. 
 -- http://getmoai.com
@@ -97,8 +96,11 @@ thread:run ( twirlingTowardsFreedom )
 	</ul>
 	</file-list>
 	</file-display>
-	<player>                           
-		<iframe></iframe>
+	<player>      
+		
+		<div class="player-aspect">                     
+		<iframe src="./samplehost.html"></iframe>
+		</div>
 		<player-console></player-console>
 	</player>
 	</sample-browser>
