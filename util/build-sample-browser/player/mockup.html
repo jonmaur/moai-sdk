@@ -2,6 +2,13 @@
 <head> 
 	<link rel="stylesheet" href="css/normalize.css">
 	<link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="vendor/terminal/jquery.terminal.css">
+    <link rel="stylesheet" href="vendor/perfect-scrollbar/css/perfect-scrollbar.css">
+    <script src="host/vendor/jquery-1.10.2.js"></script>
+	<script src="vendor/ace/ace.js" type="text/javascript" charset="utf-8"></script>
+	<script src="vendor/ace/ext-language_tools.js" type="text/javascript" charset="utf-8"></script>
+    <script src="vendor/terminal/jquery.terminal-0.8.7.min.js" type="text/javascript" charset="utf-8"></script>
+    <script src="vendor/perfect-scrollbar/js/perfect-scrollbar.js"></script>
 </head>
 <body>                                         
 	<sample-browser> 
@@ -9,16 +16,33 @@
 		<h2>Sample Browser2</h2>
 	</header>
 	<sample-list>
+        <div id="samplelist">
 		<ul>
 			<li class="selected">anim-basic</li>
 			<li>hello-moai</li>
 			<li>zipfs-test</li>
+            <li>hello-moai</li>
+            <li>zipfs-test</li>
+            <li>hello-moai</li>
+            <li>zipfs-test</li><li>hello-moai</li>
+            <li>zipfs-test</li><li>hello-moai</li>
+            <li>zipfs-test</li><li>hello-moai</li>
+            <li>zipfs-test</li><li>hello-moai</li>
+            <li>zipfs-test</li><li>hello-moai</li>
+            <li>zipfs-test</li><li>hello-moai</li>
+            <li>zipfs-test</li>
+
+
+
+
+
+
 		</ul>
+        </div>
 	</sample-list>
 	<file-display>             
-		<file-item-display>
-		
-		<pre><code>----------------------------------------------------------------
+		<file-item-display >
+		<div  id="editor">----------------------------------------------------------------
 -- Copyright (c) 2010-2011 Zipline Games, Inc. 
 -- All Rights Reserved. 
 -- http://getmoai.com
@@ -66,12 +90,10 @@ end
 
 thread = MOAIThread.new ()
 thread:run ( twirlingTowardsFreedom )
-
-		
-		</code>
-		</pre>                 
+</div>
 		</file-item-display>
 	<file-list>
+        <div id="filelist">
 	<ul> 
 		<li class="selected">
 			<file-icon>
@@ -93,19 +115,80 @@ thread:run ( twirlingTowardsFreedom )
 			</file-icon>
 		</li>
 
+        <li class="selected">
+            <file-icon>
+                <img src="http://placehold.it/32x23">
+                <span>main.lua</span>
+            </file-icon>
+        </li>
+        <li class="selected">
+            <file-icon>
+                <img src="http://placehold.it/32x23">
+                <span>main.lua</span>
+            </file-icon>
+        </li>
+        <li class="selected">
+            <file-icon>
+                <img src="http://placehold.it/32x23">
+                <span>main.lua</span>
+            </file-icon>
+        </li>
 	</ul>
+        </div>
 	</file-list>
 	</file-display>
 	<player>      
-		
-		<div class="player-aspect">                     
-		<iframe src="./samplehost.html"></iframe>
-		</div>
-		<player-console></player-console>
+		<div class="player-wrapper">
+
+		<iframe src="./samplehost.html?sample=hello-moai"></iframe>
+
+        </div>
+		<player-console>
+            <div id="terminal">
+
+            </div>
+        </player-console>
 	</player>
 	</sample-browser>
 
 
+<script>
+    //editor instance
+    var editor = ace.edit("editor");
+
+    editor.setTheme("ace/theme/monokai");
+    var session = editor.getSession();
+
+    editor.setShowPrintMargin(false);
+    session.setMode("ace/mode/lua");
+    editor.setOptions({
+        enableBasicAutocompletion: true,
+        enableSnippets: true
+    });
+
+    session.setUseWrapMode(true);
+    //console
+    var terminal = $('#terminal').terminal(function(command, term) {
+                console.log("Got input",command)
+            },
+            {
+                greetings: 'Moai Sample Player v1.00',
+                name: 'sample_console',
+                prompt: 'moai-lua> '
+            });
+
+    terminal.disable(); //steals focs
+
+
+    //scrollbars
+    var container = $('#samplelist')[0];
+    Ps.initialize(container);
+    //scrollbars
+    container = $('#filelist')[0];
+    Ps.initialize(container);
+
+
+</script>
 
 </body>
 </html>
