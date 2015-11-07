@@ -4,16 +4,25 @@
     </div>
 
     <script>
+
         //console
         this.on("mount", function() {
 
+            window.consoleWrite = function(x) {
+                this.terminal.echo(x);
+            }.bind(this);
+
+            window.consoleError = function(x) {
+                this.terminal.error(x);
+            }.bind(this);
+
             this.terminal = $('#terminal').terminal(function (command, term) {
-                        console.log("Got input", command)
-                    },
+                        this.trigger("consoleCommand", command);
+            }.bind(this),
                     {
-                        greetings: 'Moai Sample Player v1.00',
+                        greetings: '[[b;#FFFFFF;#FFFFFF00]Moai Sample Player v1.00]',
                         name: 'sample_console',
-                        prompt: 'moai-lua> '
+                        prompt: '[[b;#A1B56C;#FFFFFF00]moai$ ]'
                     });
 
             this.terminal.disable(); //steals focs

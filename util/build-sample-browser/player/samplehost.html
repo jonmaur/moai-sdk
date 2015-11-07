@@ -19,11 +19,28 @@ A custom host container for sample running, overrides the moai.html from host fo
 
 
 <div id="moaiplayer" class="moai-player" data-title="Moai Sample" data-ram="64">
-    <div id="runMe"><i class="fa fa-play"></i></div>
+
+    <div class="moai-window">
+        <div class="moai-info">
+            <div id="runMe"><i class="fa fa-play"></i></div>
+        </div>
+        <div class="moai-canvas-wrapper" style="display: none;"><canvas class="moai-canvas"  tabindex="1"></canvas></div>
+        <div class="moai-footer">
+            <i id="moai-play" class="fa fa-play">&nbsp;</i>
+            <i id="moai-stop" class="fa fa-stop" style="display:none">&nbsp;</i>
+            <i id="moai-pause" class="fa fa-pause">&nbsp;</i>
+            <!--<div class="moai-attrib">
+                Made with Moai
+                www.getmoai.com
+                Copyright (c) 2010-2012 Zipline Games, Inc. All Rights Reserved.
+            </div>-->
+        </div>
+    </div>
+  <!--  <div id="runMe"><i class="fa fa-play"></i></div>
     <div class="moai-cpal">
         <img src="host/moailogo-white.svg">
         <a href="http://www.getmoai.com">www.getmoai.com</a>
-    </div>
+    </div>-->
 </div>
 
 <!-- we need these -->
@@ -85,12 +102,21 @@ A custom host container for sample running, overrides the moai.html from host fo
 
     var samplePath = getUrlVars()['sample'];
 
+    var romUrl = "../"+samplePath+"/romdata.js";
+
     var playerEl = $("#moaiplayer");
 
     playerEl.attr("data-title", samplePath.replace(/-/g," "));
 
-    var player = new MoaiPlayer(playerEl);
+    var player = new MoaiPlayer(playerEl, true);
 
+    player.onPrint = function(x) {
+        parent.consoleWrite(x);
+    };
+
+    player.onError = function(x) {
+        parent.consoleError(x);
+    };
 
 
 
@@ -124,8 +150,12 @@ A custom host container for sample running, overrides the moai.html from host fo
             $(".moai-canvas-wrapper")[0].style.display = "table-row";
             $(".moai-info")[0].style.display = "none";
             $("#moai-play")[0].style.display = "none";
+
+
+
+
             getMoaiJs(
-                    "../"+samplePath+"/romdata.js",
+                    romUrl,
                     function() {
                         console.log("in do run");
                 $("#moai-stop")[0].style.display = "inline-block";
@@ -152,7 +182,18 @@ A custom host container for sample running, overrides the moai.html from host fo
         $("#moai-play")[0].style.display = "inline-block";
         $("#moai-stop")[0].style.display = "none";
     })
-   
+
+
+    function sendCommand(x) {
+        getMoaiJs(romUrl, function(){
+            if (!player.moai) {
+                player.initMoai();
+            }
+            player.moai.getEmscripten();
+            player.moai.runString(x);
+        });
+
+    }
 
 
 </script>

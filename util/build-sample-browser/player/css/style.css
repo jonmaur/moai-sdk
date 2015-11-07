@@ -31,6 +31,31 @@ sample-list {
     position: relative;
 }
 
+#samplelist ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+#samplelist li {
+    padding: 4px 20px;
+    font-size: 15px;
+    cursor: pointer;
+}
+
+#samplelist li.selected {
+    background-color: #A1B56C;
+}
+
+#samplelist li:hover {
+    background-color: #A1B56C;
+      transition: all 300ms linear;
+  -moz-transition: all 300ms linear;
+  -webkit-transition: all 300ms linear;
+  -o-transition: all 300ms linear;
+}
+
+
 file-display {
      left: calc(15% + 8px);
      top: 44px;
@@ -101,6 +126,64 @@ file-list {
     overflow: auto;
     box-sizing: border-box;
 }
+
+#filelist ul {
+    list-style-type: none;
+    margin:0;
+    padding:20px;
+}
+#filelist li {
+    margin: 5px;
+}
+
+file-icon {
+    display: block;
+    width: 96px;
+    height: 96px;
+    float: left;
+    overflow:hidden;
+    margin: 5px;
+}
+
+file-icon.selected .icon,
+file-icon:hover .icon,
+file-icon:hover .caption 
+{
+           transition: all 300ms linear;
+  -moz-transition: all 300ms linear;
+  -webkit-transition: all 300ms linear;
+  -o-transition: all 300ms linear;
+    color: #A1B56C;
+}
+
+
+
+file-icon.selected .caption {
+    color: white;
+    background-color: #A1B56C;
+}
+
+
+
+
+file-icon .icon {
+    display: block;
+    margin: 5px auto;
+    font-size: 48px;
+    width: 100%;
+    text-align: center;
+}
+
+file-icon .caption {
+    /*font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', 'source-code-pro', monospace;*/
+    font-size: 13px;
+    max-width: 96px;
+    display: block;
+    text-align: center;
+    padding: 2px;
+    word-wrap:break-word;
+}
+
 player-console {
     display: block;
     /* height: 150px; */
@@ -118,7 +201,6 @@ player-console {
     box-sizing: border-box;
     overflow: auto;
 }
-
 
 picture-viewer {
     width: 100%;

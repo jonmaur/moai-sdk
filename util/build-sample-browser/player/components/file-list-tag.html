@@ -1,17 +1,28 @@
 <file-list>
     <div id="filelist">
         <ul>
-            <li each="{opts.files}" onclick="{select}">
-                <file-icon file="{this}"></file-icon>
+            <li each="{file, i in opts.files}" onclick="{select}">
+                <file-icon file="{file}" class="{ selected: isSelected(file) }"></file-icon>
             </li>
         </ul>
     </div>
     <script>
         this.files = [];
 
+        isSelected(f) {
+            if (f == opts.picked) {
+                console.log("found selected", opts.picked,f);
+                return true;
+            } else {
+                console.log("not selected", opts.picked, f);
+                return false;
+            }
+        }
+
         select(e) {
-            console.log("File selected", e.item);
-            this.trigger("fileSelected", e.item);
+
+            console.log("File selected", e.item.file);
+            this.trigger("fileSelected", e.item.file);
         }
 
         this.on("update", function() {
@@ -20,6 +31,7 @@
                var container = $('#filelist')[0];
                container.scrollTop = 0;
            }
+
         });
 
         this.on("mount", function() {

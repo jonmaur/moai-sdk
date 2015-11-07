@@ -18,7 +18,7 @@
 .moai-canvas-wrapper,
 .moai-info
 {
-    background-color: #202025;
+    background-color: #FFF;
     width: 100%;
     height: 100%;
     position: relative;
@@ -108,7 +108,7 @@ body {
     height:100%;
     margin:0;
     padding:0;
-    background-color: #202025;
+    background-color: #FFF;
 }
 
 #moaiplayer {
@@ -144,10 +144,8 @@ body {
 
 #runMe {
     position: absolute;
-    width: 150px; 
+    width: 150px;
     height: 100px;
-
-
     top: 45%;
     left: 50%;
     margin-left: -75px;
@@ -160,7 +158,6 @@ body {
     line-height: 100px;
     color: #777;
     font-size: 65px;
-
 }
 #runMe:hover {
     opacity: 1;
