@@ -6,4 +6,15 @@
       <h2>Filename: { opts.file.filename }</h2>
       <h3>Size: { opts.file.data.length }</h3>
   </div>
+
+    <script>
+        this.flushChanges = function() {
+            if (fileUtil.isType(opts.file, 'text')) {
+               this.tags['editor'].flushChanges();
+            }
+        }
+
+
+    </script>
+
 </file-item-display>

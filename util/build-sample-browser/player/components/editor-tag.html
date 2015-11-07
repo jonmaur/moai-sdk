@@ -4,10 +4,25 @@
 
     <script>
 
+        this.flushChanges = function() {
+            if (this.session) {
+                var newText = this.session.getValue();
+                if (newText != this.originalText) {
+                    var arr = b64.strToUTF8Arr(newText);
+                    this.file.data = new Uint8Array(arr);
+                    this.originalText = newText;
+                }
+            }
+        };
+
         this.on("update", function() {
             console.log("editor update", opts, this);
             if (this.session && (!opts.hasOwnProperty("if") || opts.if )) {
-                this.session.setValue(fileUtil.asText(opts.file));
+                if (opts.file != this.file) {
+                    this.file = opts.file;
+                    this.originalText = fileUtil.asText(opts.file);
+                    this.session.setValue(this.originalText);
+                }
             }
         });
 
@@ -23,7 +38,10 @@
             this.session = this.editor.getSession();
             this.session.setUseWrapMode(true);
             this.session.setMode("ace/mode/lua");
-            this.session.setValue(fileUtil.asText(opts.file));
+            this.file = opts.file;
+            this.originalText = fileUtil.asText(opts.file);
+            this.session.setValue(this.originalText);
+            this.editor.on("blur", this.flushChanges.bind(this))
         });
     </script>
 </editor>

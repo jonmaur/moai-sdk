@@ -123,14 +123,14 @@ A custom host container for sample running, overrides the moai.html from host fo
 
     var moaiJSAjax;
 
-    function getMoaiJs(romPath, callback) {
+    function getMoaiJs(callback) {
         if (window.CreateMoaiRuntime) {
             callback();
         } else {
             if (!moaiJSAjax) {
                 var deferred = D();
                 moaiJSAjax = deferred.promise;
-                loadDeferredScripts([ "lib/moaijs.js", romPath ], ['CreateMoaiRuntime','romData' ], function() {
+                loadDeferredScripts([ "lib/moaijs.js" ], ['CreateMoaiRuntime' ], function() {
                     console.log("resolving deferred scripts");
                     deferred.resolve(true);
                 })
@@ -152,18 +152,17 @@ A custom host container for sample running, overrides the moai.html from host fo
             $("#moai-play")[0].style.display = "none";
 
 
-
+            var rom = window.parent.getRom();
 
             getMoaiJs(
-                    romUrl,
                     function() {
                         console.log("in do run");
                 $("#moai-stop")[0].style.display = "inline-block";
 
                 //convert romdata to arraybuffer
-                var uint8rom = b64.base64DecToArr(window.romData);
+                //var uint8rom = b64.base64DecToArr(rom.romData);
 
-                player.loadRomRaw(uint8rom.buffer, window.romJson);
+                player.loadRomRaw(rom.romData,rom.romJson);
                 player.moai.run("main.lua");
 
             });

@@ -10,6 +10,10 @@
             this.update();
         };
 
+        this.flushChanges = function() {
+            this.tags['file-item-display'].flushChanges();
+        };
+
         this.on("update", function() {
 
             //our current file is no longer in the set of files?
