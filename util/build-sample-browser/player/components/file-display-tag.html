@@ -1,14 +1,23 @@
 <file-display>
-    <h2 if="{file}">{file.filename}</h2>
+    <file-item-display file="{file}"></file-item-display>
     <file-list files="{opts.files}"></file-list>
 
     <script>
         this.file = null;
 
+        this.showFile = function(file) {
+            this.file = file;
+            this.update();
+        };
+
         this.on("update", function() {
             if (!this.file && opts.files && opts.files.length > 0) {
                 this.file = opts.files[0];
             }
+        })
+
+        this.on("mount", function() {
+            this.tags['file-list'].on("fileSelected", this.showFile.bind(this))
         })
     </script>
 </file-display>

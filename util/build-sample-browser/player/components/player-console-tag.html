@@ -1,0 +1,23 @@
+<player-console>
+    <div id="terminal">
+
+    </div>
+
+    <script>
+        //console
+        this.on("mount", function() {
+
+            this.terminal = $('#terminal').terminal(function (command, term) {
+                        console.log("Got input", command)
+                    },
+                    {
+                        greetings: 'Moai Sample Player v1.00',
+                        name: 'sample_console',
+                        prompt: 'moai-lua> '
+                    });
+
+            this.terminal.disable(); //steals focs
+        });
+
+    </script>
+</player-console>

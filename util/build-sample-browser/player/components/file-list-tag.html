@@ -1,4 +1,20 @@
 <file-list>
-    <h2>File List</h2>
-    <li each="{opts.files}">{this.filename}</li>
+    <div id="filelist">
+        <ul>
+            <li each="{opts.files}" onclick="{select}">
+                <file-icon file="{this}"></file-icon>
+            </li>
+        </ul>
+    </div>
+    <script>
+        select(e) {
+            console.log("File selected", e.item);
+            this.trigger("fileSelected", e.item);
+        }
+
+        this.on("mount", function() {
+            var container = $('#filelist')[0];
+            Ps.initialize(container);
+        })
+    </script>
 </file-list>

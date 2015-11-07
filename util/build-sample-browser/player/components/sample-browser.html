@@ -1,4 +1,7 @@
 <sample-browser>
+    <header>
+        <h2>Moai Sample Browser</h2>
+    </header>
     <sample-list samples="{opts.samples}" onselected="{doselected}"/>
     <file-display files="{files}"/>
 
@@ -10,7 +13,14 @@
         this.loadSample = function(sample) {
             this.sample = sample;
             loadDeferredScripts(["../"+sample+"/romdata.js"],['romData'], function() {
-                this.files = romJson.files;
+                var files = romJson.files;
+                var packageData = b64.base64DecToArr(romData).buffer;
+
+                for (var i=0; i < files.length; i++) {
+                    var file = files[i];
+                    file.data = new Uint8Array(packageData,file.start,(file.end -file.start));
+                }
+                this.files = files;
                 this.update();
             }.bind(this))
         };
