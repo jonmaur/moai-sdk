@@ -147,6 +147,11 @@ body .ace_editor:hover .ace_scrollbar {
     display: block;
 }
 
+.file-info {
+    padding: 10px;
+    color: #F8F8F2;
+}
+
 ::-webkit-scrollbar {
     width: 0.5em;
 }
