@@ -62,8 +62,58 @@ local skipList = {
 }
 
 local function dumpRomJs(sampleDir, outfolder)
-    local rom = generateRom(sampleDir,skipList)
+ 
    -- print("rom:\n", rom.jsonData, "\n", rom.romData)
+    
+    --detect references to resources folder
+    local main = MOAIFileSystem.loadFile(sampleDir.."/main.lua")
+    local rom
+    
+    if main and main:find("%.%./resources") then
+      print("found resource reference")
+      --get a workspace
+      local workspace = scriptDir.."/temprom"
+      if MOAIFileSystem.checkPathExists(workspace) then
+        MOAIFileSystem.deleteDirectory(workspace,true)
+      end
+      MOAIFileSystem.affirmPath(workspace)
+      print("workspace created")
+      
+      
+      --copy sample
+      MOAIFileSystem.copy(MOAIFileSystem.getAbsoluteDirectoryPath(sampleDir.."/"),
+                    MOAIFileSystem.getAbsoluteDirectoryPath(workspace))
+                  
+      print("sample files copied")
+      
+      local resourceDir = MOAIFileSystem.getAbsoluteDirectoryPath(sampleDir.."/../resources")
+      
+      --copy the resources in and modify main while we are at it
+      for m in main:gmatch("%.%./resources([%w_%.%-/]+)") do
+        print("replacing reference to ", m)
+          if MOAIFileSystem.checkFileExists(resourceDir..m) then
+            local dest = MOAIFileSystem.getAbsoluteFilePath(workspace..m)
+            local destfolder = util.getFolderFromPath(dest);
+            MOAIFileSystem.affirmPath(destfolder)
+            MOAIFileSystem.copy(resourceDir..m, dest)
+          else
+              print("Sample references",m," but not found in resource folder")
+          end
+      end
+      
+      
+      local newmain = main:gsub("%.%./resources/","")
+      MOAIFileSystem.saveFile(workspace.."/main.lua", newmain)
+    
+      --ready to make a rom
+      rom = generateRom(workspace, skipList)
+      
+      --cleanup
+      MOAIFileSystem.deleteDirectory(workspace,true)
+    else
+      rom = generateRom(sampleDir,skipList)
+    end
+
 
     MOAIFileSystem.affirmPath(outfolder)
     local outfile = MOAIFileStream.new()
@@ -159,14 +209,15 @@ local function buildSampleBrowser()
       table.insert(samplesProcessed, sample)
       
       print("building sample ",sample,"in",sampleDir)
-      --dump rom js
-      dumpRomJs(sampleDir, outfolder)
       
-      --dump index.html
-      --dumpSamplePage(sample, sampleDir, outfolder)
+     
       
-      --index main.lua
+      
+      
       if (MOAIFileSystem.checkFileExists(sampleDir.."/main.lua")) then
+        --dump rom js
+        dumpRomJs(sampleDir, outfolder)
+        --index main.lua
         local main = MOAIFileSystem.loadFile(sampleDir.."/main.lua")
         indexKeywords(moaikeywords, sample, main)
       end
