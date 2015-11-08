@@ -79,6 +79,48 @@ local function dumpRomJs(sampleDir, outfolder)
     outfile:close()  
 end
 
+
+
+
+local function indexKeywords(index, sample, doc)
+  
+  local function addToIndex(token)
+    if not index[token] then
+      index[token] = {}
+    end
+    
+    if not index[token][sample] then
+      index[token][sample] = 1
+    else
+      index[token][sample] = index[token][sample] + 1
+    end
+    
+  end
+  
+  
+  for m in doc:gmatch('MOAI%w+%.*[%w_%-]+') do
+    --first index whole word
+    addToIndex(m)
+    
+    if (m == "MOAIAction.EVENT" and sample == "font-glyph") then
+      print("found MOAIAction.event in sample font-glyph")
+      print(doc)
+      os.exit(1)
+    end
+    
+    --split on . and add both
+    found, _, klass, method = m:find("(%w+)%.([%w_%-]+)")
+    if found then
+      addToIndex(klass)
+      addToIndex(method)
+    end
+    
+  end
+  
+
+end
+
+
 local sampleTemplate = MOAIFileSystem.loadFile(scriptDir.."/samplepage.html")
 
 local function dumpSamplePage(sample, sampleDir, outfolder) 
@@ -97,30 +139,50 @@ local function dumpSampleList(samples)
   MOAIFileSystem.saveFile(outfile, list)
 end
 
-local samplesProcessed = {}
-for k,sample in ipairs(allSamples) do
-  
-  if not config.SAMPLE_WHITELIST or config.SAMPLE_WHITELIST[sample] then
+local function dumpSampleIndex(index)
+  local indexJs = "var sampleindex = "..MOAIJsonParser.encode(index )
+  local outfile = MOAIFileSystem.getAbsoluteFilePath(config.OUTPUT_DIR.."/player/sampleindex.js")
+  MOAIFileSystem.saveFile(outfile, indexJs)
+end
+
+
+
+local function buildSampleBrowser()
+  local samplesProcessed = {}
+  local moaikeywords = {}
+  for k,sample in ipairs(allSamples) do
     
-    local sampleDir = MOAIFileSystem.getAbsoluteDirectoryPath(config.SAMPLE_SOURCE.."/"..sample)
-    local outfolder = MOAIFileSystem.getAbsoluteDirectoryPath(config.OUTPUT_DIR.."/"..sample)
-    table.insert(samplesProcessed, sample)
+    if not config.SAMPLE_WHITELIST or config.SAMPLE_WHITELIST[sample] then
+      
+      local sampleDir = MOAIFileSystem.getAbsoluteDirectoryPath(config.SAMPLE_SOURCE.."/"..sample)
+      local outfolder = MOAIFileSystem.getAbsoluteDirectoryPath(config.OUTPUT_DIR.."/"..sample)
+      table.insert(samplesProcessed, sample)
+      
+      print("building sample ",sample,"in",sampleDir)
+      --dump rom js
+      dumpRomJs(sampleDir, outfolder)
+      
+      --dump index.html
+      --dumpSamplePage(sample, sampleDir, outfolder)
+      
+      --index main.lua
+      if (MOAIFileSystem.checkFileExists(sampleDir.."/main.lua")) then
+        local main = MOAIFileSystem.loadFile(sampleDir.."/main.lua")
+        indexKeywords(moaikeywords, sample, main)
+      end
+      
+      
+    end
     
-    print("building sample ",sample,"in",sampleDir)
-    --dump rom js
-    dumpRomJs(sampleDir, outfolder)
-    
-    --dump index.html
-    dumpSamplePage(sample, sampleDir, outfolder)
     
   end
   
-  
+  dumpSampleList(samplesProcessed)
+  dumpSampleIndex(moaikeywords)
 end
 
-dumpSampleList(samplesProcessed)
 
-
+buildSampleBrowser()
 
 
 
