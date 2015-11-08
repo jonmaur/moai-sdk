@@ -10,6 +10,18 @@ header h2 {
     color: white;
     font-weight: normal;
     margin: 0;
+    width: 250px;
+    display:inline-block;
+    float: left;
+}
+header h3 {
+    line-height: 40px;
+    color: white;
+    padding:0;
+    margin:0;
+    margin-right: 20px;
+    font-size: 20px;
+    float:right;
 }
 
 sample-search {
@@ -28,7 +40,7 @@ sample-search {
 }
 #samplesearch input {
     width:calc(100% - 41px);
-    margin: 0 0 0 30px;
+    /* margin: 0 0 0 30px; */
     box-sizing: border-box;
     line-height: 21px;
     padding-left: 10px;
@@ -36,6 +48,17 @@ sample-search {
     border-radius: 13px;
     font-size: 13px;
     background-color: #2F3129;
+}
+
+#samplesearch .awesomplete {
+    margin-left: 30px;
+    width: 100%;
+    z-index: 1000;
+}
+
+#samplesearch .awesomplete > ul {
+    background: #2F3129;
+    font-size: 13px;
 }
 
 
@@ -49,7 +72,7 @@ sample-list {
     top: 44px;
     color: #F8F8F2;
     /* overflow-y: scroll; */
-    overflow: auto;
+    /* overflow: auto; */
 }
 
 #samplelist {
