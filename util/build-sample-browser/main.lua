@@ -206,7 +206,7 @@ local function buildSampleBrowser()
       
       local sampleDir = MOAIFileSystem.getAbsoluteDirectoryPath(config.SAMPLE_SOURCE.."/"..sample)
       local outfolder = MOAIFileSystem.getAbsoluteDirectoryPath(config.OUTPUT_DIR.."/"..sample)
-      table.insert(samplesProcessed, sample)
+      
       
       print("building sample ",sample,"in",sampleDir)
       
@@ -215,6 +215,7 @@ local function buildSampleBrowser()
       
       
       if (MOAIFileSystem.checkFileExists(sampleDir.."/main.lua")) then
+        table.insert(samplesProcessed, sample)
         --dump rom js
         dumpRomJs(sampleDir, outfolder)
         --index main.lua
