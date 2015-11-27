@@ -428,11 +428,31 @@ MoaiJS.prototype.updateloop = function() {
 }
 
 MoaiJS.prototype.mousedown = function(e) {
-    this.onMouseButton(0,0); //MOUSE_LEFT, MOUSE_DOWN
+
+    var btn = e.button;
+
+    if (btn != 2) {
+        this.onMouseButton(0, 0); //MOUSE_LEFT, MOUSE_DOWN
+    } else {
+        this.onMouseButton(2, 0);
+    }
+   
 }
 
+MoaiJS.prototype.cancelMouseButtons = function() {
+    this.onMouseButton(0, 1);
+    this.onMouseButton(2, 1);
+};
+
 MoaiJS.prototype.mouseup = function(e) {
-    this.onMouseButton(0,1); //MOUSE_LEFT, MOUSE_UP
+
+    var btn = e.button;
+
+    if (btn != 2) {
+        this.onMouseButton(0, 1); //MOUSE_LEFT, MOUSE_Up
+    } else {
+        this.onMouseButton(2, 1);
+    }
 }
 
 MoaiJS.prototype.mousemove = function(e) {
@@ -515,10 +535,6 @@ MoaiJS.prototype.OpenWindowFunc = function(title,width,height) {
 	}
 	this.canvas.style.display = "block";
 
-   //if (width > height) {
-  //      $(this.canvas).parent().addClass("portrait");
-   // }
-
 	canvas.width = width;
 	canvas.height = height;
 	this.canvasScale = canvas.width/$(canvas).width();
@@ -532,13 +548,17 @@ MoaiJS.prototype.OpenWindowFunc = function(title,width,height) {
 
 	//grab focus on hover
 	canvas.addEventListener("mouseover",function() { canvas.focus(); },false);
-	canvas.addEventListener("mouseout",(function() { canvas.blur(); this.mouseup(); }).bind(this),false);
+	canvas.addEventListener("mouseout",(function() { canvas.blur(); this.cancelMouseButtons(); }).bind(this),false);
 
 	//grab keys
 	canvas.addEventListener("keydown", this.keydown.bind(this), false);
 	canvas.addEventListener("keyup", this.keyup.bind(this), false);
 	canvas.addEventListener("keypress", this.keypress.bind(this), false);
 
+	canvas.addEventListener("contextmenu", function(e) { 
+		e.preventDefault();
+		return false;
+	});
 	//now start rendering and updationg
 	this.startUpdates();
 	this.emscripten.requestAnimationFrame(this.renderloop.bind(this));
@@ -559,11 +579,15 @@ MoaiJS.prototype.OpenWindowFunc = function(title,width,height) {
 	  }
 	  var that = this;
 	  function resizeHandler() {
-		that.canvasScale = canvas.width/$(canvas).width();
+		that.recalibrateInput();
 	  }
 
 	return canvas;
 };
+
+MoaiJS.prototype.recalibrateInput = function() {
+		this.canvasScale = this.canvas.width/$(this.canvas).width();
+}
 
 MoaiJS.prototype.startUpdates = function() {
 	var step = this.AKUGetSimStep() || ((1000/60)/1000)
@@ -723,12 +747,14 @@ function MoaiPlayer(element, skipTemplate) {
     } else {
          infoEl = el.find(".moai-info");
     }
-
+	this.el = el;
 	var titleEl = el.find(".moai-title").first();
 	var statusEl = el.find(".moai-status").first();
 	var canvasEl = el.find(".moai-canvas").first();
-	var canvasWrapperEl = el.find(".moai-canvas-wrapper").first();
+	this.canvas = canvasEl[0];
 
+	var canvasWrapperEl = el.find(".moai-canvas-wrapper").first();
+	this.canvasWrapper = canvasWrapperEl;
     var pause = el.find("#moai-pause").first();
 	//get settings
 	this.url = el.attr('data-url');
@@ -757,11 +783,14 @@ function MoaiPlayer(element, skipTemplate) {
 		statusEl.html(status);
 	}
 
-	function onResolutionChange(width, height) {
-		console.log("width",width,"height",height,"portrait",(height > width));
-		el.find('.moai-canvas-wrapper').first().toggleClass("portrait", (height > width));
-	}
-    this.onResolutionChange = onResolutionChange;
+	
+    this.onResolutionChange = function(width, height) {
+		//resize canvas after moaijs has finished its stuff
+		window.setTimeout(function() {
+			this.resizeCanvas();
+		}.bind(this),10);
+    }
+
 	this.onError = function(err) {
 		console.log("ERROR: ",err);
 	};
@@ -784,13 +813,38 @@ function MoaiPlayer(element, skipTemplate) {
         canvasWrapperEl[0].style.display="table-row";
 }
 
+	 window.addEventListener("resize", resizeThrottler, false);
 
+	  var resizeTimeout;
+	  function resizeThrottler() {
+		// ignore resize events as long as an actualResizeHandler execution is in the queue
+		if ( !resizeTimeout ) {
+		  resizeTimeout = setTimeout(function() {
+		    resizeTimeout = null;
+		    resizeHandler();
+		 
+		   // The actualResizeHandler will execute at a rate of 15fps
+		   }, 66);
+		}
+	  }
+	  
+	  var resizeHandler = function() {
+		this.resizeCanvas();
+	  }.bind(this);
 
 
 
     this.initMoai = function() {
         this.moai = new MoaiJS(canvasEl[0], ram * 1024 * 1024, onTitleChange, onStatusChange, onError.bind(this), onPrint.bind(this), this.onResolutionChange.bind(this));
     }
+}
+
+
+MoaiPlayer.prototype.resizeCanvas = function() {
+	//we apply portrait class if the ratio of width to height is larger than our canvases
+	var wantedRatio = this.canvas.width / this.canvas.height;
+	var actualRatio = this.canvasWrapper.width() / this.canvasWrapper.height();
+	this.el.find('.moai-canvas-wrapper').first().toggleClass("portrait", (actualRatio > wantedRatio));
 }
 
 MoaiPlayer.prototype.isSupported = function() {
