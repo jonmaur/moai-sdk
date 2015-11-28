@@ -17,7 +17,7 @@ end
 
 local config = {}
 
-config.OUTPUT_DIR                       = INVOKE_DIR..'sample-index'
+config.OUTPUT_DIR                       = INVOKE_DIR..'sample-browser'
 config.SAMPLE_SOURCE                      = MOAIFileSystem.getAbsoluteDirectoryPath(MOAI_SDK_HOME..'samples')
 config.SAMPLE_WHITELIST = false
 
@@ -43,10 +43,21 @@ for i, escape, param, iter in util.iterateCommandLine ( arg or {}) do
 end
 
 local scriptDir = MOAIFileSystem.getAbsoluteDirectoryPath(SCRIPT_DIR)
+
+MOAIFileSystem.affirmPath(config.OUTPUT_DIR)
+
+
 --setup player dir
 MOAIFileSystem.copy(MOAIFileSystem.getAbsoluteDirectoryPath(scriptDir..'player'),
                     MOAIFileSystem.getAbsoluteDirectoryPath(config.OUTPUT_DIR..'/player'))
 
+-- index to redir to player
+MOAIFileSystem.copy(MOAIFileSystem.getAbsoluteFilePath(scriptDir..'/index.html'),
+                    MOAIFileSystem.getAbsoluteFilePath(config.OUTPUT_DIR..'/index.html'))
+                 
+--copy in our html host
+MOAIFileSystem.copy(MOAIFileSystem.getAbsoluteDirectoryPath(MOAI_SDK_HOME..'host-templates/html/www/'),
+                    MOAIFileSystem.getAbsoluteDirectoryPath(config.OUTPUT_DIR..'/player/host'))
 
 --setup lib dir
 MOAIFileSystem.copy(MOAIFileSystem.getAbsoluteDirectoryPath(MOAI_SDK_HOME..'lib/html/'),
@@ -171,12 +182,7 @@ local function indexKeywords(index, sample, doc)
 end
 
 
-local sampleTemplate = MOAIFileSystem.loadFile(scriptDir.."/samplepage.html")
 
-local function dumpSamplePage(sample, sampleDir, outfolder) 
-   local sampleOutput = sampleTemplate:gsub("@SAMPLENAME@",sample)
-   MOAIFileSystem.saveFile(MOAIFileSystem.getAbsoluteFilePath(outfolder.."/index.html"),sampleOutput)
-end
 
 local function dumpSampleList(samples)
   local list = "var samplelist=["

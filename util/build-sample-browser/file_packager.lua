@@ -1,12 +1,7 @@
 local function generateRom(dir, skipList)
 
-local function gen_uuid()
-  math.randomseed(os.time())
-    local template ='xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'
-    return string.gsub(template, '[xy]', function (c)
-        local v = (c == 'x') and math.random(0, 0xf) or math.random(8, 0xb)
-        return string.format('%x', v)
-    end)
+local function gen_uuid(romData)
+  return crypto.digest("md5", romData)
 end
 
 
@@ -104,7 +99,7 @@ local romData = outmemstream:getString()
 outmemstream:close()
 
 --json dump
-local uuid = gen_uuid()
+local uuid = gen_uuid(romData)
 
 local jsonData =  MOAIJsonParser.encode({
    ['bundle_file'] = dumpfile , ['directories'] = partial_dirs, ['files'] = fileinfo, ['package_uuid'] = uuid
