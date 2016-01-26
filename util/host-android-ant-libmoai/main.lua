@@ -1,7 +1,7 @@
 --==============================================================
 -- args
 --==============================================================
-
+MOAIFileSystem.setWorkingDirectory ( SCRIPT_DIR )
 OUTPUT_DIR				= INVOKE_DIR .. 'libmoai/'
 
 LIB_NAME				= 'moai'
@@ -319,6 +319,10 @@ makeJniProject = function ()
 	end
 	file:close ()
 
+
+
+
+
 	util.replaceInFile ( JNI_DIR .. 'Android.mk', {
 		[ '@MOAI_SDK_HOME@' ]				= MOAIFileSystem.getRelativePath ( MOAI_SDK_HOME, JNI_DIR ),
 		[ '@MY_ARM_MODE@' ]					= MY_ARM_MODE,
@@ -348,6 +352,7 @@ makeTarget = function ( target )
 	local JNI_DIR = FOLDERS.JNI
 	local targetMakefile = JNI_DIR .. target.NAME .. '.mk'
 	MOAIFileSystem.copy ( 'MoaiTarget.mk', targetMakefile )
+  MOAIFileSystem.copy ( 'prebuiltcore.mk', JNI_DIR.."prebuiltcore.mk" )
 
 	print ( 'TARGET', target.NAME, targetMakefile )
 
@@ -387,6 +392,21 @@ makeTarget = function ( target )
 		[ '@STATIC_LIBRARIES@' ] 			= getLibrariesString ( STATIC_LIBRARIES, libraries ),
 		[ '@WHOLE_STATIC_LIBRARIES@' ] 		= getLibrariesString ( WHOLE_STATIC_LIBRARIES, libraries ),
 	})
+
+  --dump prebuilt
+   local file = io.open ( JNI_DIR .. 'prebuilt.mk', 'w' )
+   local libstr = ""
+   file:write("LOCAL_PATH := $(call my-dir)\n")
+   
+   for k, v in pairs ( libraries ) do
+      
+       file:write ("include $(CLEAR_VARS)\n")
+       file:write ("LOCAL_MODULE := "..k.."\n")
+       file:write ("LOCAL_SRC_FILES := $(LOCAL_PATH)/../obj/local/$(TARGET_ARCH_ABI)/"..k..".a\n")
+       file:write ("include $(PREBUILT_STATIC_LIBRARY)\n\n")
+      
+   end
+	 file:close ()
 end
 
 ----------------------------------------------------------------
