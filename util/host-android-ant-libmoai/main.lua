@@ -308,6 +308,17 @@ makeJniProject = function ()
 	MOAIFileSystem.copy ( 'Android.mk', JNI_DIR .. 'Android.mk' )
 	MOAIFileSystem.copy ( 'Application.mk', JNI_DIR .. 'Application.mk' )
 	MOAIFileSystem.copy ( 'src/', JNI_DIR .. 'src/' )
+
+	local hostmodules = MOAI_SDK_HOME..'src/host-modules/'
+	MOAIFileSystem.copy(hostmodules, JNI_DIR..'src/host-modules/')
+
+	--don't want these ones
+	MOAIFileSystem.deleteFile(JNI_DIR..'src/host-modules/aku_modules_ios.h')
+	MOAIFileSystem.deleteFile(JNI_DIR..'src/host-modules/aku_modules_ios_config.h')
+	MOAIFileSystem.deleteFile(JNI_DIR..'src/host-modules/aku_modules_ios.mm')
+
+
+
 	MOAIFileSystem.copy ( MOAI_SDK_HOME .. 'src/host-modules/aku_plugins.cpp.in', JNI_DIR .. 'src/aku_plugins.cpp' )
 
 	local file = io.open ( JNI_DIR .. 'libraries.mk', 'w' )
@@ -358,6 +369,7 @@ makeTarget = function ( target )
 
 	local modules = {}
 	local libraries = {}
+	local javaLibraries = {} --our libraries that expose JNI, keep these apart so they can be easily disabled (other libs the linker will take care of)
 	local preprecessorFlags = {}
 
 	-- build a set of modules to include
@@ -366,7 +378,11 @@ makeTarget = function ( target )
 		if module then
 			MODULES_USED [ moduleName ] = module
 			modules [ moduleName ] = module
-			addLibraries ( libraries, module.STATIC_LIBRARIES )
+			if table.getn(module.JAVA) > 0 then
+				addLibraries ( javaLibraries, module.STATIC_LIBRARIES )
+			else
+				addLibraries ( libraries, module.STATIC_LIBRARIES )
+			end
 		end
 	end
 
@@ -376,7 +392,9 @@ makeTarget = function ( target )
 			preprecessorFlags [ module.PREPROCESSOR_FLAG ] = modules [ k ] and 1 or 0
 		end
 	end
+ 
 
+	
 	-- build the preprocessor string
 	local preprocessorString = '\n'
 	for k, v in util.pairsByKeys ( preprecessorFlags ) do
@@ -389,6 +407,7 @@ makeTarget = function ( target )
 	util.replaceInFile ( targetMakefile, {
 		[ '@LIB_NAME@' ]					= target.NAME,
 		[ '@AKU_PREPROCESSOR@' ]			= preprocessorString,
+		[ '@STATIC_JNI_LIBRARIES@']   = getLibrariesString ( STATIC_LIBRARIES, javaLibraries ),
 		[ '@STATIC_LIBRARIES@' ] 			= getLibrariesString ( STATIC_LIBRARIES, libraries ),
 		[ '@WHOLE_STATIC_LIBRARIES@' ] 		= getLibrariesString ( WHOLE_STATIC_LIBRARIES, libraries ),
 	})
@@ -399,6 +418,15 @@ makeTarget = function ( target )
    file:write("LOCAL_PATH := $(call my-dir)\n")
    
    for k, v in pairs ( libraries ) do
+      
+       file:write ("include $(CLEAR_VARS)\n")
+       file:write ("LOCAL_MODULE := "..k.."\n")
+       file:write ("LOCAL_SRC_FILES := $(LOCAL_PATH)/../obj/local/$(TARGET_ARCH_ABI)/"..k..".a\n")
+       file:write ("include $(PREBUILT_STATIC_LIBRARY)\n\n")
+      
+   end
+   
+   for k, v in pairs ( javaLibraries ) do
       
        file:write ("include $(CLEAR_VARS)\n")
        file:write ("LOCAL_MODULE := "..k.."\n")
@@ -496,7 +524,7 @@ for k, path in pairs ( FOLDERS ) do
 		FOLDERS [ k ] = path
 
 		if path ~= INVOKE_DIR then
-			MOAIFileSystem.deleteDirectory ( path, true )
+		--	MOAIFileSystem.deleteDirectory ( path, true )
 			MOAIFileSystem.affirmPath ( path )
 		end
 	end

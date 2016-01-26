@@ -77,8 +77,8 @@
 
 	include libraries.mk
   ifdef USE_PREBUILT
-   include prebuiltcore.mk
-   include prebuilt.mk
+   include $(MOAI_SDK_HOME)/libmoai/prebuiltcore.mk
+   include $(MOAI_SDK_HOME)/libmoai/prebuilt.mk
   else
 	 include $(MY_INCLUDES)
   endif
