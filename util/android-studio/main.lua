@@ -42,14 +42,20 @@ print ( 'OUTPUT_DIR', OUTPUT_DIR )
 --==============================================================
 
 PROJECT_FOLDER = OUTPUT_DIR .. 'Moai/'
-MOAI_SDK_HOME = MOAIFileSystem.getRelativePath ( MOAI_SDK_HOME, PROJECT_FOLDER ) .. '../'
 
-print ( 'MOAI_SDK_HOME', MOAI_SDK_HOME )
+ANDROID_LIBS = MOAIFileSystem.getAbsoluteDirectoryPath ( MOAI_SDK_HOME .. 'libmoai' )
+
+
 
 MOAIFileSystem.copy ( 'Moai/', PROJECT_FOLDER )
+MOAIFileSystem.copy ( ANDROID_LIBS.."/jni", PROJECT_FOLDER.."moai/src/main/jni" )
+MOAIFileSystem.copy ( ANDROID_LIBS.."/libs", PROJECT_FOLDER.."moai/src/main/libs" )
 
+
+MOAI_SDK_HOME =  MOAIFileSystem.getRelativePath ( MOAI_SDK_HOME, PROJECT_FOLDER )
+print ( 'MOAI_SDK_HOME', MOAI_SDK_HOME )
 util.replaceInFiles ({
-	[ util.wrap ( util.iterateFilesAbsPath, PROJECT_FOLDER, '.gradle$' )] = {
+	[ PROJECT_FOLDER..'build.gradle'] = {
 		[ '@MOAI_SDK_HOME@' ]		= MOAI_SDK_HOME,
 	},
 })
