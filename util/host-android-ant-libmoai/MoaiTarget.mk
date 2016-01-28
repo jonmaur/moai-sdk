@@ -26,7 +26,7 @@ LOCAL_SRC_FILES 	+= $(wildcard $(LOCAL_PATH)/src/host-modules/*.cpp)
 LOCAL_SRC_FILES 	+= src/aku_plugins.cpp
 
 LOCAL_STATIC_LIBRARIES := $(LOCAL_STATIC_JNI_LIBRARIES)  @STATIC_LIBRARIES@ libmoai-util libmoai-core libzl-core libcontrib libexpat libjson liblua libsfmt libsqlite libtinyxml libzl-vfs libzlib libcpufeatures
-LOCAL_WHOLE_STATIC_LIBRARIES := @WHOLE_STATIC_LIBRARIES@ libmoai-core
+LOCAL_WHOLE_STATIC_LIBRARIES := @WHOLE_STATIC_LIBRARIES@ libmoai-core libmoai-android
 
 include $(BUILD_SHARED_LIBRARY)
 

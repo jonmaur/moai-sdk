@@ -19,8 +19,8 @@ android {
     sourceSets {
         main {
             manifest.srcFile 'AndroidManifest.xml'
-            java.srcDirs += '@MOAI_SDK_HOME@src/moai-android-twitter'
-            java.srcDirs += '@MOAI_SDK_HOME@3rdparty-android/twitter-3.0.3/src'
+            java.srcDirs += project.moaiRoot+'/src/moai-android-twitter/java/src' 
+            java.srcDirs += project.moaiRoot+'/3rdparty-android/twitter-3.0.3/src'
         }
     }
 }

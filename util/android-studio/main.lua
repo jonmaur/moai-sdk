@@ -50,12 +50,16 @@ ANDROID_LIBS = MOAIFileSystem.getAbsoluteDirectoryPath ( MOAI_SDK_HOME .. 'libmo
 MOAIFileSystem.copy ( 'Moai/', PROJECT_FOLDER )
 MOAIFileSystem.copy ( ANDROID_LIBS.."/jni", PROJECT_FOLDER.."moai/src/main/jni" )
 MOAIFileSystem.copy ( ANDROID_LIBS.."/libs", PROJECT_FOLDER.."moai/src/main/libs" )
-
+MOAIFileSystem.delete ( PROJECT_FOLDER.."moai/src/main/jni/Android.mk")
+MOAIFileSystem.copy ( 'Android-prebuilt.mk', PROJECT_FOLDER.."moai/src/main/jni/Android.mk" )
 
 MOAI_SDK_HOME =  MOAIFileSystem.getRelativePath ( MOAI_SDK_HOME, PROJECT_FOLDER )
 print ( 'MOAI_SDK_HOME', MOAI_SDK_HOME )
 util.replaceInFiles ({
 	[ PROJECT_FOLDER..'build.gradle'] = {
+		[ '@MOAI_SDK_HOME@' ]		= MOAI_SDK_HOME,
+	},
+	[ PROJECT_FOLDER..'moai/src/main/jni/Android.mk'] = {
 		[ '@MOAI_SDK_HOME@' ]		= MOAI_SDK_HOME,
 	},
 })

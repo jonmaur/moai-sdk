@@ -19,7 +19,7 @@ android {
     sourceSets {
         main {
             manifest.srcFile 'AndroidManifest.xml'
-            java.srcDirs += '@MOAI_SDK_HOME@src/moai-android'
+            java.srcDirs += project.moaiRoot+'/src/moai-android/java/src'
         }
     }
 }

@@ -19,14 +19,13 @@ android {
     sourceSets {
         main {
             manifest.srcFile 'AndroidManifest.xml'
-            java.srcDirs += '@MOAI_SDK_HOME@src/moai-android-adcolony'
+            java.srcDirs += project.moaiRoot+'/src/moai-android-adcolony/java/src'
         }
     }
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'com.android.support:appcompat-v7:22.1.1'
-    compile files('@MOAI_SDK_HOME@3rdparty-android/adcolony-2.0.6/lib/adcolony-2.0.6.jar')
+    compile files( project.moaiRoot+'/3rdparty-android/adcolony-2.0.6/lib/adcolony-2.0.6.jar')
     compile project(':moai-core')
 }

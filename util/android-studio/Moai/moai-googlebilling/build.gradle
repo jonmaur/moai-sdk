@@ -19,8 +19,8 @@ android {
     sourceSets {
         main {
             manifest.srcFile 'AndroidManifest.xml'
-            java.srcDirs += '@MOAI_SDK_HOME@src/moai-android-google-billing'
-            aidl.srcDirs += '@MOAI_SDK_HOME@3rdparty-android/google-billing-v3/src'
+            java.srcDirs += project.moaiRoot+'/src/moai-android-google-billing/java/src'
+            aidl.srcDirs += project.moaiRoot+'/3rdparty-android/google-billing-v3/src'
         }
     }
 }
