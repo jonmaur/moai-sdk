@@ -17,10 +17,31 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    sourceSets {
+        main {
+            jni.srcDirs = []
+            jniLibs.srcDir 'src/main/libs'
+        }
+    }
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'com.android.support:appcompat-v7:22.1.1'
     compile project(':moai-core')
+    //optional Modules
+    compile project(':moai-adcolony')
+    compile project(':moai-amazonbilling')
+    compile project(':moai-chartboost')
+    compile project(':moai-core')
+    compile project(':moai-crittercism')
+    compile project(':moai-facebook')
+    compile project(':moai-flurry')
+    compile project(':moai-fortumo')
+    compile project(':moai-googlebilling')
+    compile project(':moai-googleplayservices')
+    compile project(':moai-googlepush')
+    compile project(':moai-tapjoy')
+    compile project(':moai-twitter')
+    compile project(':moai-vungle')
+
 }

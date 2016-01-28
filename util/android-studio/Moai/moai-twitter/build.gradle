@@ -26,9 +26,8 @@ android {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'com.android.support:appcompat-v7:22.1.1'
-    compile files('@MOAI_SDK_HOME@3rdparty-android/twitter-3.0.3/lib/twitter4j-async-3.0.3.jar')
-    compile files('@MOAI_SDK_HOME@3rdparty-android/twitter-3.0.3/lib/twitter4j-core-3.0.3.jar')
+    compile files( project.moaiRoot+'/3rdparty-android/twitter-3.0.3/lib/twitter4j-async-3.0.3.jar')
+    compile files(  project.moaiRoot+'/3rdparty-android/twitter-3.0.3/lib/twitter4j-core-3.0.3.jar')
     compile project(':moai-core')
 }
