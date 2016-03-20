@@ -356,6 +356,8 @@ void MOAIGfxDevice::ResetDrawCount () {
 //----------------------------------------------------------------//
 void MOAIGfxDevice::ResetState () {
 
+	this->OnGfxStateWillChange ();
+
 	for ( u32 i = 0; i < TOTAL_VTX_TRANSFORMS; ++i ) {
 		this->mVertexTransforms [ i ].Ident ();
 	}
@@ -370,6 +372,7 @@ void MOAIGfxDevice::ResetState () {
 
 	// turn off texture
 	this->mTextureUnits [ 0 ] = 0;
+	this->mCurrentTexture = 0;
 	
 	// turn off blending
 	zglDisable ( ZGL_PIPELINE_BLEND );

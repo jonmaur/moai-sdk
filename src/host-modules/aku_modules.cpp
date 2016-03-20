@@ -91,10 +91,6 @@ void AKUModulesAppFinalize () {
 		AKUSimAppFinalize ();
 	#endif
 
-	#if AKU_WITH_SPINE
-		AKUSpineAppFinalize ();
-	#endif 
-
 	#if AKU_WITH_UNTZ
 		AKUUntzAppFinalize ();
 	#endif
@@ -165,10 +161,6 @@ void AKUModulesAppInitialize () {
 
 	#if AKU_WITH_SIM
 		AKUSimAppInitialize ();
-	#endif
-
-	#if AKU_WITH_SPINE
-		AKUSpineAppInitialize ();
 	#endif
 
 	#if AKU_WITH_UNTZ
@@ -243,10 +235,6 @@ void AKUModulesContextInitialize () {
 		AKUSimContextInitialize ();
 	#endif
 
-	#if AKU_WITH_SPINE
-		AKUSpineContextInitialize ();
-	#endif
-
 	#if AKU_WITH_UNTZ
 		AKUUntzContextInitialize ();
 	#endif
@@ -261,6 +249,24 @@ void AKUModulesContextInitialize () {
 	
 	#if AKU_WITH_PLUGINS
 		AKUPluginsContextInitialize ();
+	#endif
+	
+	// have to do this *after* initializing Sim module
+	
+	#if AKU_WITH_IMAGE_JPG
+		AKUImageJpgContextInitialize ();
+	#endif
+
+	#if AKU_WITH_IMAGE_PNG
+		AKUImagePngContextInitialize ();
+	#endif
+
+	#if AKU_WITH_IMAGE_PVR
+		AKUImagePvrContextInitialize ();
+	#endif
+
+	#if AKU_WITH_IMAGE_WEBP
+		AKUImageWebPContextInitialize ();
 	#endif
 	
 	AKULoadFuncFromBuffer ( moai_lua, moai_lua_SIZE, AKU_DATA_STRING, AKU_DATA_ZIPPED );
