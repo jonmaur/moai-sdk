@@ -33,21 +33,62 @@
 namespace InputDeviceID {
 	enum {
 		DEVICE,
+		PAD_0,
+		PAD_1,
+		PAD_2,
+		PAD_3,
 		TOTAL,
 	};
 }
 
-namespace InputSensorID {
-	enum {
+namespace InputSensorID
+{
+	enum
+	{
 		KEYBOARD,
 		POINTER,
 		MOUSE_LEFT,
 		MOUSE_MIDDLE,
 		MOUSE_RIGHT,
 		MOUSE_WHEEL,
-		JOYSTICK,
-//		TOUCH,
 		TOTAL,
+	};
+}
+
+namespace GamepadSensorID
+{
+	enum
+	{
+		STICK_LEFT,
+		STICK_RIGHT,
+		TRIGGERS,
+		BUTTONS,
+		TOTAL
+	};
+}
+
+namespace PadSensorButtonID
+{
+	enum
+	{
+		BUTTON_A,
+		BUTTON_B,
+		BUTTON_X,
+		BUTTON_Y,
+		BUTTON_START,
+		BUTTON_BACK,
+
+		BUTTON_LEFTSTICK,
+		BUTTON_RIGHTSTICK,
+
+		BUTTON_LEFTSHOULDER,
+		BUTTON_RIGHTSHOULDER,
+
+		BUTTON_DPAD_UP,
+		BUTTON_DPAD_DOWN,
+		BUTTON_DPAD_LEFT,
+		BUTTON_DPAD_RIGHT,
+		TOTAL
 	};
 }
 
@@ -150,6 +191,8 @@ void Finalize () {
 void Init ( int argc, char** argv ) {
 
 	SDL_Init ( SDL_INIT_EVERYTHING );
+	int nummappings = SDL_GameControllerAddMappingsFromFile("gamecontrollerdb.txt");
+	printf("SDL Added %d mappings\n", nummappings);
 	PrintMoaiVersion ();
 
 	#ifdef _DEBUG
@@ -179,7 +222,23 @@ void Init ( int argc, char** argv ) {
 	AKUSetInputDeviceButton			( InputDeviceID::DEVICE, InputSensorID::MOUSE_MIDDLE,	"mouseMiddle" );
 	AKUSetInputDeviceButton			( InputDeviceID::DEVICE, InputSensorID::MOUSE_RIGHT,	"mouseRight" );
 	AKUSetInputDeviceWheel			( InputDeviceID::DEVICE, InputSensorID::MOUSE_WHEEL,	"mouseWheel" );
-	AKUSetInputDeviceJoystick       ( InputDeviceID::DEVICE, InputSensorID::JOYSTICK,	    "joystick" );
+	//AKUSetInputDeviceJoystick       ( InputDeviceID::DEVICE, InputSensorID::JOYSTICK,	    "joystick" );
+
+	// 4 gamepads
+	char pad_name[16];
+	for (int i = 0; i < 4; ++i)
+	{
+		sprintf(pad_name, "pad%d", i);
+
+		AKUSetInputDevice(InputDeviceID::PAD_0 + i, pad_name);
+		AKUSetInputDeviceActive(InputDeviceID::PAD_0 + i, false);
+		AKUReserveInputDeviceSensors(InputDeviceID::PAD_0 + i, GamepadSensorID::TOTAL);
+		AKUSetInputDeviceJoystick(InputDeviceID::PAD_0 + i, GamepadSensorID::STICK_LEFT, "stickLeft");
+		AKUSetInputDeviceJoystick(InputDeviceID::PAD_0 + i, GamepadSensorID::STICK_RIGHT, "stickRight");
+		AKUSetInputDeviceJoystick(InputDeviceID::PAD_0 + i, GamepadSensorID::TRIGGERS, "triggers");
+		AKUSetInputDeviceKeyboard(InputDeviceID::PAD_0 + i, GamepadSensorID::BUTTONS, "buttons");
+	}
+	
 
 	AKUSetFunc_EnterFullscreenMode ( _AKUEnterFullscreenModeFunc );
 	AKUSetFunc_ExitFullscreenMode ( _AKUExitFullscreenModeFunc );
@@ -282,24 +341,24 @@ void SetScreenDpi() {
 //----------------------------------------------------------------//
 void MainLoop () {
 
-	// TODO: array's of Joysticks
-	Joystick * joystick0 = NULL;
+	printf("SDL num joysticks %d\n", SDL_NumJoysticks());
+	Joystick* gamepads[] = {NULL, NULL, NULL, NULL};
 
-	if ( SDL_NumJoysticks() < 1 ) {
-		
-		std::cerr << "No Joysticks connected." << std::endl;
+	// create 4 gamepads and activate/deactivate them as needed
+	gamepads[0] = new Joystick(0, InputDeviceID::PAD_0);
+	gamepads[1] = new Joystick(1, InputDeviceID::PAD_1);
+	gamepads[2] = new Joystick(2, InputDeviceID::PAD_2);
+	gamepads[3] = new Joystick(3, InputDeviceID::PAD_3);
 
-	} else {
-		
-		joystick0 = new Joystick(0); // 0 == first joystick of system.
+	//int num_devices_connected = SDL_NumJoysticks();
 
-		if ( joystick0->isOpen() || !joystick0->Open() )
-		{
-			delete joystick0;
-			joystick0 = NULL;
-		}
+	for (int i = 0; i < 4; ++i)
+	{
+		gamepads[i]->Open();
 	}
-
+	
+	SDL_GameControllerEventState(SDL_QUERY);
+	
 	Uint32 lastFrame = SDL_GetTicks();
 	
 	bool running = true;
@@ -364,7 +423,7 @@ void MainLoop () {
 							const int32_t y = sdlEvent.wheel.y; 
 
 							//XXX: x or y ?
-							AKUEnqueueWheelEvent ( InputDeviceID::DEVICE, InputSensorID::MOUSE_WHEEL, y );
+							AKUEnqueueWheelEvent ( InputDeviceID::DEVICE, InputSensorID::MOUSE_WHEEL, (float)y );
 						}
 					break;
 
@@ -378,14 +437,23 @@ void MainLoop () {
 					 * SDL_JOYDEVICEREMOVED	joystick disconnected
 					 * */
 				case SDL_JOYAXISMOTION:
-						
-						//TODO: array's of Joysticks
+					{
+						//float x, y;
+						//int sensor = gamepads[sdlEvent.cdevice.which]->UpdateAxis(sdlEvent.jaxis.axis, &x, &y);
+						//AKUEnqueueJoystickEvent(InputDeviceID::PAD_0 + sdlEvent.cdevice.which, sensor, x, y);
+						// printf("SDL_JOYAXISMOTION %f, %f\n", x, y);
+					}
+					break;
 
-						if ( sdlEvent.jaxis.which == 0 /* what joystick? */  && joystick0 != NULL ) {
-
-                            const Joystick::AXIS_MOTION & axis = joystick0->HandleAxisMotion(sdlEvent);
-					        AKUEnqueueJoystickEvent ( InputDeviceID::DEVICE, InputSensorID::JOYSTICK, axis.x, axis.y );
-						}
+				case SDL_CONTROLLERDEVICEADDED:
+					printf("SDL_CONTROLLERDEVICEADDED\n");
+					gamepads[sdlEvent.cdevice.which]->Open();
+					AKUSetInputDeviceActive(InputDeviceID::PAD_0 + sdlEvent.cdevice.which, true);
+					break;
+				case SDL_JOYDEVICEREMOVED:
+					printf("SDL_JOYDEVICEREMOVED\n");
+					AKUSetInputDeviceActive(InputDeviceID::PAD_0 + sdlEvent.cdevice.which, false);
+					gamepads[sdlEvent.cdevice.which]->Close();
 					break;
 
 				case SDL_MOUSEMOTION:
@@ -426,7 +494,31 @@ void MainLoop () {
 //					break;
 			} //end_switch
 		}//end_while
-		
+
+		for (int i = 0; i < 4; ++i)
+		{
+			float x, y;
+			
+			int sensor = gamepads[i]->UpdateAxis(SDL_CONTROLLER_AXIS_RIGHTX, &x, &y);
+			AKUEnqueueJoystickEvent(InputDeviceID::PAD_0 + i, sensor, x, y);
+
+			sensor = gamepads[i]->UpdateAxis(SDL_CONTROLLER_AXIS_LEFTX, &x, &y);
+			AKUEnqueueJoystickEvent(InputDeviceID::PAD_0 + i, sensor, x, y);
+
+			sensor = gamepads[i]->UpdateAxis(SDL_CONTROLLER_AXIS_TRIGGERLEFT, &x, &y);
+			AKUEnqueueJoystickEvent(InputDeviceID::PAD_0 + i, sensor, x, y);
+
+			bool buttonstate = false;
+			for (int ii = 0; ii < SDL_CONTROLLER_BUTTON_MAX; ++ii)
+			{
+				if (gamepads[i]->UpdateButton(ii, &buttonstate))
+				{
+					// ii + 1 because lua arrays start at 1
+					AKUEnqueueKeyboardKeyEvent(InputDeviceID::PAD_0 + i, GamepadSensorID::BUTTONS, ii + 1, buttonstate);
+				}
+			}
+		}
+
 		AKUModulesUpdate ();
 		
 		AKURender ();
@@ -440,6 +532,11 @@ void MainLoop () {
 			SDL_Delay ( frameDelta - delta );
 		}
 		lastFrame = SDL_GetTicks();
+	}
+
+	for (int i = 0; i < 4; ++i)
+	{
+		gamepads[i]->Close();
 	}
 }
 

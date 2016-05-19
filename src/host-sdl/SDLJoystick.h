@@ -3,46 +3,28 @@
 
 #include <SDL.h>
 
-#include <iostream>
-#include <utility>
-
 class Joystick
 {
-    public:
-        
-        explicit Joystick(const int index);
-        ~Joystick();
-        
-        Joystick(const Joystick&) = delete;
-        void operator= (const Joystick&) = delete;
-    
-        struct AXIS_MOTION {
-            int x;
-            int y;
-            AXIS_MOTION() : x(0), y(0) { }
-        };
+public:
+	Joystick(int index, int akuid);
+	virtual ~Joystick();
 
-        /* TODO: Wait, see pull #1026 */
-        /* struct BALL_MOTION { 
-            AXIS_MOTION axis;
-            int ball;
-            BALL_MOTION() : ball(0) { }
-        };*/
+	void Open();
+	void Close();
+	const char* getName();
+	int UpdateAxis(int axis, float* x, float* y);
+	bool UpdateButton(int button, bool* buttonstate);
+	int m_index;
+	int m_akuid;
 
-    public:
+private:
+	
+	SDL_GameController *m_gamepad;
+	SDL_Haptic *m_haptic;
+	SDL_JoystickID m_instance_id;
 
-        bool Open();
-        bool isOpen() const;
-        const char* getName() const;
-        const AXIS_MOTION & HandleAxisMotion(const SDL_Event & event);
-
-    private:
-
-        AXIS_MOTION axis_motion;
-
-        int index;
-        SDL_Joystick* sdl_joystick;
-        static const int JOYSTICK_DEAD_ZONE = 8000;
+	bool m_connected;
+	bool m_buttonstates[SDL_CONTROLLER_BUTTON_MAX];
 };
 
 #endif
