@@ -23,6 +23,10 @@
 #include "SDLJoystick.h"
 #include "SDLKeyCodeMapping.h"
 
+#include "imgui.h"
+#include "imgui_impl_sdl_gl3.h"
+
+
 #ifdef __APPLE__
 #include <CoreFoundation/CoreFoundation.h>
 #include <limits.h>
@@ -274,6 +278,10 @@ void Init ( int argc, char** argv ) {
 		AKUModulesParseArgs ( argc, argv );
 	#endif
 
+
+	// Setup ImGui binding
+	ImGui_ImplSdlGL3_Init(sWindow);
+
 	
 	atexit ( Finalize ); // do this *after* SDL_Init
 }
@@ -367,7 +375,9 @@ void MainLoop () {
 		SDL_Event sdlEvent;
 		
 		while ( SDL_PollEvent ( &sdlEvent )) {  
-			   
+			
+			ImGui_ImplSdlGL3_ProcessEvent(&sdlEvent);
+
 			switch ( sdlEvent.type )  {
 			
 				case SDL_QUIT:
@@ -519,9 +529,17 @@ void MainLoop () {
 			}
 		}
 
+		ImGui_ImplSdlGL3_NewFrame(sWindow);
+
 		AKUModulesUpdate ();
 		
+		bool show_test_window = true;
+		//ImGui::ShowTestWindow(&show_test_window);
+
 		AKURender ();
+
+		ImGui::Render();
+
 		SDL_GL_SwapWindow ( sWindow );
 		
 		Uint32 frameDelta = ( Uint32 )( AKUGetSimStep () * 1000.0 );
