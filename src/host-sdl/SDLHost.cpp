@@ -533,7 +533,7 @@ void MainLoop () {
 
 		AKUModulesUpdate ();
 		
-		bool show_test_window = true;
+		//bool show_test_window = true;
 		//ImGui::ShowTestWindow(&show_test_window);
 
 		AKURender ();

@@ -79,6 +79,10 @@ void AKUModulesAppFinalize () {
 		AKUHttpServerAppFinalize ();
 	#endif
 
+	#if AKU_WITH_IMGUI
+		AKUImGuiAppFinalize ();
+	#endif
+
 	#if AKU_WITH_LUAEXT
 		AKULuaExtAppFinalize ();
 	#endif
@@ -150,7 +154,11 @@ void AKUModulesAppInitialize () {
 	#if AKU_WITH_HTTP_SERVER
 		AKUHttpServerAppInitialize ();
 	#endif
-
+	
+	#if AKU_WITH_IMGUI
+		AKUImGuiAppInitialize ();
+	#endif
+	
 	#if AKU_WITH_LUAEXT
 		AKULuaExtAppInitialize ();
 	#endif
@@ -223,6 +231,10 @@ void AKUModulesContextInitialize () {
 		AKUHttpServerContextInitialize ();
 	#endif
 
+	#if AKU_WITH_IMGUI
+		AKUImGuiContextInitialize ();
+	#endif
+	
 	#if AKU_WITH_LUAEXT
 		AKULuaExtContextInitialize ();
 	#endif
