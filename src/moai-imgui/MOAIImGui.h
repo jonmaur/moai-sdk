@@ -18,6 +18,8 @@ class MOAIImGui :
 protected:
 
 	static int _ShowTestWindow(lua_State* L);
+	static int _Begin(lua_State* L);
+	static int _End(lua_State* L);
 
 public:
 
