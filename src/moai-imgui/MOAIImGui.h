@@ -20,6 +20,9 @@ protected:
 	static int _ShowTestWindow(lua_State* L);
 	static int _Begin(lua_State* L);
 	static int _End(lua_State* L);
+	static int _BeginChild(lua_State* L);
+	static int _EndChild(lua_State* L);
+	static int _Text(lua_State* L);
 
 public:
 

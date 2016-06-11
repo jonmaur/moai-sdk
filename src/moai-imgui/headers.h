@@ -5,5 +5,6 @@
 #define	MOAI_IMGUI_HEADERS_H
 
 #include <moai-imgui/MOAIImGui.h>
+#include <moai-imgui/MOAIImVec2.h>
 
 #endif

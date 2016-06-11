@@ -21,4 +21,5 @@ void AKUImGuiAppInitialize () {
 void AKUImGuiContextInitialize () {
 
 	REGISTER_LUA_CLASS ( MOAIImGui )
+	REGISTER_LUA_CLASS ( MOAIImVec2 )
 }
