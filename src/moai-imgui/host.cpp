@@ -22,4 +22,5 @@ void AKUImGuiContextInitialize () {
 
 	REGISTER_LUA_CLASS ( MOAIImGui )
 	REGISTER_LUA_CLASS ( MOAIImVec2 )
+	REGISTER_LUA_CLASS ( MOAIImVec4 )
 }

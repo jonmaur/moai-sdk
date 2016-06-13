@@ -23,6 +23,7 @@ protected:
 	static int _BeginChild(lua_State* L);
 	static int _EndChild(lua_State* L);
 	static int _Text(lua_State* L);
+	static int _TextColored(lua_State* L);
 
 public:
 

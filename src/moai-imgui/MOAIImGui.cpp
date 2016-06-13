@@ -1,5 +1,6 @@
 #include <moai-imgui/MOAIImGui.h>
 #include <moai-imgui/MOAIImVec2.h>
+#include <moai-imgui/MOAIImVec4.h>
 
 
 //----------------------------------------------------------------//
@@ -41,6 +42,7 @@ void MOAIImGui::RegisterLuaClass(MOAILuaState& state) {
 		{ "BeginChild",					_BeginChild },
 		{ "EndChild",					_EndChild },
 		{ "Text",						_Text },
+		{ "TextColored",				_TextColored },
 		{ NULL, NULL }
 	};
 
@@ -108,9 +110,18 @@ int MOAIImGui::_End(lua_State* L)
 
 //bool          BeginChild(const char* str_id, const ImVec2& size = ImVec2(0,0), bool border = false, ImGuiWindowFlags extra_flags = 0);    // begin a scrolling region. size==0.0f: use remaining window size, size<0.0f: use remaining window size minus abs(size). size>0.0f: fixed size. each axis can use a different mode, e.g. ImVec2(0,400).
 //bool          BeginChild(ImGuiID id, const ImVec2& size = ImVec2(0,0), bool border = false, ImGuiWindowFlags extra_flags = 0);            // "
+//----------------------------------------------------------------//
+/**	@lua	ShowTestWindow
+@text	Show a test window for ImGui.
+
+@in		string or number id
+@in		MOAIImVec2 self
+@opt	boolean border		Default value is 'false.'
+@out	number extra_flags	Default value is 0
+*/
 int MOAIImGui::_BeginChild(lua_State* L)
 {
-	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "@");
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "@U");
 
 	MOAIImVec2* size = state.GetLuaObject<MOAIImVec2>(2, true);
 	bool border = state.GetValue<bool>(3, false);
@@ -156,7 +167,7 @@ int MOAIImGui::_EndChild(lua_State* L)
 
 //----------------------------------------------------------------//
 /**	@lua	Text
-	@text	See ImGui.
+	@text	See ImGui. No point in using format strings here, construct the string in lua.
 
 	@in		string txt
 */
@@ -164,8 +175,28 @@ int MOAIImGui::_Text(lua_State* L)
 {
 	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "S");
 
-	cc8* formatstr = state.GetValue < cc8* >(1, "");
-	ImGui::Text(formatstr);
+	cc8* str = state.GetValue < cc8* >(1, "");
+	ImGui::Text(str);
+
+	return 0;
+}
+
+//void          TextColored(const ImVec4& col, const char* fmt, ...) IM_PRINTFARGS(2);  // shortcut for PushStyleColor(ImGuiCol_Text, col); Text(fmt, ...); PopStyleColor();
+
+//----------------------------------------------------------------//
+/**	@lua	Text
+	@text	See ImGui.
+
+	@in		string txt
+*/
+int MOAIImGui::_TextColored(lua_State* L)
+{
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "US");
+
+	MOAIImVec4* color = state.GetLuaObject<MOAIImVec4>(1, true);
+	cc8* str = state.GetValue < cc8* >(2, "");
+
+	ImGui::TextColored(color->mVec4, str);
 
 	return 0;
 }

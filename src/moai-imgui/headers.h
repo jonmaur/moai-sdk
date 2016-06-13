@@ -6,5 +6,6 @@
 
 #include <moai-imgui/MOAIImGui.h>
 #include <moai-imgui/MOAIImVec2.h>
+#include <moai-imgui/MOAIImVec4.h>
 
 #endif
