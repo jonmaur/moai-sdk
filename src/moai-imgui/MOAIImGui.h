@@ -24,6 +24,19 @@ protected:
 	static int _EndChild(lua_State* L);
 	static int _Text(lua_State* L);
 	static int _TextColored(lua_State* L);
+	static int _TextDisabled(lua_State* L);
+	static int _TextWrapped(lua_State* L);
+	static int _TextUnformatted(lua_State* L);
+	static int _LabelText(lua_State* L);
+	static int _Bullet(lua_State* L);
+	static int _BulletText(lua_State* L);
+	static int _Button(lua_State* L);
+	static int _SmallButton(lua_State* L);
+	static int _InvisibleButton(lua_State* L);
+	// static int _Image(lua_State* L);
+	// static int _ImageButton(lua_State* L);
+	static int _Checkbox(lua_State* L);
+	static int _RadioButton(lua_State* L);
 
 public:
 

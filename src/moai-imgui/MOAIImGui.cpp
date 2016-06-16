@@ -43,6 +43,17 @@ void MOAIImGui::RegisterLuaClass(MOAILuaState& state) {
 		{ "EndChild",					_EndChild },
 		{ "Text",						_Text },
 		{ "TextColored",				_TextColored },
+		{ "TextDisabled",				_TextDisabled },
+		{ "TextWrapped",				_TextWrapped },
+		{ "TextUnformatted",			_TextUnformatted },
+		{ "LabelText",					_LabelText },
+		{ "Bullet",						_Bullet },
+		{ "BulletText",					_BulletText },
+		{ "Button",						_Button },
+		{ "SmallButton",				_SmallButton },
+		{ "InvisibleButton",			_InvisibleButton },
+		{ "Checkbox",					_Checkbox },
+		{ "RadioButton",				_RadioButton },
 		{ NULL, NULL }
 	};
 
@@ -115,15 +126,21 @@ int MOAIImGui::_End(lua_State* L)
 @text	Show a test window for ImGui.
 
 @in		string or number id
-@in		MOAIImVec2 self
+@opt	MOAIImVec2 size
 @opt	boolean border		Default value is 'false.'
-@out	number extra_flags	Default value is 0
+@opt	number extra_flags	Default value is 0
 */
 int MOAIImGui::_BeginChild(lua_State* L)
 {
-	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "@U");
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "@");
 
-	MOAIImVec2* size = state.GetLuaObject<MOAIImVec2>(2, true);
+	MOAIImVec2 size;
+
+	if (state.IsType(2, LUA_TUSERDATA))
+	{
+		size = *state.GetLuaObject<MOAIImVec2>(2, true);
+	}
+
 	bool border = state.GetValue<bool>(3, false);
 	int extra_flags = state.GetValue<int>(4, 0);
 	
@@ -133,13 +150,13 @@ int MOAIImGui::_BeginChild(lua_State* L)
 	{
 		cc8* str_id = state.GetValue<cc8*>(1, "");
 
-		ret = ImGui::BeginChild(str_id, size->mVec2, border, extra_flags);
+		ret = ImGui::BeginChild(str_id, size.mVec2, border, extra_flags);
 	}
 	else if (state.IsType(1, LUA_TNUMBER))
 	{
 		int id = state.GetValue<int>(1, 0);
 
-		ret = ImGui::BeginChild(id, size->mVec2, border, extra_flags);
+		ret = ImGui::BeginChild(id, size.mVec2, border, extra_flags);
 	}
 	else
 	{
@@ -175,28 +192,247 @@ int MOAIImGui::_Text(lua_State* L)
 {
 	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "S");
 
-	cc8* str = state.GetValue < cc8* >(1, "");
-	ImGui::Text(str);
+	cc8* txt = state.GetValue < cc8* >(1, "");
+	ImGui::Text(txt);
 
 	return 0;
 }
 
-//void          TextColored(const ImVec4& col, const char* fmt, ...) IM_PRINTFARGS(2);  // shortcut for PushStyleColor(ImGuiCol_Text, col); Text(fmt, ...); PopStyleColor();
-
 //----------------------------------------------------------------//
-/**	@lua	Text
-	@text	See ImGui.
+/**	@lua	TextColored
+	@text	See ImGui. No point in using format strings here, construct the string in lua.
 
-	@in		string txt
+	@in MOAIImVec4		color
+	@in	string 			txt
 */
 int MOAIImGui::_TextColored(lua_State* L)
 {
 	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "US");
 
 	MOAIImVec4* color = state.GetLuaObject<MOAIImVec4>(1, true);
-	cc8* str = state.GetValue < cc8* >(2, "");
+	cc8* txt = state.GetValue < cc8* >(2, "");
 
-	ImGui::TextColored(color->mVec4, str);
+	ImGui::TextColored(color->mVec4, txt);
 
 	return 0;
+}
+
+//----------------------------------------------------------------//
+/**	@lua	TextDisabled
+	@text	See ImGui. No point in using format strings here, construct the string in lua.
+
+	@in	string 			txt
+*/
+int MOAIImGui::_TextDisabled(lua_State* L)
+{
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "S");
+
+	cc8* txt = state.GetValue < cc8* >(1, "");
+
+	ImGui::TextDisabled(txt);
+
+	return 0;
+}
+
+//----------------------------------------------------------------//
+/**	@lua	TextWrapped
+	@text	See ImGui. No point in using format strings here, construct the string in lua.
+
+	@in	string 			txt
+*/
+int MOAIImGui::_TextWrapped(lua_State* L)
+{
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "S");
+
+	cc8* txt = state.GetValue < cc8* >(1, "");
+
+	ImGui::TextWrapped(txt);
+
+	return 0;
+}
+
+//----------------------------------------------------------------//
+/**	@lua	TextUnformatted
+	@text	See ImGui. No point in using format strings here, construct the string in lua.
+
+	@in	string 			txt
+*/
+int MOAIImGui::_TextUnformatted(lua_State* L)
+{
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "S");
+
+	size_t len;
+	const char *txt = lua_tolstring(L, 1, &len);
+	
+	ImGui::TextUnformatted(txt, txt+len);
+
+	return 0;
+}
+
+//----------------------------------------------------------------//
+/**	@lua	LabelText
+	@text	See ImGui. No point in using format strings here, construct the string in lua.
+
+	@in	string 			label
+	@in	string 			txt
+*/
+int MOAIImGui::_LabelText(lua_State* L)
+{
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "SS");
+
+	cc8* txt = state.GetValue < cc8* >(1, "");
+	cc8* lbl = state.GetValue < cc8* >(2, "");
+
+	ImGui::LabelText(txt, lbl);
+
+	return 0;
+}
+
+//----------------------------------------------------------------//
+/**	@lua	Bullet
+	@text	See ImGui.
+*/
+int MOAIImGui::_Bullet(lua_State* L)
+{
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "");
+
+	ImGui::Bullet();
+
+	return 0;
+}
+
+//----------------------------------------------------------------//
+/**	@lua	BulletText
+	@text	See ImGui. No point in using format strings here, construct the string in lua.
+
+	@in	string 			txt
+*/
+int MOAIImGui::_BulletText(lua_State* L)
+{
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "S");
+
+	cc8* txt = state.GetValue < cc8* >(1, "");
+
+	ImGui::BulletText(txt);
+
+	return 0;
+}
+
+//----------------------------------------------------------------//
+/**	@lua	Button
+	@text	See ImGui. No point in using format strings here, construct the string in lua.
+
+	@in		string 			lbl
+	@opt 	MOAIImVec2		size
+	@out	boolean			pressed
+*/
+int MOAIImGui::_Button(lua_State* L)
+{
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "S");
+
+	cc8* lbl = state.GetValue < cc8* >(1, "");
+	
+	MOAIImVec2 size;
+
+	if (state.IsType(2, LUA_TUSERDATA))
+	{
+		size = *state.GetLuaObject<MOAIImVec2>(2, true);
+	}
+
+	bool ret = ImGui::Button(lbl, size.mVec2);
+	state.Push(ret);
+
+	return 1;
+}
+
+//----------------------------------------------------------------//
+/**	@lua	SmallButton
+	@text	See ImGui. No point in using format strings here, construct the string in lua.
+
+	@in		string 			lbl
+	@out	boolean			pressed
+*/
+int MOAIImGui::_SmallButton(lua_State* L)
+{
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "S");
+
+	cc8* lbl = state.GetValue < cc8* >(1, "");
+
+	bool ret = ImGui::SmallButton(lbl);
+	state.Push(ret);
+
+	return 1;
+}
+
+//----------------------------------------------------------------//
+/**	@lua	InvisibleButton
+	@text	See ImGui. No point in using format strings here, construct the string in lua.
+
+	@in		string 			id
+	@in 	MOAIImVec2		size
+	@out	boolean			pressed
+*/
+int MOAIImGui::_InvisibleButton(lua_State* L)
+{
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "SU");
+
+	cc8* id = state.GetValue < cc8* >(1, "");
+	
+	MOAIImVec2* size = state.GetLuaObject<MOAIImVec2>(2, true);
+
+	bool ret = ImGui::InvisibleButton(id, size->mVec2);
+	state.Push(ret);
+
+	return 1;
+}
+
+//Image(ImTextureID user_texture_id, const ImVec2& size, const ImVec2& uv0 = ImVec2(0,0), const ImVec2& uv1 = ImVec2(1,1), const ImVec4& tint_col = ImVec4(1,1,1,1), const ImVec4& border_col = ImVec4(0,0,0,0));
+//bool          ImageButton(ImTextureID user_texture_id, const ImVec2& size, const ImVec2& uv0 = ImVec2(0,0),  const ImVec2& uv1 = ImVec2(1,1), int frame_padding = -1, const ImVec4& bg_col = ImVec4(0,0,0,0), const ImVec4& tint_col = ImVec4(1,1,1,1));    // <0 frame_padding uses default frame padding settings. 0 for no padding
+
+//----------------------------------------------------------------//
+/**	@lua	Checkbox
+	@text	See ImGui.
+
+	@in		string 			lbl
+	@in		boolean			checked
+	@out	boolean			pressed
+	@out	boolean			checked
+*/
+int MOAIImGui::_Checkbox(lua_State* L)
+{
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "SB");
+
+	cc8* lbl = state.GetValue < cc8* >(1, "");
+	bool checked = state.GetValue < bool >(2, false);
+
+	bool ret = ImGui::Checkbox(lbl, &checked);
+	state.Push(checked);
+	state.Push(ret);
+
+	return 2;
+}
+
+//----------------------------------------------------------------//
+/**	@lua	RadioButton
+	@text	See ImGui.
+
+	@in		string 			lbl
+	@in		number			activebutton
+	@in		number			buttonid
+	@out	boolean			pressed
+	@out	number			activebutton
+*/
+int MOAIImGui::_RadioButton(lua_State* L)
+{
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "SNN");
+
+	cc8* lbl = state.GetValue < cc8* >(1, "");
+	int activebutton = state.GetValue < int >(2, 0);
+	int buttonid = state.GetValue < int >(3, 0);
+
+	bool ret = ImGui::RadioButton(lbl, &activebutton, buttonid);
+	state.Push(activebutton);
+	state.Push(ret);
+
+	return 2;
 }

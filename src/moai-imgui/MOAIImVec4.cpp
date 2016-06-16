@@ -98,6 +98,11 @@ MOAIImVec4::MOAIImVec4() {
 MOAIImVec4::~MOAIImVec4() {
 }
 
+MOAIImVec4& MOAIImVec4::operator=(const MOAIImVec4 &v)
+{
+	this->mVec4 = v.mVec4;
+	return *this;
+}
 
 void MOAIImVec4::RegisterLuaClass(MOAILuaState& state) {
 

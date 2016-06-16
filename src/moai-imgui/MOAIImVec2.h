@@ -24,6 +24,8 @@ public:
 	MOAIImVec2();
 	~MOAIImVec2();
 
+	MOAIImVec2& operator=(const MOAIImVec2 &v);
+
 	void RegisterLuaClass(MOAILuaState& state);
 	void RegisterLuaFuncs(MOAILuaState& state);
 };
