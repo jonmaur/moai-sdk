@@ -37,6 +37,15 @@ protected:
 	// static int _ImageButton(lua_State* L);
 	static int _Checkbox(lua_State* L);
 	static int _RadioButton(lua_State* L);
+	static int _Combo(lua_State* L);
+	static int _ColorButton(lua_State* L);
+	static int _ColorEdit3(lua_State* L);
+	static int _ColorEdit4(lua_State* L);
+	// static int _PlotLines(lua_State* L);
+	// static int _PlotHistogram(lua_State* L);
+	static int _ProgressBar(lua_State* L);
+	static int _DragFloat(lua_State* L);
+
 
 public:
 

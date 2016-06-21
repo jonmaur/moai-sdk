@@ -54,6 +54,14 @@ void MOAIImGui::RegisterLuaClass(MOAILuaState& state) {
 		{ "InvisibleButton",			_InvisibleButton },
 		{ "Checkbox",					_Checkbox },
 		{ "RadioButton",				_RadioButton },
+		{ "Combo",						_Combo },
+		{ "ColorButton",				_ColorButton },
+		{ "ColorEdit3",					_ColorEdit3 },
+		{ "ColorEdit4",					_ColorEdit4 },
+		// { "PlotLines",					_PlotLines },
+		// { "PlotHistogram",				_PlotHistogram },
+		{ "ProgressBar",				_ProgressBar },
+		{ "DragFloat",					_DragFloat },
 		{ NULL, NULL }
 	};
 
@@ -432,6 +440,198 @@ int MOAIImGui::_RadioButton(lua_State* L)
 
 	bool ret = ImGui::RadioButton(lbl, &activebutton, buttonid);
 	state.Push(activebutton);
+	state.Push(ret);
+
+	return 2;
+}
+
+// item getter for Combo()
+bool items_getter(void* data, int idx, const char** out_text)
+{
+	MOAILuaState* state = (MOAILuaState*)data;
+	state->GetField ( 3, idx+1 );
+	cc8* value = state->GetValue < cc8* >( -1, 0 );
+	lua_pop ( *state, 1 );
+	
+	if ( value )
+	{
+		*out_text = value;
+		return true;
+	}
+
+	return false;
+}
+
+//----------------------------------------------------------------//
+/**	@lua	Combo
+	@text	See ImGui.
+
+	@in		string 			lbl
+	@in		number			currentitem
+	@in		table			items
+	@opt	number			height
+	@out	boolean			selected
+	@out	number			currentitem
+*/
+int MOAIImGui::_Combo(lua_State* L)
+{
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "SNT");
+
+	cc8* lbl = state.GetValue < cc8* >(1, "");
+	int currentitem = state.GetValue < int >(2, 0);
+	int numitems = (int)lua_objlen(L, 3);
+	int height = state.GetValue < int >(4, -1);
+
+	// lua array to c array translation
+	--currentitem;
+	bool ret = ImGui::Combo(lbl, &currentitem, items_getter, &state, numitems, height);
+	state.Push(currentitem + 1); // c array to lua array translation
+	state.Push(ret);
+
+	return 2;
+}
+
+//----------------------------------------------------------------//
+/**	@lua	ColorButton
+	@text	See ImGui.
+
+	@in 	MOAIImVec4		color
+	@in		boolean			small_height
+	@in		boolean			border
+	@out	boolean			pressed
+*/
+int MOAIImGui::_ColorButton(lua_State* L)
+{
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "U");
+
+	MOAIImVec4* color = state.GetLuaObject<MOAIImVec4>(1, true);
+	bool small_height = state.GetValue < bool >(2, false);
+	bool border = state.GetValue < bool >(3, true);
+
+	bool ret = ImGui::ColorButton(color->mVec4, small_height, border);
+	state.Push(ret);
+
+	return 1;
+}
+
+//----------------------------------------------------------------//
+/**	@lua	ColorEdit3
+	@text	See ImGui.
+
+	@in		string			label
+	@in 	MOAIImVec4		color
+	@out	boolean			pressed
+*/
+int MOAIImGui::_ColorEdit3(lua_State* L)
+{
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "SU");
+
+	cc8* lbl = state.GetValue < cc8* >(1, "");
+	MOAIImVec4* color = state.GetLuaObject<MOAIImVec4>(2, true);
+
+	bool ret = ImGui::ColorEdit3(lbl, &color->mVec4.x);
+	state.Push(ret);
+
+	return 1;
+}
+
+//----------------------------------------------------------------//
+/**	@lua	ColorEdit4
+	@text	See ImGui.
+
+	@in		string			label
+	@in 	MOAIImVec4		color
+	@in		boolean			showalpha	Default value is 'false.'
+	@out	boolean			pressed
+*/
+int MOAIImGui::_ColorEdit4(lua_State* L)
+{
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "SU");
+
+	cc8* lbl = state.GetValue < cc8* >(1, "");
+	MOAIImVec4* color = state.GetLuaObject<MOAIImVec4>(2, true);
+	bool showalpha = state.GetValue < bool >(3, true);
+
+	bool ret = ImGui::ColorEdit4(lbl, &color->mVec4.x, showalpha);
+	state.Push(ret);
+
+	return 1;
+}
+
+//void          PlotLines(const char* label, float (*values_getter)(void* data, int idx), void* data, int values_count, int values_offset = 0, const char* overlay_text = NULL, float scale_min = FLT_MAX, float scale_max = FLT_MAX, ImVec2 graph_size = ImVec2(0,0));
+
+// void          PlotHistogram(const char* label, float (*values_getter)(void* data, int idx), void* data, int values_count, int values_offset = 0, const char* overlay_text = NULL, float scale_min = FLT_MAX, float scale_max = FLT_MAX, ImVec2 graph_size = ImVec2(0,0));
+
+
+//----------------------------------------------------------------//
+/**	@lua	ProgressBar
+	@text	See ImGui.
+
+	@in		number			fraction
+	@opt 	MOAIImVec2		size
+	@opt	string			overlay
+*/
+int MOAIImGui::_ProgressBar(lua_State* L)
+{
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "N");
+
+	float fraction = state.GetValue < float >(1, 0.0f);
+
+	if (state.IsType(2, LUA_TUSERDATA))
+	{
+		MOAIImVec2* size = state.GetLuaObject<MOAIImVec2>(2, true);
+		if (state.IsType(3, LUA_TSTRING))
+		{
+			cc8* overlay = state.GetValue < cc8* >(3, "");
+			ImGui::ProgressBar(fraction, size->mVec2, overlay);
+		}
+		else
+		{
+			ImGui::ProgressBar(fraction, size->mVec2);
+		}
+	}
+	else if (state.IsType(3, LUA_TSTRING))
+	{
+		cc8* overlay = state.GetValue < cc8* >(3, "");
+		ImGui::ProgressBar(fraction, ImVec2(-1, 0), overlay);
+	}
+	else
+	{
+		ImGui::ProgressBar(fraction);
+	}
+
+
+	return 0;
+}
+
+//----------------------------------------------------------------//
+/**	@lua	DragFloat
+	@text	See ImGui.
+
+	@in		string 			label
+	@in		number			v
+	@opt	number			speed
+	@opt	number			min
+	@opt	number			max
+	@opt	string			display_format
+	@opt	number			power
+	@out	boolean			pressed
+	@out	number			currentv
+*/
+int MOAIImGui::_DragFloat(lua_State* L)
+{
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "SN");
+
+	cc8* label = state.GetValue < cc8* >(1, "");
+	float v = state.GetValue < float >(2, 0);
+	float speed = state.GetValue < float >(3, 1.0f);
+	float min = state.GetValue < float >(4, 0.0f);
+	float max = state.GetValue < float >(5, 0.0f);
+	cc8* display_format = state.GetValue < cc8* >(6, "%.3f");
+	float power = state.GetValue < float >(7, 1.0f);
+
+	bool ret = ImGui::DragFloat(label, &v, speed, min, max, display_format, power);
+	state.Push(v); // c array to lua array translation
 	state.Push(ret);
 
 	return 2;
