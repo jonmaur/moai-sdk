@@ -45,7 +45,15 @@ protected:
 	// static int _PlotHistogram(lua_State* L);
 	static int _ProgressBar(lua_State* L);
 	static int _DragFloat(lua_State* L);
-
+	static int _DragFloat2(lua_State* L);
+	static int _DragFloat3(lua_State* L);
+	static int _DragFloat4(lua_State* L);
+	static int _DragFloatRange2(lua_State* L);
+	static int _DragInt(lua_State* L);
+	static int _DragInt2(lua_State* L);
+	static int _DragInt3(lua_State* L);
+	static int _DragInt4(lua_State* L);
+	static int _DragIntRange2(lua_State* L);
 
 public:
 
