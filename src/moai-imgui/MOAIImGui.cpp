@@ -16,24 +16,40 @@ MOAIImGui::~MOAIImGui() {
 void MOAIImGui::RegisterLuaClass(MOAILuaState& state) {
 
 	// ImGuiWindowFlags enum
-	state.SetField(-1, "ImGuiWindowFlags_NoTitleBar", 					1 << 0);   // Disable title-bar
-	state.SetField(-1, "ImGuiWindowFlags_NoResize", 					1 << 1);   // Disable user resizing with the lower-right grip
-	state.SetField(-1, "ImGuiWindowFlags_NoMove", 						1 << 2);   // Disable user moving the window
-	state.SetField(-1, "ImGuiWindowFlags_NoScrollbar", 					1 << 3);   // Disable scrollbars (window can still scroll with mouse or programatically)
-	state.SetField(-1, "ImGuiWindowFlags_NoScrollWithMouse", 			1 << 4);   // Disable user vertically scrolling with mouse wheel
-	state.SetField(-1, "ImGuiWindowFlags_NoCollapse", 					1 << 5);   // Disable user collapsing window by double-clicking on it
-	state.SetField(-1, "ImGuiWindowFlags_AlwaysAutoResize", 			1 << 6);   // Resize every window to its content every frame
-	state.SetField(-1, "ImGuiWindowFlags_ShowBorders", 					1 << 7);   // Show borders around windows and items
-	state.SetField(-1, "ImGuiWindowFlags_NoSavedSettings", 				1 << 8);   // Never load/save settings in .ini file
-	state.SetField(-1, "ImGuiWindowFlags_NoInputs", 					1 << 9);   // Disable catching mouse or keyboard inputs
-	state.SetField(-1, "ImGuiWindowFlags_MenuBar", 						1 << 10);  // Has a menu-bar
-	state.SetField(-1, "ImGuiWindowFlags_HorizontalScrollbar", 			1 << 11);  // Allow horizontal scrollbar to appear (off by default). You may use SetNextWindowContentSize(ImVec2(width,0.0f)); prior to calling Begin() to specify width. Read code in imgui_demo in the "Horizontal Scrolling" section.
-	state.SetField(-1, "ImGuiWindowFlags_NoFocusOnAppearing", 			1 << 12);  // Disable taking focus when transitioning from hidden to visible state
-	state.SetField(-1, "ImGuiWindowFlags_NoBringToFrontOnFocus", 		1 << 13);  // Disable bringing window to front when taking focus (e.g. clicking on it or programatically giving it focus)
-	state.SetField(-1, "ImGuiWindowFlags_AlwaysVerticalScrollbar", 		1 << 14);  // Always show vertical scrollbar (even if ContentSize.y < Size.y)
-	state.SetField(-1, "ImGuiWindowFlags_AlwaysHorizontalScrollbar", 	1 << 15);  // Always show horizontal scrollbar (even if ContentSize.x < Size.x)
-	state.SetField(-1, "ImGuiWindowFlags_AlwaysUseWindowPadding", 		1 << 16);  // Ensure child windows without border uses style.WindowPadding (ignored by default for non-bordered child windows, because more convenient)
-
+	state.SetField(-1, "WindowFlags_NoTitleBar", 					1 << 0);   // Disable title-bar
+	state.SetField(-1, "WindowFlags_NoResize", 						1 << 1);   // Disable user resizing with the lower-right grip
+	state.SetField(-1, "WindowFlags_NoMove", 						1 << 2);   // Disable user moving the window
+	state.SetField(-1, "WindowFlags_NoScrollbar", 					1 << 3);   // Disable scrollbars (window can still scroll with mouse or programatically)
+	state.SetField(-1, "WindowFlags_NoScrollWithMouse", 			1 << 4);   // Disable user vertically scrolling with mouse wheel
+	state.SetField(-1, "WindowFlags_NoCollapse", 					1 << 5);   // Disable user collapsing window by double-clicking on it
+	state.SetField(-1, "WindowFlags_AlwaysAutoResize", 				1 << 6);   // Resize every window to its content every frame
+	state.SetField(-1, "WindowFlags_ShowBorders", 					1 << 7);   // Show borders around windows and items
+	state.SetField(-1, "WindowFlags_NoSavedSettings", 				1 << 8);   // Never load/save settings in .ini file
+	state.SetField(-1, "WindowFlags_NoInputs", 						1 << 9);   // Disable catching mouse or keyboard inputs
+	state.SetField(-1, "WindowFlags_MenuBar", 						1 << 10);  // Has a menu-bar
+	state.SetField(-1, "WindowFlags_HorizontalScrollbar", 			1 << 11);  // Allow horizontal scrollbar to appear (off by default). You may use SetNextWindowContentSize(ImVec2(width,0.0f)); prior to calling Begin() to specify width. Read code in imgui_demo in the "Horizontal Scrolling" section.
+	state.SetField(-1, "WindowFlags_NoFocusOnAppearing", 			1 << 12);  // Disable taking focus when transitioning from hidden to visible state
+	state.SetField(-1, "WindowFlags_NoBringToFrontOnFocus", 		1 << 13);  // Disable bringing window to front when taking focus (e.g. clicking on it or programatically giving it focus)
+	state.SetField(-1, "WindowFlags_AlwaysVerticalScrollbar", 		1 << 14);  // Always show vertical scrollbar (even if ContentSize.y < Size.y)
+	state.SetField(-1, "WindowFlags_AlwaysHorizontalScrollbar", 	1 << 15);  // Always show horizontal scrollbar (even if ContentSize.x < Size.x)
+	state.SetField(-1, "WindowFlags_AlwaysUseWindowPadding", 		1 << 16);  // Ensure child windows without border uses style.WindowPadding (ignored by default for non-bordered child windows, because more convenient)
+	
+	state.SetField(-1, "InputTextFlags_CharsDecimal",        	 	1 << 0);   // Allow 0123456789.+-*/
+	state.SetField(-1, "InputTextFlags_CharsHexadecimal",    	 	1 << 1);   // Allow 0123456789ABCDEFabcdef
+	state.SetField(-1, "InputTextFlags_CharsUppercase",      	 	1 << 2);   // Turn a..z into A..Z
+	state.SetField(-1, "InputTextFlags_CharsNoBlank",        	 	1 << 3);   // Filter out spaces, tabs
+	state.SetField(-1, "InputTextFlags_AutoSelectAll",       	 	1 << 4);   // Select entire text when first taking mouse focus
+	state.SetField(-1, "InputTextFlags_EnterReturnsTrue",    	 	1 << 5);   // Return 'true' when Enter is pressed (as opposed to when the value was modified)
+	state.SetField(-1, "InputTextFlags_CallbackCompletion",  	 	1 << 6);   // Call user function on pressing TAB (for completion handling)
+	state.SetField(-1, "InputTextFlags_CallbackHistory",     	 	1 << 7);   // Call user function on pressing Up/Down arrows (for history handling)
+	state.SetField(-1, "InputTextFlags_CallbackAlways",      	 	1 << 8);   // Call user function every time. User code may query cursor position, modify text buffer.
+	state.SetField(-1, "InputTextFlags_CallbackCharFilter",  	 	1 << 9);   // Call user function to filter character. Modify data->EventChar to replace/filter input, or return 1 to discard character.
+	state.SetField(-1, "InputTextFlags_AllowTabInput",       	 	1 << 10);  // Pressing TAB input a '\t' character into the text field
+	state.SetField(-1, "InputTextFlags_CtrlEnterForNewLine", 	 	1 << 11);  // In multi-line mode, allow exiting edition by pressing Enter. Ctrl+Enter to add new line (by default adds new lines with Enter).
+	state.SetField(-1, "InputTextFlags_NoHorizontalScroll",  	 	1 << 12);  // Disable following the cursor horizontally
+	state.SetField(-1, "InputTextFlags_AlwaysInsertMode",    	 	1 << 13);  // Insert mode
+	state.SetField(-1, "InputTextFlags_ReadOnly",            	 	1 << 14);  // Read-only mode
+	state.SetField(-1, "InputTextFlags_Password",            	 	1 << 15);  // Password mode, display all characters as '*'
 
 	luaL_Reg regTable[] = {
 		{ "ShowTestWindow",				_ShowTestWindow },
@@ -61,6 +77,7 @@ void MOAIImGui::RegisterLuaClass(MOAILuaState& state) {
 		// { "PlotLines",					_PlotLines },
 		// { "PlotHistogram",				_PlotHistogram },
 		{ "ProgressBar",				_ProgressBar },
+		
 		{ "DragFloat",					_DragFloat },
 		{ "DragFloat2",					_DragFloat2 },
 		{ "DragFloat3",					_DragFloat3 },
@@ -71,6 +88,8 @@ void MOAIImGui::RegisterLuaClass(MOAILuaState& state) {
 		{ "DragInt3",					_DragInt3 },
 		{ "DragInt4",					_DragInt4 },
 		{ "DragIntRange2",				_DragIntRange2 },
+
+		{ "InputText",					_InputText },
 		{ NULL, NULL }
 	};
 
@@ -827,8 +846,8 @@ int MOAIImGui::_DragInt2(lua_State* L)
 	cc8* label = state.GetValue < cc8* >(1, "");
 	MOAIImVec2* v = state.GetLuaObject<MOAIImVec2>(2, true);
 	float speed = state.GetValue < float >(3, 1.0f);
-	int min = state.GetValue < int >(4, 0.0f);
-	int max = state.GetValue < int >(5, 0.0f);
+	int min = state.GetValue < int >(4, 0);
+	int max = state.GetValue < int >(5, 0);
 	cc8* display_format = state.GetValue < cc8* >(6, "%.0f");
 
 	int integers[2];
@@ -862,8 +881,8 @@ int MOAIImGui::_DragInt3(lua_State* L)
 	cc8* label = state.GetValue < cc8* >(1, "");
 	MOAIImVec4* v = state.GetLuaObject<MOAIImVec4>(2, true);
 	float speed = state.GetValue < float >(3, 1.0f);
-	int min = state.GetValue < int >(4, 0.0f);
-	int max = state.GetValue < int >(5, 0.0f);
+	int min = state.GetValue < int >(4, 0);
+	int max = state.GetValue < int >(5, 0);
 	cc8* display_format = state.GetValue < cc8* >(6, "%.0f");
 
 	int integers[3];
@@ -899,8 +918,8 @@ int MOAIImGui::_DragInt4(lua_State* L)
 	cc8* label = state.GetValue < cc8* >(1, "");
 	MOAIImVec4* v = state.GetLuaObject<MOAIImVec4>(2, true);
 	float speed = state.GetValue < float >(3, 1.0f);
-	int min = state.GetValue < int >(4, 0.0f);
-	int max = state.GetValue < int >(5, 0.0f);
+	int min = state.GetValue < int >(4, 0);
+	int max = state.GetValue < int >(5, 0);
 	cc8* display_format = state.GetValue < cc8* >(6, "%.0f");
 
 	int integers[4];
@@ -941,8 +960,8 @@ int MOAIImGui::_DragIntRange2(lua_State* L)
 	int v_min = state.GetValue < int >(2, 0);
 	int v_max = state.GetValue < int >(3, 0);
 	float speed = state.GetValue < float >(4, 1.0f);
-	int min = state.GetValue < int >(5, 0.0f);
-	int max = state.GetValue < int >(6, 0.0f);
+	int min = state.GetValue < int >(5, 0);
+	int max = state.GetValue < int >(6, 0);
 	cc8* display_format = state.GetValue < cc8* >(7, "%.0f");
 	cc8* display_format_max = state.GetValue < cc8* >(8, display_format);
 
@@ -952,4 +971,36 @@ int MOAIImGui::_DragIntRange2(lua_State* L)
 	state.Push(ret);
 
 	return 3;
+}
+
+//----------------------------------------------------------------//
+/**	@lua	InputText
+	@text	See ImGui. buf_size defaults to 1024. callback not supported. 
+	user_data not needed. 
+
+	@in		string 			label
+	@in		string 			buf
+	@opt	number			buf_size (max)
+	@opt	number			flags
+	@out	boolean			pressed
+	@out	string 			buf
+*/
+int MOAIImGui::_InputText(lua_State* L)
+{
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "SS");
+
+	cc8* label = state.GetValue < cc8* >(1, "");
+	cc8* buf = state.GetValue < cc8* >(2, "");
+	int buf_size = state.GetValue < int >(3, 1024);
+	int flags = state.GetValue < int >(4, 0);
+
+	char* temp = (char*)alloca(buf_size);
+	strncpy(temp, buf, buf_size);
+
+	// TODO: callback support
+	bool ret = ImGui::InputText(label, temp, buf_size, flags);
+	state.Push(temp);
+	state.Push(ret);
+
+	return 2;
 }
