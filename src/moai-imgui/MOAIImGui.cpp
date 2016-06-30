@@ -90,6 +90,10 @@ void MOAIImGui::RegisterLuaClass(MOAILuaState& state) {
 		{ "DragIntRange2",				_DragIntRange2 },
 
 		{ "InputText",					_InputText },
+		{ "InputFloat",					_InputFloat },
+		{ "InputFloat2",				_InputFloat2 },
+		{ "InputFloat3",				_InputFloat3 },
+		{ "InputFloat4",				_InputFloat4 },
 		{ NULL, NULL }
 	};
 
@@ -997,10 +1001,115 @@ int MOAIImGui::_InputText(lua_State* L)
 	char* temp = (char*)alloca(buf_size);
 	strncpy(temp, buf, buf_size);
 
-	// TODO: callback support
 	bool ret = ImGui::InputText(label, temp, buf_size, flags);
 	state.Push(temp);
 	state.Push(ret);
 
 	return 2;
+}
+
+//----------------------------------------------------------------//
+/**	@lua	InputFloat
+	@text	See ImGui.
+
+	@in		string 			label
+	@in		number 			v
+	@opt	number			step
+	@opt	number			step_fast
+	@opt	number			decimal_precision
+	@opt	number			extra_flags
+	@out	boolean			pressed
+	@out	number 			value
+*/
+int MOAIImGui::_InputFloat(lua_State* L)
+{
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "SN");
+
+	cc8* label = state.GetValue < cc8* >(1, "");
+	float v = state.GetValue < float >(2, 0.0f);
+	float step = state.GetValue < float >(3, 0.0f);
+	float step_fast = state.GetValue < float >(4, 0.0f);
+	int decimal_precision = state.GetValue < int >(5, -1);
+	int extra_flags = state.GetValue < int >(6, 0);
+
+	bool ret = ImGui::InputFloat(label, &v, step, step_fast, decimal_precision, extra_flags);
+	state.Push(v);
+	state.Push(ret);
+
+	return 2;
+}
+
+//----------------------------------------------------------------//
+/**	@lua	InputFloat2
+	@text	See ImGui.
+
+	@in		string 			label
+	@in		ImVec2			v
+	@opt	number			decimal_precision
+	@opt	number			extra_flags
+	@out	boolean			pressed
+*/
+int MOAIImGui::_InputFloat2(lua_State* L)
+{
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "SU");
+
+	cc8* label = state.GetValue < cc8* >(1, "");
+	MOAIImVec2* v = state.GetLuaObject<MOAIImVec2>(2, true);
+	int decimal_precision = state.GetValue < int >(3, -1);
+	int extra_flags = state.GetValue < int >(4, 0);
+	
+	bool ret = ImGui::InputFloat2(label, &v->mVec2.x, decimal_precision, extra_flags);
+	state.Push(ret);
+
+	return 1;
+}
+
+//----------------------------------------------------------------//
+/**	@lua	InputFloat3
+@text	See ImGui.
+
+@in		string 			label
+@in		ImVec4			v
+@opt	number			decimal_precision
+@opt	number			extra_flags
+@out	boolean			pressed
+*/
+int MOAIImGui::_InputFloat3(lua_State* L)
+{
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "SU");
+
+	cc8* label = state.GetValue < cc8* >(1, "");
+	MOAIImVec4* v = state.GetLuaObject<MOAIImVec4>(2, true);
+	int decimal_precision = state.GetValue < int >(3, -1);
+	int extra_flags = state.GetValue < int >(4, 0);
+
+	bool ret = ImGui::InputFloat3(label, &v->mVec4.x, decimal_precision, extra_flags);
+	state.Push(ret);
+
+	return 1;
+}
+
+//----------------------------------------------------------------//
+/**	@lua	InputFloat4
+@text	See ImGui.
+
+@in		string 			label
+@in		ImVec4			v
+@opt	number			decimal_precision
+@opt	number			extra_flags
+@out	boolean			pressed
+*/
+int MOAIImGui::_InputFloat4(lua_State* L)
+{
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "SU");
+
+	cc8* label = state.GetValue < cc8* >(1, "");
+	MOAIImVec4* v = state.GetLuaObject<MOAIImVec4>(2, true);
+	int decimal_precision = state.GetValue < int >(3, -1);
+	int extra_flags = state.GetValue < int >(4, 0);
+
+	bool ret = ImGui::InputFloat4(label, &v->mVec4.x, decimal_precision, extra_flags);
+	state.Push(ret);
+
+	return 1;
 }

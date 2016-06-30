@@ -57,6 +57,10 @@ protected:
 	static int _DragIntRange2(lua_State* L);
 
 	static int _InputText(lua_State* L);
+	static int _InputFloat(lua_State* L);
+	static int _InputFloat2(lua_State* L);
+	static int _InputFloat3(lua_State* L);
+	static int _InputFloat4(lua_State* L);
 
 public:
 
