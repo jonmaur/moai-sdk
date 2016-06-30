@@ -61,6 +61,15 @@ protected:
 	static int _InputFloat2(lua_State* L);
 	static int _InputFloat3(lua_State* L);
 	static int _InputFloat4(lua_State* L);
+	static int _InputInt(lua_State* L);
+	static int _InputInt2(lua_State* L);
+	static int _InputInt3(lua_State* L);
+	static int _InputInt4(lua_State* L);
+
+	// TODO: Sliders
+
+	static int _TreeNode(lua_State* L);
+	static int _TreePop(lua_State* L);
 
 public:
 

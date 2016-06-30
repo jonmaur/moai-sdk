@@ -94,6 +94,15 @@ void MOAIImGui::RegisterLuaClass(MOAILuaState& state) {
 		{ "InputFloat2",				_InputFloat2 },
 		{ "InputFloat3",				_InputFloat3 },
 		{ "InputFloat4",				_InputFloat4 },
+		{ "InputInt",					_InputInt },
+		{ "InputInt2",					_InputInt2 },
+		{ "InputInt3",					_InputInt3 },
+		{ "InputInt4",					_InputInt4 },
+
+		// TODO: sliders
+		
+		{ "TreeNode",					_TreeNode },
+		{ "TreePop",					_TreePop },
 		{ NULL, NULL }
 	};
 
@@ -1112,4 +1121,162 @@ int MOAIImGui::_InputFloat4(lua_State* L)
 	state.Push(ret);
 
 	return 1;
+}
+
+//----------------------------------------------------------------//
+/**	@lua	InputInt
+	@text	See ImGui.
+
+	@in		string 			label
+	@in		number 			v
+	@opt	number			step
+	@opt	number			step_fast
+	@opt	number			extra_flags
+	@out	boolean			pressed
+	@out	number 			value
+*/
+int MOAIImGui::_InputInt(lua_State* L)
+{
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "SN");
+
+	cc8* label = state.GetValue < cc8* >(1, "");
+	int v = state.GetValue < int >(2, 0);
+	int step = state.GetValue < int >(3, 1);
+	int step_fast = state.GetValue < int >(4, 100);
+	int extra_flags = state.GetValue < int >(5, 0);
+
+	bool ret = ImGui::InputInt(label, &v, step, step_fast, extra_flags);
+	state.Push(v);
+	state.Push(ret);
+
+	return 2;
+}
+
+//----------------------------------------------------------------//
+/**	@lua	InputInt2
+	@text	See ImGui.
+
+	@in		string 			label
+	@in		ImVec2			v
+	@opt	number			extra_flags
+	@out	boolean			pressed
+*/
+int MOAIImGui::_InputInt2(lua_State* L)
+{
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "SU");
+
+	cc8* label = state.GetValue < cc8* >(1, "");
+	MOAIImVec2* v = state.GetLuaObject<MOAIImVec2>(2, true);
+	int extra_flags = state.GetValue < int >(3, 0);
+	
+	int integers[2];
+	integers[0] = (int)v->mVec2.x;
+	integers[1] = (int)v->mVec2.y;
+	bool ret = ImGui::InputInt2(label, integers, extra_flags);
+	state.Push(ret);
+
+	v->mVec2.x = (float)integers[0];
+	v->mVec2.y = (float)integers[1];
+
+	return 1;
+}
+
+//----------------------------------------------------------------//
+/**	@lua	InputInt3
+	@text	See ImGui.
+
+	@in		string 			label
+	@in		ImVec4			v
+	@opt	number			extra_flags
+	@out	boolean			pressed
+*/
+int MOAIImGui::_InputInt3(lua_State* L)
+{
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "SU");
+
+	cc8* label = state.GetValue < cc8* >(1, "");
+	MOAIImVec4* v = state.GetLuaObject<MOAIImVec4>(2, true);
+	int extra_flags = state.GetValue < int >(3, 0);
+	
+	int integers[3];
+	integers[0] = (int)v->mVec4.x;
+	integers[1] = (int)v->mVec4.y;
+	integers[2] = (int)v->mVec4.z;
+	bool ret = ImGui::InputInt3(label, integers, extra_flags);
+	state.Push(ret);
+
+	v->mVec4.x = (float)integers[0];
+	v->mVec4.y = (float)integers[1];
+	v->mVec4.z = (float)integers[2];
+
+	return 1;
+}
+
+//----------------------------------------------------------------//
+/**	@lua	InputInt4
+	@text	See ImGui.
+
+	@in		string 			label
+	@in		ImVec4			v
+	@opt	number			extra_flags
+	@out	boolean			pressed
+*/
+int MOAIImGui::_InputInt4(lua_State* L)
+{
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "SU");
+
+	cc8* label = state.GetValue < cc8* >(1, "");
+	MOAIImVec4* v = state.GetLuaObject<MOAIImVec4>(2, true);
+	int extra_flags = state.GetValue < int >(3, 0);
+	
+	int integers[4];
+	integers[0] = (int)v->mVec4.x;
+	integers[1] = (int)v->mVec4.y;
+	integers[2] = (int)v->mVec4.z;
+	integers[3] = (int)v->mVec4.w;
+	bool ret = ImGui::InputInt4(label, integers, extra_flags);
+	state.Push(ret);
+
+	v->mVec4.x = (float)integers[0];
+	v->mVec4.y = (float)integers[1];
+	v->mVec4.z = (float)integers[2];
+	v->mVec4.w = (float)integers[3];
+
+	return 1;
+}
+
+// TODO: Sliders
+
+//----------------------------------------------------------------//
+/**	@lua	TreeNode
+	@text	See ImGui. No point in using format strings here, construct the string in lua.
+
+	@in		string id
+	@opt	string txt
+	@out	boolean			open
+*/
+int MOAIImGui::_TreeNode(lua_State* L)
+{
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "S");
+
+	cc8* id = state.GetValue < cc8* >(1, "");
+	cc8* txt = state.GetValue < cc8* >(2, id);
+	bool ret = ImGui::TreeNode(id, txt);
+	state.Push(ret);
+
+	return 1;
+}
+
+//----------------------------------------------------------------//
+/**	@lua	TreePop
+	@text	See ImGui. No point in using format strings here, construct the string in lua.
+
+*/
+int MOAIImGui::_TreePop(lua_State* L)
+{
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "");
+
+	ImGui::TreePop();
+
+	return 0;
 }
