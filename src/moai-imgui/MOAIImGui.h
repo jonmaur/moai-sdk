@@ -69,7 +69,12 @@ protected:
 	// TODO: Sliders
 
 	static int _TreeNode(lua_State* L);
+	static int _TreeNodeEx(lua_State* L);
 	static int _TreePop(lua_State* L);
+	static int _TreePush(lua_State* L);
+	static int _SetNextTreeNodeOpen(lua_State* L);
+	static int _GetTreeNodeToLabelSpacing(lua_State* L);
+	static int _CollapsingHeader(lua_State* L);
 
 public:
 

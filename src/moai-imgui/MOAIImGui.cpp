@@ -51,6 +51,22 @@ void MOAIImGui::RegisterLuaClass(MOAILuaState& state) {
 	state.SetField(-1, "InputTextFlags_ReadOnly",            	 	1 << 14);  // Read-only mode
 	state.SetField(-1, "InputTextFlags_Password",            	 	1 << 15);  // Password mode, display all characters as '*'
 
+	state.SetField(-1, "SetCond_Always",        1 << 0);	// Set the variable
+	state.SetField(-1, "SetCond_Once",          1 << 1);	// Only set the variable on the first call per runtime session
+	state.SetField(-1, "SetCond_FirstUseEver",  1 << 2);	// Only set the variable if the window doesn't exist in the .ini file
+	state.SetField(-1, "SetCond_Appearing",     1 << 3);	// Only set the variable if the window is appearing after being inactive (or the first time)
+
+	state.SetField(-1, "TreeNodeFlags_Selected",             1 << 0);   // Draw as selected
+	state.SetField(-1, "TreeNodeFlags_Framed",               1 << 1);   // Full colored frame (e.g. for CollapsingHeader)
+	state.SetField(-1, "TreeNodeFlags_AllowOverlapMode",     1 << 2);   // Hit testing to allow subsequent widgets to overlap this one
+	state.SetField(-1, "TreeNodeFlags_NoTreePushOnOpen",     1 << 3);   // Don't do a TreePush() when open (e.g. for CollapsingHeader) = no extra indent nor pushing on ID stack
+	state.SetField(-1, "TreeNodeFlags_NoAutoOpenOnLog",      1 << 4);   // Don't automatically and temporarily open node when Logging is active (by default logging will automatically open tree nodes)
+	state.SetField(-1, "TreeNodeFlags_DefaultOpen",          1 << 5);   // Default node to be open
+	state.SetField(-1, "TreeNodeFlags_OpenOnDoubleClick",    1 << 6);   // Need double-click to open node
+	state.SetField(-1, "TreeNodeFlags_OpenOnArrow",          1 << 7);   // Only open when clicking on the arrow part. If ImGuiTreeNodeFlags_OpenOnDoubleClick is also set, single-click arrow or double-click all box to open.
+	state.SetField(-1, "TreeNodeFlags_AlwaysOpen",           1 << 8);   // No collapsing, no arrow (use as a convenience for leaf nodes). 
+	state.SetField(-1, "TreeNodeFlags_CollapsingHeader",     ImGuiTreeNodeFlags_Framed | ImGuiTreeNodeFlags_NoAutoOpenOnLog);
+
 	luaL_Reg regTable[] = {
 		{ "ShowTestWindow",				_ShowTestWindow },
 		{ "Begin",						_Begin },
@@ -102,7 +118,11 @@ void MOAIImGui::RegisterLuaClass(MOAILuaState& state) {
 		// TODO: sliders
 		
 		{ "TreeNode",					_TreeNode },
+		{ "TreeNodeEx",					_TreeNodeEx },
 		{ "TreePop",					_TreePop },
+		{ "TreePush",					_TreePush },
+		{ "SetNextTreeNodeOpen",		_SetNextTreeNodeOpen },
+		{ "CollapsingHeader",			_CollapsingHeader },
 		{ NULL, NULL }
 	};
 
@@ -1268,6 +1288,30 @@ int MOAIImGui::_TreeNode(lua_State* L)
 }
 
 //----------------------------------------------------------------//
+/**	@lua	TreeNodeEx
+	@text	See ImGui. No point in using format strings here, construct the string in lua.
+
+	@in		string 		id
+	@in		number		flags
+	@opt	string 		txt
+	@out	boolean		open
+*/
+int MOAIImGui::_TreeNodeEx(lua_State* L)
+{
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "SN");
+
+	cc8* id = state.GetValue < cc8* >(1, "");
+	int flags = state.GetValue < int >(2, 0);
+	cc8* txt = state.GetValue < cc8* >(3, id);
+	
+	bool ret = ImGui::TreeNodeEx(id, flags, txt);
+
+	state.Push(ret);
+
+	return 1;
+}
+
+//----------------------------------------------------------------//
 /**	@lua	TreePop
 	@text	See ImGui. No point in using format strings here, construct the string in lua.
 
@@ -1279,4 +1323,98 @@ int MOAIImGui::_TreePop(lua_State* L)
 	ImGui::TreePop();
 
 	return 0;
+}
+
+//----------------------------------------------------------------//
+/**	@lua	TreePush
+	@text	See ImGui.
+
+	@in		string 		id
+*/
+int MOAIImGui::_TreePush(lua_State* L)
+{
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "");
+
+	cc8* id = state.GetValue < cc8* >(1, "");
+	ImGui::TreePush(id);
+
+	return 0;
+}
+
+//----------------------------------------------------------------//
+/**	@lua	SetNextTreeNodeOpen
+	@text	See ImGui.
+
+	@in		boolean 	is_open
+	@opt	number		cond
+*/
+int MOAIImGui::_SetNextTreeNodeOpen(lua_State* L)
+{
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "B");
+
+	bool is_open = state.GetValue < bool >(1, true);
+	int cond = state.GetValue < int >(2, 0);
+
+	ImGui::SetNextTreeNodeOpen(is_open, cond);
+
+	return 0;
+}
+
+//----------------------------------------------------------------//
+/**	@lua	GetTreeNodeToLabelSpacing
+	@text	See ImGui.
+
+	@opt	number	 	flags
+	@out	number		spacing
+*/
+int MOAIImGui::_GetTreeNodeToLabelSpacing(lua_State* L)
+{
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "");
+
+	int flags = state.GetValue < int >(1, 0);
+
+	float ret = ImGui::GetTreeNodeToLabelSpacing(flags);
+	state.Push(ret);
+
+	return 1;
+}
+
+//----------------------------------------------------------------//
+/**	@lua	CollapsingHeader
+	@text	See ImGui.
+
+	@in		string	 	label
+	@opt 	boolean		p_open
+	@opt	number	 	flags
+	@out	number		spacing
+*/
+int MOAIImGui::_CollapsingHeader(lua_State* L)
+{
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "S");
+
+	cc8* label = state.GetValue < cc8* >(1, "");
+
+	if (state.IsType(2, LUA_TNUMBER))
+	{
+		int flags = state.GetValue < int >(2, 0);
+		bool ret = ImGui::CollapsingHeader(label, flags);
+		state.Push(ret);
+
+		return 1;
+	}
+	else if (state.IsType(2, LUA_TBOOLEAN))
+	{
+		bool p_open = state.GetValue < bool >(2, false);
+		int flags = state.GetValue < int >(3, 0);
+		bool ret = ImGui::CollapsingHeader(label, &p_open, flags);
+		state.Push(p_open);
+		state.Push(ret);
+
+		return 2;
+	}
+		
+	bool ret = ImGui::CollapsingHeader(label);
+	state.Push(ret);
+
+	return 1;
 }
