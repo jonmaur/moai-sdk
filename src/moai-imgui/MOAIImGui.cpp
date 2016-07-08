@@ -73,6 +73,17 @@ void MOAIImGui::RegisterLuaClass(MOAILuaState& state) {
 		{ "End",						_End },
 		{ "BeginChild",					_BeginChild },
 		{ "EndChild",					_EndChild },
+
+		{ "Separator",					_Separator },
+		{ "SameLine",					_SameLine },
+		{ "NewLine",					_NewLine },
+		{ "Spacing",					_Spacing },
+		{ "Dummy",						_Dummy },
+		{ "Indent",						_Indent },
+		{ "Unindent",					_Unindent },
+		{ "BeginGroup",					_BeginGroup },
+		{ "EndGroup",					_EndGroup },
+		
 		{ "Text",						_Text },
 		{ "TextColored",				_TextColored },
 		{ "TextDisabled",				_TextDisabled },
@@ -132,7 +143,7 @@ void MOAIImGui::RegisterLuaClass(MOAILuaState& state) {
 		{ "TreePop",					_TreePop },
 		{ "TreePush",					_TreePush },
 		{ "SetNextTreeNodeOpen",		_SetNextTreeNodeOpen },
-		{ "GetTreeNodeToLabelSpacing",			_GetTreeNodeToLabelSpacing },
+		{ "GetTreeNodeToLabelSpacing",	_GetTreeNodeToLabelSpacing },
 		{ "CollapsingHeader",			_CollapsingHeader },
 		{ NULL, NULL }
 	};
@@ -258,6 +269,132 @@ int MOAIImGui::_EndChild(lua_State* L)
 	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "");
 
 	ImGui::EndChild();
+
+	return 0;
+}
+
+//----------------------------------------------------------------//
+/**	@lua	Separator
+	@text	See ImGui.
+*/
+int MOAIImGui::_Separator(lua_State* L)
+{
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "");
+
+	ImGui::Separator();
+
+	return 0;
+}
+
+//----------------------------------------------------------------//
+/**	@lua	SameLine
+	@text	See ImGui.
+
+	@opt	number pos_x
+	@opt	number txt
+*/
+int MOAIImGui::_SameLine(lua_State* L)
+{
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "");
+
+	float pos_x = state.GetValue < float >(1, 0.0f);
+	float spacing_w = state.GetValue < float >(2, -1.0f);
+	ImGui::SameLine(pos_x, spacing_w);
+
+	return 0;
+}
+
+//----------------------------------------------------------------//
+/**	@lua	NewLine
+	@text	See ImGui.
+*/
+int MOAIImGui::_NewLine(lua_State* L)
+{
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "");
+
+	ImGui::NewLine();
+
+	return 0;
+}
+
+//----------------------------------------------------------------//
+/**	@lua	Spacing
+	@text	See ImGui.
+*/
+int MOAIImGui::_Spacing(lua_State* L)
+{
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "");
+
+	ImGui::Spacing();
+
+	return 0;
+}
+
+//----------------------------------------------------------------//
+/**	@lua	Dummy
+	@text	See ImGui.
+
+	@in MOAIImVec2		size
+*/
+int MOAIImGui::_Dummy(lua_State* L)
+{
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "U");
+
+	MOAIImVec2* color = state.GetLuaObject<MOAIImVec2>(1, true);
+
+	ImGui::Dummy(color->mVec2);
+
+	return 0;
+}
+
+//----------------------------------------------------------------//
+/**	@lua	Indent
+	@text	See ImGui.
+*/
+int MOAIImGui::_Indent(lua_State* L)
+{
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "");
+
+	ImGui::Indent();
+
+	return 0;
+}
+
+//----------------------------------------------------------------//
+/**	@lua	Unindent
+	@text	See ImGui.
+*/
+int MOAIImGui::_Unindent(lua_State* L)
+{
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "");
+
+	ImGui::Unindent();
+
+	return 0;
+}
+
+//----------------------------------------------------------------//
+/**	@lua	BeginGroup
+	@text	See ImGui.
+*/
+int MOAIImGui::_BeginGroup(lua_State* L)
+{
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "");
+
+	ImGui::BeginGroup();
+
+	return 0;
+}
+
+//----------------------------------------------------------------//
+/**	@lua	EndGroup
+	@text	See ImGui.
+*/
+int MOAIImGui::_EndGroup(lua_State* L)
+{
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "");
+
+	ImGui::EndGroup();
 
 	return 0;
 }

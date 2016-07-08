@@ -22,6 +22,17 @@ protected:
 	static int _End(lua_State* L);
 	static int _BeginChild(lua_State* L);
 	static int _EndChild(lua_State* L);
+
+	static int _Separator(lua_State* L);
+	static int _SameLine(lua_State* L);
+	static int _NewLine(lua_State* L);
+	static int _Spacing(lua_State* L);
+	static int _Dummy(lua_State* L);
+	static int _Indent(lua_State* L);
+	static int _Unindent(lua_State* L);
+	static int _BeginGroup(lua_State* L);
+	static int _EndGroup(lua_State* L);
+
 	static int _Text(lua_State* L);
 	static int _TextColored(lua_State* L);
 	static int _TextDisabled(lua_State* L);
