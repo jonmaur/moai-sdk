@@ -115,13 +115,24 @@ void MOAIImGui::RegisterLuaClass(MOAILuaState& state) {
 		{ "InputInt3",					_InputInt3 },
 		{ "InputInt4",					_InputInt4 },
 
-		// TODO: sliders
+		{ "SliderFloat",				_SliderFloat },
+		{ "SliderFloat2",				_SliderFloat2 },
+		{ "SliderFloat3",				_SliderFloat3 },
+		{ "SliderFloat4",				_SliderFloat4 },
+		{ "SliderAngle",				_SliderAngle },
+		{ "SliderInt",					_SliderInt },
+		{ "SliderInt2",					_SliderInt2 },
+		{ "SliderInt3",					_SliderInt3 },
+		{ "SliderInt4",					_SliderInt4 },
+		{ "VSliderFloat",				_VSliderFloat },
+		{ "VSliderInt",					_VSliderInt },
 		
 		{ "TreeNode",					_TreeNode },
 		{ "TreeNodeEx",					_TreeNodeEx },
 		{ "TreePop",					_TreePop },
 		{ "TreePush",					_TreePush },
 		{ "SetNextTreeNodeOpen",		_SetNextTreeNodeOpen },
+		{ "GetTreeNodeToLabelSpacing",			_GetTreeNodeToLabelSpacing },
 		{ "CollapsingHeader",			_CollapsingHeader },
 		{ NULL, NULL }
 	};
@@ -1265,11 +1276,352 @@ int MOAIImGui::_InputInt4(lua_State* L)
 	return 1;
 }
 
-// TODO: Sliders
+//----------------------------------------------------------------//
+/**	@lua	SliderFloat
+	@text	See ImGui.
+
+	@in		string 			label
+	@in		number			v
+	@opt	number			min
+	@opt	number			max
+	@opt	string			display_format
+	@opt	number			power
+	@out	boolean			pressed
+	@out	number			v
+*/
+int MOAIImGui::_SliderFloat(lua_State* L)
+{
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "SN");
+
+	cc8* label = state.GetValue < cc8* >(1, "");
+	float v = state.GetValue < float >(2, 0);
+	float min = state.GetValue < float >(3, 0.0f);
+	float max = state.GetValue < float >(4, 0.0f);
+	cc8* display_format = state.GetValue < cc8* >(5, "%.3f");
+	float power = state.GetValue < float >(6, 1.0f);
+
+	bool ret = ImGui::SliderFloat(label, &v, min, max, display_format, power);
+	state.Push(v);
+	state.Push(ret);
+
+	return 2;
+}
+
+//----------------------------------------------------------------//
+/**	@lua	SliderFloat2
+	@text	See ImGui.
+
+	@in		string 			label
+	@in		ImVec2			v
+	@opt	number			min
+	@opt	number			max
+	@opt	string			display_format
+	@opt	number			power
+	@out	boolean			pressed
+*/
+int MOAIImGui::_SliderFloat2(lua_State* L)
+{
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "SU");
+
+	cc8* label = state.GetValue < cc8* >(1, "");
+	MOAIImVec2* v = state.GetLuaObject<MOAIImVec2>(2, true);
+	float min = state.GetValue < float >(3, 0.0f);
+	float max = state.GetValue < float >(4, 0.0f);
+	cc8* display_format = state.GetValue < cc8* >(5, "%.3f");
+	float power = state.GetValue < float >(6, 1.0f);
+
+	bool ret = ImGui::SliderFloat2(label, &v->mVec2.x, min, max, display_format, power);
+	state.Push(ret);
+
+	return 1;
+}
+
+//----------------------------------------------------------------//
+/**	@lua	SliderFloat3
+	@text	See ImGui.
+
+	@in		string 			label
+	@in		ImVec4			v
+	@opt	number			min
+	@opt	number			max
+	@opt	string			display_format
+	@opt	number			power
+	@out	boolean			pressed
+*/
+int MOAIImGui::_SliderFloat3(lua_State* L)
+{
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "SU");
+
+	cc8* label = state.GetValue < cc8* >(1, "");
+	MOAIImVec4* v = state.GetLuaObject<MOAIImVec4>(2, true);
+	float min = state.GetValue < float >(3, 0.0f);
+	float max = state.GetValue < float >(4, 0.0f);
+	cc8* display_format = state.GetValue < cc8* >(5, "%.3f");
+	float power = state.GetValue < float >(6, 1.0f);
+
+	bool ret = ImGui::SliderFloat3(label, &v->mVec4.x, min, max, display_format, power);
+	state.Push(ret);
+
+	return 1;
+}
+
+//----------------------------------------------------------------//
+/**	@lua	SliderFloat4
+	@text	See ImGui.
+
+	@in		string 			label
+	@in		ImVec4			v
+	@opt	number			min
+	@opt	number			max
+	@opt	string			display_format
+	@opt	number			power
+	@out	boolean			pressed
+*/
+int MOAIImGui::_SliderFloat4(lua_State* L)
+{
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "SU");
+
+	cc8* label = state.GetValue < cc8* >(1, "");
+	MOAIImVec4* v = state.GetLuaObject<MOAIImVec4>(2, true);
+	float min = state.GetValue < float >(3, 0.0f);
+	float max = state.GetValue < float >(4, 0.0f);
+	cc8* display_format = state.GetValue < cc8* >(5, "%.3f");
+	float power = state.GetValue < float >(6, 1.0f);
+
+	bool ret = ImGui::SliderFloat4(label, &v->mVec4.x, min, max, display_format, power);
+	state.Push(ret);
+
+	return 1;
+}
+
+//----------------------------------------------------------------//
+/**	@lua	SliderAngle
+	@text	See ImGui.
+
+	@in		string 			label
+	@in		number			v_rad
+	@opt	number			v_degrees_min
+	@opt	number			v_degrees_max
+	@out	boolean			pressed
+	@out	number			v_rad
+*/
+int MOAIImGui::_SliderAngle(lua_State* L)
+{
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "SN");
+
+	cc8* label = state.GetValue < cc8* >(1, "");
+	float v_rad = state.GetValue < float >(2, 0);
+	float v_degrees_min = state.GetValue < float >(3, -360.0f);
+	float v_degrees_max = state.GetValue < float >(4, 360.0f);
+
+	bool ret = ImGui::SliderAngle(label, &v_rad, v_degrees_min, v_degrees_max);
+	state.Push(v_rad);
+	state.Push(ret);
+
+	return 2;
+}
+
+//----------------------------------------------------------------//
+/**	@lua	SliderInt
+	@text	See ImGui.
+
+	@in		string 			label
+	@in		number			v
+	@opt	number			min
+	@opt	number			max
+	@opt	string			display_format
+	@out	boolean			pressed
+	@out	number			currentv
+*/
+int MOAIImGui::_SliderInt(lua_State* L)
+{
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "SN");
+
+	cc8* label = state.GetValue < cc8* >(1, "");
+	int v = state.GetValue < int >(2, 0);
+	int min = state.GetValue < int >(3, 0);
+	int max = state.GetValue < int >(4, 0);
+	cc8* display_format = state.GetValue < cc8* >(5, "%.0f");
+
+	bool ret = ImGui::SliderInt(label, &v, min, max, display_format);
+	state.Push(v);
+	state.Push(ret);
+
+	return 2;
+}
+
+//----------------------------------------------------------------//
+/**	@lua	SliderInt2
+	@text	See ImGui.
+
+	@in		string 			label
+	@in		ImVec2			v
+	@opt	number			min
+	@opt	number			max
+	@opt	string			display_format
+	@out	boolean			pressed
+*/
+int MOAIImGui::_SliderInt2(lua_State* L)
+{
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "SU");
+
+	cc8* label = state.GetValue < cc8* >(1, "");
+	MOAIImVec2* v = state.GetLuaObject<MOAIImVec2>(2, true);
+	int min = state.GetValue < int >(3, 0);
+	int max = state.GetValue < int >(4, 0);
+	cc8* display_format = state.GetValue < cc8* >(5, "%.0f");
+
+	int integers[2];
+	integers[0] = (int)v->mVec2.x;
+	integers[1] = (int)v->mVec2.y;
+	bool ret = ImGui::SliderInt2(label, integers, min, max, display_format);
+	state.Push(ret);
+
+	v->mVec2.x = (float)integers[0];
+	v->mVec2.y = (float)integers[1];
+
+	return 1;
+}
+
+//----------------------------------------------------------------//
+/**	@lua	SliderInt3
+	@text	See ImGui.
+
+	@in		string 			label
+	@in		ImVec4			v
+	@opt	number			min
+	@opt	number			max
+	@opt	string			display_format
+	@out	boolean			pressed
+*/
+int MOAIImGui::_SliderInt3(lua_State* L)
+{
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "SU");
+
+	cc8* label = state.GetValue < cc8* >(1, "");
+	MOAIImVec4* v = state.GetLuaObject<MOAIImVec4>(2, true);
+	int min = state.GetValue < int >(3, 0);
+	int max = state.GetValue < int >(4, 0);
+	cc8* display_format = state.GetValue < cc8* >(5, "%.0f");
+
+	int integers[3];
+	integers[0] = (int)v->mVec4.x;
+	integers[1] = (int)v->mVec4.y;
+	integers[2] = (int)v->mVec4.z;
+	bool ret = ImGui::SliderInt3(label, integers, min, max, display_format);
+	state.Push(ret);
+
+	v->mVec4.x = (float)integers[0];
+	v->mVec4.y = (float)integers[1];
+	v->mVec4.z = (float)integers[2];
+
+	return 1;
+}
+
+bool          SliderInt4(const char* label, int v[4], int v_min, int v_max, const char* display_format = "%.0f");
+//----------------------------------------------------------------//
+/**	@lua	SliderInt4
+	@text	See ImGui.
+
+	@in		string 			label
+	@in		ImVec4			v
+	@opt	number			min
+	@opt	number			max
+	@opt	string			display_format
+	@out	boolean			pressed
+*/
+int MOAIImGui::_SliderInt4(lua_State* L)
+{
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "SU");
+
+	cc8* label = state.GetValue < cc8* >(1, "");
+	MOAIImVec4* v = state.GetLuaObject<MOAIImVec4>(2, true);
+	int min = state.GetValue < int >(3, 0);
+	int max = state.GetValue < int >(4, 0);
+	cc8* display_format = state.GetValue < cc8* >(5, "%.0f");
+
+	int integers[4];
+	integers[0] = (int)v->mVec4.x;
+	integers[1] = (int)v->mVec4.y;
+	integers[2] = (int)v->mVec4.z;
+	integers[3] = (int)v->mVec4.w;
+	bool ret = ImGui::SliderInt4(label, integers, min, max, display_format);
+	state.Push(ret);
+
+	v->mVec4.x = (float)integers[0];
+	v->mVec4.y = (float)integers[1];
+	v->mVec4.z = (float)integers[2];
+	v->mVec4.w = (float)integers[3];
+	return 1;
+}
+
+//----------------------------------------------------------------//
+/**	@lua	VSliderFloat
+	@text	See ImGui.
+
+	@in		string 			label
+	@in		ImVec2			size
+	@in		number			v
+	@opt	number			min
+	@opt	number			max
+	@opt	string			display_format
+	@opt	number			power
+	@out	boolean			pressed
+	@out	number			v
+*/
+int MOAIImGui::_VSliderFloat(lua_State* L)
+{
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "SUN");
+
+	cc8* label = state.GetValue < cc8* >(1, "");
+	MOAIImVec2* size = state.GetLuaObject<MOAIImVec2>(2, true);
+	float v = state.GetValue < float >(3, 0);
+	float min = state.GetValue < float >(4, 0.0f);
+	float max = state.GetValue < float >(5, 0.0f);
+	cc8* display_format = state.GetValue < cc8* >(6, "%.3f");
+	float power = state.GetValue < float >(7, 1.0f);
+
+	bool ret = ImGui::VSliderFloat(label, size->mVec2, &v, min, max, display_format, power);
+	state.Push(v);
+	state.Push(ret);
+
+	return 2;
+}
+
+//----------------------------------------------------------------//
+/**	@lua	VSliderInt
+	@text	See ImGui.
+
+	@in		string 			label
+	@in		ImVec2			size
+	@in		number			v
+	@opt	number			min
+	@opt	number			max
+	@opt	string			display_format
+	@out	boolean			pressed
+	@out	number			currentv
+*/
+int MOAIImGui::_VSliderInt(lua_State* L)
+{
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "SUN");
+
+	cc8* label = state.GetValue < cc8* >(1, "");
+	MOAIImVec2* size = state.GetLuaObject<MOAIImVec2>(2, true);
+	int v = state.GetValue < int >(3, 0);
+	int min = state.GetValue < int >(4, 0);
+	int max = state.GetValue < int >(5, 0);
+	cc8* display_format = state.GetValue < cc8* >(6, "%.0f");
+
+	bool ret = ImGui::VSliderInt(label, size->mVec2, &v, min, max, display_format);
+	state.Push(v);
+	state.Push(ret);
+
+	return 2;
+}
 
 //----------------------------------------------------------------//
 /**	@lua	TreeNode
-	@text	See ImGui. No point in using format strings here, construct the string in lua.
+	@text	See ImGui.
 
 	@in		string id
 	@opt	string txt

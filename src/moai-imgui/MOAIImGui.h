@@ -66,7 +66,17 @@ protected:
 	static int _InputInt3(lua_State* L);
 	static int _InputInt4(lua_State* L);
 
-	// TODO: Sliders
+	static int _SliderFloat(lua_State* L);
+	static int _SliderFloat2(lua_State* L);
+	static int _SliderFloat3(lua_State* L);
+	static int _SliderFloat4(lua_State* L);
+	static int _SliderAngle(lua_State* L);
+	static int _SliderInt(lua_State* L);
+	static int _SliderInt2(lua_State* L);
+	static int _SliderInt3(lua_State* L);
+	static int _SliderInt4(lua_State* L);
+	static int _VSliderFloat(lua_State* L);
+	static int _VSliderInt(lua_State* L);
 
 	static int _TreeNode(lua_State* L);
 	static int _TreeNodeEx(lua_State* L);
