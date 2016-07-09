@@ -32,6 +32,12 @@ protected:
 	static int _Unindent(lua_State* L);
 	static int _BeginGroup(lua_State* L);
 	static int _EndGroup(lua_State* L);
+	static int _GetCursorPos(lua_State* L);
+	static int _GetCursorPosX(lua_State* L);
+	static int _GetCursorPosY(lua_State* L);
+	static int _SetCursorPos(lua_State* L);
+	static int _SetCursorPosX(lua_State* L);
+	static int _SetCursorPosY(lua_State* L);
 
 	static int _Text(lua_State* L);
 	static int _TextColored(lua_State* L);

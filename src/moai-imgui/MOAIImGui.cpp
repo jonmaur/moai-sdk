@@ -83,6 +83,12 @@ void MOAIImGui::RegisterLuaClass(MOAILuaState& state) {
 		{ "Unindent",					_Unindent },
 		{ "BeginGroup",					_BeginGroup },
 		{ "EndGroup",					_EndGroup },
+		{ "GetCursorPos",				_GetCursorPos },
+		{ "GetCursorPosX",				_GetCursorPosX },
+		{ "GetCursorPosY",				_GetCursorPosY },
+		{ "SetCursorPos",				_SetCursorPos },
+		{ "SetCursorPosX",				_SetCursorPosX },
+		{ "SetCursorPosY",				_SetCursorPosY },
 		
 		{ "Text",						_Text },
 		{ "TextColored",				_TextColored },
@@ -395,6 +401,107 @@ int MOAIImGui::_EndGroup(lua_State* L)
 	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "");
 
 	ImGui::EndGroup();
+
+	return 0;
+}
+
+//----------------------------------------------------------------//
+/**	@lua	GetCursorPos
+	@text	See ImGui.
+
+	@out	number x
+	@out	number y
+*/
+int MOAIImGui::_GetCursorPos(lua_State* L)
+{
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "");
+
+	ImVec2 ret = ImGui::GetCursorPos();
+	state.Push(ret.x);
+	state.Push(ret.y);
+
+	return 2;
+}
+
+//----------------------------------------------------------------//
+/**	@lua	GetCursorPosX
+	@text	See ImGui.
+
+	@out	number x
+*/
+int MOAIImGui::_GetCursorPosX(lua_State* L)
+{
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "");
+
+	float ret = ImGui::GetCursorPosX();
+	state.Push(ret);
+
+	return 1;
+}
+
+//----------------------------------------------------------------//
+/**	@lua	GetCursorPosY
+	@text	See ImGui.
+
+	@out	number y
+*/
+int MOAIImGui::_GetCursorPosY(lua_State* L)
+{
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "");
+
+	float ret = ImGui::GetCursorPosY();
+	state.Push(ret);
+
+	return 1;
+}
+
+//----------------------------------------------------------------//
+/**	@lua	SetCursorPos
+	@text	See ImGui.
+
+	@in MOAIImVec2		local_pos
+*/
+int MOAIImGui::_SetCursorPos(lua_State* L)
+{
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "U");
+
+	MOAIImVec2* local_pos = state.GetLuaObject<MOAIImVec2>(1, true);
+
+	ImGui::SetCursorPos(local_pos->mVec2);
+
+	return 0;
+}
+
+//----------------------------------------------------------------//
+/**	@lua	SetCursorPosX
+	@text	See ImGui.
+
+	@in number		x
+*/
+int MOAIImGui::_SetCursorPosX(lua_State* L)
+{
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "N");
+
+	float x = state.GetValue<float>(1, 0.0f);
+
+	ImGui::SetCursorPosX(x);
+
+	return 0;
+}
+
+//----------------------------------------------------------------//
+/**	@lua	SetCursorPosY
+	@text	See ImGui.
+
+	@in number		y
+*/
+int MOAIImGui::_SetCursorPosY(lua_State* L)
+{
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "N");
+
+	float y = state.GetValue<float>(1, 0.0f);
+
+	ImGui::SetCursorPosY(y);
 
 	return 0;
 }
