@@ -38,6 +38,13 @@ protected:
 	static int _SetCursorPos(lua_State* L);
 	static int _SetCursorPosX(lua_State* L);
 	static int _SetCursorPosY(lua_State* L);
+	static int _GetCursorStartPos(lua_State* L);
+	static int _GetCursorScreenPos(lua_State* L);
+	static int _SetCursorScreenPos(lua_State* L);
+	static int _AlignFirstTextHeightToWidgets(lua_State* L);
+	static int _GetTextLineHeight(lua_State* L);
+	static int _GetTextLineHeightWithSpacing(lua_State* L);
+	static int _GetItemsLineHeightWithSpacing(lua_State* L);
 
 	static int _Text(lua_State* L);
 	static int _TextColored(lua_State* L);

@@ -68,89 +68,96 @@ void MOAIImGui::RegisterLuaClass(MOAILuaState& state) {
 	state.SetField(-1, "TreeNodeFlags_CollapsingHeader",     ImGuiTreeNodeFlags_Framed | ImGuiTreeNodeFlags_NoAutoOpenOnLog);
 
 	luaL_Reg regTable[] = {
-		{ "ShowTestWindow",				_ShowTestWindow },
-		{ "Begin",						_Begin },
-		{ "End",						_End },
-		{ "BeginChild",					_BeginChild },
-		{ "EndChild",					_EndChild },
+		{ "ShowTestWindow",					_ShowTestWindow },
+		{ "Begin",							_Begin },
+		{ "End",							_End },
+		{ "BeginChild",						_BeginChild },
+		{ "EndChild",						_EndChild },
 
-		{ "Separator",					_Separator },
-		{ "SameLine",					_SameLine },
-		{ "NewLine",					_NewLine },
-		{ "Spacing",					_Spacing },
-		{ "Dummy",						_Dummy },
-		{ "Indent",						_Indent },
-		{ "Unindent",					_Unindent },
-		{ "BeginGroup",					_BeginGroup },
-		{ "EndGroup",					_EndGroup },
-		{ "GetCursorPos",				_GetCursorPos },
-		{ "GetCursorPosX",				_GetCursorPosX },
-		{ "GetCursorPosY",				_GetCursorPosY },
-		{ "SetCursorPos",				_SetCursorPos },
-		{ "SetCursorPosX",				_SetCursorPosX },
-		{ "SetCursorPosY",				_SetCursorPosY },
+		{ "Separator",						_Separator },
+		{ "SameLine",						_SameLine },
+		{ "NewLine",						_NewLine },
+		{ "Spacing",						_Spacing },
+		{ "Dummy",							_Dummy },
+		{ "Indent",							_Indent },
+		{ "Unindent",						_Unindent },
+		{ "BeginGroup",						_BeginGroup },
+		{ "EndGroup",						_EndGroup },
+		{ "GetCursorPos",					_GetCursorPos },
+		{ "GetCursorPosX",					_GetCursorPosX },
+		{ "GetCursorPosY",					_GetCursorPosY },
+		{ "SetCursorPos",					_SetCursorPos },
+		{ "SetCursorPosX",					_SetCursorPosX },
+		{ "SetCursorPosY",					_SetCursorPosY },
+		{ "GetCursorStartPos",				_GetCursorStartPos },
+		{ "GetCursorScreenPos",				_GetCursorScreenPos },
+		{ "SetCursorScreenPos",				_SetCursorScreenPos },
+		{ "AlignFirstTextHeightToWidgets",	_AlignFirstTextHeightToWidgets },
+		{ "GetTextLineHeight",				_GetTextLineHeight },
+		{ "GetTextLineHeightWithSpacing",	_GetTextLineHeightWithSpacing },
+		{ "GetItemsLineHeightWithSpacing",	_GetItemsLineHeightWithSpacing },
 		
-		{ "Text",						_Text },
-		{ "TextColored",				_TextColored },
-		{ "TextDisabled",				_TextDisabled },
-		{ "TextWrapped",				_TextWrapped },
-		{ "TextUnformatted",			_TextUnformatted },
-		{ "LabelText",					_LabelText },
-		{ "Bullet",						_Bullet },
-		{ "BulletText",					_BulletText },
-		{ "Button",						_Button },
-		{ "SmallButton",				_SmallButton },
-		{ "InvisibleButton",			_InvisibleButton },
-		{ "Checkbox",					_Checkbox },
-		{ "RadioButton",				_RadioButton },
-		{ "Combo",						_Combo },
-		{ "ColorButton",				_ColorButton },
-		{ "ColorEdit3",					_ColorEdit3 },
-		{ "ColorEdit4",					_ColorEdit4 },
+		{ "Text",							_Text },
+		{ "TextColored",					_TextColored },
+		{ "TextDisabled",					_TextDisabled },
+		{ "TextWrapped",					_TextWrapped },
+		{ "TextUnformatted",				_TextUnformatted },
+		{ "LabelText",						_LabelText },
+		{ "Bullet",							_Bullet },
+		{ "BulletText",						_BulletText },
+		{ "Button",							_Button },
+		{ "SmallButton",					_SmallButton },
+		{ "InvisibleButton",				_InvisibleButton },
+		{ "Checkbox",						_Checkbox },
+		{ "RadioButton",					_RadioButton },
+		{ "Combo",							_Combo },
+		{ "ColorButton",					_ColorButton },
+		{ "ColorEdit3",						_ColorEdit3 },
+		{ "ColorEdit4",						_ColorEdit4 },
 		// { "PlotLines",					_PlotLines },
 		// { "PlotHistogram",				_PlotHistogram },
-		{ "ProgressBar",				_ProgressBar },
+		{ "ProgressBar",					_ProgressBar },
 		
-		{ "DragFloat",					_DragFloat },
-		{ "DragFloat2",					_DragFloat2 },
-		{ "DragFloat3",					_DragFloat3 },
-		{ "DragFloat4",					_DragFloat4 },
-		{ "DragFloatRange2",			_DragFloatRange2 },
-		{ "DragInt",					_DragInt },
-		{ "DragInt2",					_DragInt2 },
-		{ "DragInt3",					_DragInt3 },
-		{ "DragInt4",					_DragInt4 },
-		{ "DragIntRange2",				_DragIntRange2 },
+		{ "DragFloat",						_DragFloat },
+		{ "DragFloat2",						_DragFloat2 },
+		{ "DragFloat3",						_DragFloat3 },
+		{ "DragFloat4",						_DragFloat4 },
+		{ "DragFloatRange2",				_DragFloatRange2 },
+		{ "DragInt",						_DragInt },
+		{ "DragInt2",						_DragInt2 },
+		{ "DragInt3",						_DragInt3 },
+		{ "DragInt4",						_DragInt4 },
+		{ "DragIntRange2",					_DragIntRange2 },
 
-		{ "InputText",					_InputText },
-		{ "InputFloat",					_InputFloat },
-		{ "InputFloat2",				_InputFloat2 },
-		{ "InputFloat3",				_InputFloat3 },
-		{ "InputFloat4",				_InputFloat4 },
-		{ "InputInt",					_InputInt },
-		{ "InputInt2",					_InputInt2 },
-		{ "InputInt3",					_InputInt3 },
-		{ "InputInt4",					_InputInt4 },
+		{ "InputText",						_InputText },
+		{ "InputFloat",						_InputFloat },
+		{ "InputFloat2",					_InputFloat2 },
+		{ "InputFloat3",					_InputFloat3 },
+		{ "InputFloat4",					_InputFloat4 },
+		{ "InputInt",						_InputInt },
+		{ "InputInt2",						_InputInt2 },
+		{ "InputInt3",						_InputInt3 },
+		{ "InputInt4",						_InputInt4 },
 
-		{ "SliderFloat",				_SliderFloat },
-		{ "SliderFloat2",				_SliderFloat2 },
-		{ "SliderFloat3",				_SliderFloat3 },
-		{ "SliderFloat4",				_SliderFloat4 },
-		{ "SliderAngle",				_SliderAngle },
-		{ "SliderInt",					_SliderInt },
-		{ "SliderInt2",					_SliderInt2 },
-		{ "SliderInt3",					_SliderInt3 },
-		{ "SliderInt4",					_SliderInt4 },
-		{ "VSliderFloat",				_VSliderFloat },
-		{ "VSliderInt",					_VSliderInt },
+		{ "SliderFloat",					_SliderFloat },
+		{ "SliderFloat2",					_SliderFloat2 },
+		{ "SliderFloat3",					_SliderFloat3 },
+		{ "SliderFloat4",					_SliderFloat4 },
+		{ "SliderAngle",					_SliderAngle },
+		{ "SliderInt",						_SliderInt },
+		{ "SliderInt2",						_SliderInt2 },
+		{ "SliderInt3",						_SliderInt3 },
+		{ "SliderInt4",						_SliderInt4 },
+		{ "VSliderFloat",					_VSliderFloat },
+		{ "VSliderInt",						_VSliderInt },
 		
-		{ "TreeNode",					_TreeNode },
-		{ "TreeNodeEx",					_TreeNodeEx },
-		{ "TreePop",					_TreePop },
-		{ "TreePush",					_TreePush },
-		{ "SetNextTreeNodeOpen",		_SetNextTreeNodeOpen },
-		{ "GetTreeNodeToLabelSpacing",	_GetTreeNodeToLabelSpacing },
-		{ "CollapsingHeader",			_CollapsingHeader },
+		{ "TreeNode",						_TreeNode },
+		{ "TreeNodeEx",						_TreeNodeEx },
+		{ "TreePop",						_TreePop },
+		{ "TreePush",						_TreePush },
+		{ "SetNextTreeNodeOpen",			_SetNextTreeNodeOpen },
+		{ "GetTreeNodeToLabelSpacing",		_GetTreeNodeToLabelSpacing },
+		{ "CollapsingHeader",				_CollapsingHeader },
 		{ NULL, NULL }
 	};
 
@@ -504,6 +511,120 @@ int MOAIImGui::_SetCursorPosY(lua_State* L)
 	ImGui::SetCursorPosY(y);
 
 	return 0;
+}
+
+//----------------------------------------------------------------//
+/**	@lua	GetCursorStartPos
+	@text	See ImGui.
+
+	@out	number x
+	@out	number y
+*/
+int MOAIImGui::_GetCursorStartPos(lua_State* L)
+{
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "");
+
+	ImVec2 ret = ImGui::GetCursorStartPos();
+	state.Push(ret.x);
+	state.Push(ret.y);
+
+	return 2;
+}
+
+//----------------------------------------------------------------//
+/**	@lua	GetCursorScreenPos
+	@text	See ImGui.
+
+	@out	number x
+	@out	number y
+*/
+int MOAIImGui::_GetCursorScreenPos(lua_State* L)
+{
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "");
+
+	ImVec2 ret = ImGui::GetCursorScreenPos();
+	state.Push(ret.x);
+	state.Push(ret.y);
+
+	return 2;
+}
+
+//----------------------------------------------------------------//
+/**	@lua	SetCursorScreenPos
+	@text	See ImGui.
+
+	@in MOAIImVec2		pos
+*/
+int MOAIImGui::_SetCursorScreenPos(lua_State* L)
+{
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "U");
+
+	MOAIImVec2* pos = state.GetLuaObject<MOAIImVec2>(1, true);
+
+	ImGui::SetCursorScreenPos(pos->mVec2);
+
+	return 0;
+}
+
+//----------------------------------------------------------------//
+/**	@lua	AlignFirstTextHeightToWidgets
+	@text	See ImGui.
+*/
+int MOAIImGui::_AlignFirstTextHeightToWidgets(lua_State* L)
+{
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "");
+
+	ImGui::AlignFirstTextHeightToWidgets();
+
+	return 0;
+}
+
+//----------------------------------------------------------------//
+/**	@lua	GetTextLineHeight
+	@text	See ImGui.
+
+	@out	number height
+*/
+int MOAIImGui::_GetTextLineHeight(lua_State* L)
+{
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "");
+
+	float ret = ImGui::GetTextLineHeight();
+	state.Push(ret);
+
+	return 1;
+}
+
+//----------------------------------------------------------------//
+/**	@lua	GetTextLineHeightWithSpacing
+	@text	See ImGui.
+
+	@out	number height
+*/
+int MOAIImGui::_GetTextLineHeightWithSpacing(lua_State* L)
+{
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "");
+
+	float ret = ImGui::GetTextLineHeightWithSpacing();
+	state.Push(ret);
+
+	return 1;
+}
+
+//----------------------------------------------------------------//
+/**	@lua	GetItemsLineHeightWithSpacing
+	@text	See ImGui.
+
+	@out	number height
+*/
+int MOAIImGui::_GetItemsLineHeightWithSpacing(lua_State* L)
+{
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "");
+
+	float ret = ImGui::GetItemsLineHeightWithSpacing();
+	state.Push(ret);
+
+	return 1;
 }
 
 //----------------------------------------------------------------//
