@@ -51,28 +51,66 @@ void MOAIImGui::RegisterLuaClass(MOAILuaState& state) {
 	state.SetField(-1, "InputTextFlags_ReadOnly",            	 	1 << 14);  // Read-only mode
 	state.SetField(-1, "InputTextFlags_Password",            	 	1 << 15);  // Password mode, display all characters as '*'
 
-	state.SetField(-1, "SetCond_Always",        1 << 0);	// Set the variable
-	state.SetField(-1, "SetCond_Once",          1 << 1);	// Only set the variable on the first call per runtime session
-	state.SetField(-1, "SetCond_FirstUseEver",  1 << 2);	// Only set the variable if the window doesn't exist in the .ini file
-	state.SetField(-1, "SetCond_Appearing",     1 << 3);	// Only set the variable if the window is appearing after being inactive (or the first time)
+	state.SetField(-1, "SetCond_Always",        					1 << 0);	// Set the variable
+	state.SetField(-1, "SetCond_Once",          					1 << 1);	// Only set the variable on the first call per runtime session
+	state.SetField(-1, "SetCond_FirstUseEver",  					1 << 2);	// Only set the variable if the window doesn't exist in the .ini file
+	state.SetField(-1, "SetCond_Appearing",     					1 << 3);	// Only set the variable if the window is appearing after being inactive (or the first time)
 
-	state.SetField(-1, "TreeNodeFlags_Selected",             1 << 0);   // Draw as selected
-	state.SetField(-1, "TreeNodeFlags_Framed",               1 << 1);   // Full colored frame (e.g. for CollapsingHeader)
-	state.SetField(-1, "TreeNodeFlags_AllowOverlapMode",     1 << 2);   // Hit testing to allow subsequent widgets to overlap this one
-	state.SetField(-1, "TreeNodeFlags_NoTreePushOnOpen",     1 << 3);   // Don't do a TreePush() when open (e.g. for CollapsingHeader) = no extra indent nor pushing on ID stack
-	state.SetField(-1, "TreeNodeFlags_NoAutoOpenOnLog",      1 << 4);   // Don't automatically and temporarily open node when Logging is active (by default logging will automatically open tree nodes)
-	state.SetField(-1, "TreeNodeFlags_DefaultOpen",          1 << 5);   // Default node to be open
-	state.SetField(-1, "TreeNodeFlags_OpenOnDoubleClick",    1 << 6);   // Need double-click to open node
-	state.SetField(-1, "TreeNodeFlags_OpenOnArrow",          1 << 7);   // Only open when clicking on the arrow part. If ImGuiTreeNodeFlags_OpenOnDoubleClick is also set, single-click arrow or double-click all box to open.
-	state.SetField(-1, "TreeNodeFlags_AlwaysOpen",           1 << 8);   // No collapsing, no arrow (use as a convenience for leaf nodes). 
-	state.SetField(-1, "TreeNodeFlags_CollapsingHeader",     ImGuiTreeNodeFlags_Framed | ImGuiTreeNodeFlags_NoAutoOpenOnLog);
+	state.SetField(-1, "TreeNodeFlags_Selected",             		1 << 0);   // Draw as selected
+	state.SetField(-1, "TreeNodeFlags_Framed",               		1 << 1);   // Full colored frame (e.g. for CollapsingHeader)
+	state.SetField(-1, "TreeNodeFlags_AllowOverlapMode",     		1 << 2);   // Hit testing to allow subsequent widgets to overlap this one
+	state.SetField(-1, "TreeNodeFlags_NoTreePushOnOpen",     		1 << 3);   // Don't do a TreePush() when open (e.g. for CollapsingHeader) = no extra indent nor pushing on ID stack
+	state.SetField(-1, "TreeNodeFlags_NoAutoOpenOnLog",      		1 << 4);   // Don't automatically and temporarily open node when Logging is active (by default logging will automatically open tree nodes)
+	state.SetField(-1, "TreeNodeFlags_DefaultOpen",          		1 << 5);   // Default node to be open
+	state.SetField(-1, "TreeNodeFlags_OpenOnDoubleClick",    		1 << 6);   // Need double-click to open node
+	state.SetField(-1, "TreeNodeFlags_OpenOnArrow",          		1 << 7);   // Only open when clicking on the arrow part. If ImGuiTreeNodeFlags_OpenOnDoubleClick is also set, single-click arrow or double-click all box to open.
+	state.SetField(-1, "TreeNodeFlags_AlwaysOpen",           		1 << 8);   // No collapsing, no arrow (use as a convenience for leaf nodes). 
+	state.SetField(-1, "TreeNodeFlags_CollapsingHeader",     		ImGuiTreeNodeFlags_Framed | ImGuiTreeNodeFlags_NoAutoOpenOnLog);
 
 	luaL_Reg regTable[] = {
 		{ "ShowTestWindow",					_ShowTestWindow },
+		{ "ShowMetricsWindow",				_ShowMetricsWindow },
+
 		{ "Begin",							_Begin },
 		{ "End",							_End },
 		{ "BeginChild",						_BeginChild },
 		{ "EndChild",						_EndChild },
+
+		{ "GetContentRegionMax",			_GetContentRegionMax },
+		{ "GetContentRegionAvail",			_GetContentRegionAvail },
+		{ "GetContentRegionAvailWidth",		_GetContentRegionAvailWidth },
+		{ "GetWindowContentRegionMin",		_GetWindowContentRegionMin },
+		{ "GetWindowContentRegionMax",		_GetWindowContentRegionMax },
+		{ "GetWindowContentRegionWidth",	_GetWindowContentRegionWidth },
+		{ "GetWindowPos",					_GetWindowPos },
+		{ "GetWindowSize",					_GetWindowSize },
+		{ "GetWindowWidth",					_GetWindowWidth },
+		{ "GetWindowHeight",				_GetWindowHeight },
+
+		{ "SetNextWindowPos",				_SetNextWindowPos },
+		{ "SetNextWindowPosCenter",			_SetNextWindowPosCenter },
+		{ "SetNextWindowSize",				_SetNextWindowSize },
+		{ "SetNextWindowSizeConstraint",	_SetNextWindowSizeConstraint },
+		{ "SetNextWindowContentSize",		_SetNextWindowContentSize },
+		{ "SetNextWindowContentWidth",		_SetNextWindowContentWidth },
+		{ "SetNextWindowCollapsed",			_SetNextWindowCollapsed },
+		{ "SetNextWindowFocus",				_SetNextWindowFocus },
+		{ "SetWindowPos",					_SetWindowPos },
+		{ "SetWindowSize",					_SetWindowSize },
+		{ "SetWindowCollapsed",				_SetWindowCollapsed },
+		{ "SetWindowFocus",					_SetWindowFocus },
+
+		{ "GetScrollX",						_GetScrollX },
+		{ "GetScrollY",						_GetScrollY },
+		{ "GetScrollMaxX",					_GetScrollMaxX },
+		{ "GetScrollMaxY",					_GetScrollMaxY },
+		{ "SetScrollX",						_SetScrollX },
+		{ "SetScrollY",						_SetScrollY },
+		{ "SetScrollHere",					_SetScrollHere },
+		{ "SetScrollFromPosY",				_SetScrollFromPosY },
+		{ "SetKeyboardFocusHere",			_SetKeyboardFocusHere },
+		// { "SetStateStorage",				_SetStateStorage },
+		// { "GetStateStorage",				_GetStateStorage },
 
 		{ "Separator",						_Separator },
 		{ "SameLine",						_SameLine },
@@ -96,6 +134,18 @@ void MOAIImGui::RegisterLuaClass(MOAILuaState& state) {
 		{ "GetTextLineHeight",				_GetTextLineHeight },
 		{ "GetTextLineHeightWithSpacing",	_GetTextLineHeightWithSpacing },
 		{ "GetItemsLineHeightWithSpacing",	_GetItemsLineHeightWithSpacing },
+
+		{ "Columns",						_Columns },
+		{ "NextColumn",						_NextColumn },
+		{ "GetColumnIndex",					_GetColumnIndex },
+		{ "GetColumnOffset",				_GetColumnOffset },
+		{ "SetColumnOffset",				_SetColumnOffset },
+		{ "GetColumnWidth",					_GetColumnWidth },
+		{ "GetColumnsCount",				_GetColumnsCount },
+		
+		{ "PushID",							_PushID },
+		{ "PopID",							_PopID },
+		{ "GetID",							_GetID },
 		
 		{ "Text",							_Text },
 		{ "TextColored",					_TextColored },
@@ -168,7 +218,6 @@ void MOAIImGui::RegisterLuaClass(MOAILuaState& state) {
 /**	@lua	ShowTestWindow
 	@text	Show a test window for ImGui.
 
-	@in		MOAIAction self
 	@opt	boolean show		Default value is 'true.'
 	@out	boolean show
 */
@@ -179,6 +228,26 @@ int MOAIImGui::_ShowTestWindow(lua_State* L)
 	bool open = state.GetValue < bool >(1, true);
 
 	ImGui::ShowTestWindow(&open);
+
+	state.Push(open);
+
+	return 1;
+}
+
+//----------------------------------------------------------------//
+/**	@lua	ShowMetricsWindow
+	@text	Show a metrics window for ImGui.
+
+	@opt	boolean show		Default value is 'true.'
+	@out	boolean show
+*/
+int MOAIImGui::_ShowMetricsWindow(lua_State* L)
+{
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "");
+
+	bool open = state.GetValue < bool >(1, true);
+
+	ImGui::ShowMetricsWindow(&open);
 
 	state.Push(open);
 
@@ -223,8 +292,6 @@ int MOAIImGui::_End(lua_State* L)
 	return 0;
 }
 
-//bool          BeginChild(const char* str_id, const ImVec2& size = ImVec2(0,0), bool border = false, ImGuiWindowFlags extra_flags = 0);    // begin a scrolling region. size==0.0f: use remaining window size, size<0.0f: use remaining window size minus abs(size). size>0.0f: fixed size. each axis can use a different mode, e.g. ImVec2(0,400).
-//bool          BeginChild(ImGuiID id, const ImVec2& size = ImVec2(0,0), bool border = false, ImGuiWindowFlags extra_flags = 0);            // "
 //----------------------------------------------------------------//
 /**	@lua	ShowTestWindow
 @text	Show a test window for ImGui.
@@ -282,6 +349,581 @@ int MOAIImGui::_EndChild(lua_State* L)
 	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "");
 
 	ImGui::EndChild();
+
+	return 0;
+}
+
+//----------------------------------------------------------------//
+/**	@lua	GetContentRegionMax
+	@text	See ImGui.
+
+	@out	number x
+	@out	number y
+*/
+int MOAIImGui::_GetContentRegionMax(lua_State* L)
+{
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "");
+
+	ImVec2 ret = ImGui::GetContentRegionMax();
+	state.Push(ret.x);
+	state.Push(ret.y);
+
+	return 2;
+}
+
+//----------------------------------------------------------------//
+/**	@lua	GetContentRegionAvail
+	@text	See ImGui.
+
+	@out	number x
+	@out	number y
+*/
+int MOAIImGui::_GetContentRegionAvail(lua_State* L)
+{
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "");
+
+	ImVec2 ret = ImGui::GetContentRegionAvail();
+	state.Push(ret.x);
+	state.Push(ret.y);
+
+	return 2;
+}
+
+//----------------------------------------------------------------//
+/**	@lua	GetContentRegionAvailWidth
+	@text	See ImGui.
+
+	@out	number width
+*/
+int MOAIImGui::_GetContentRegionAvailWidth(lua_State* L)
+{
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "");
+
+	float width = ImGui::GetContentRegionAvailWidth();
+	state.Push(width);
+
+	return 1;
+}
+
+//----------------------------------------------------------------//
+/**	@lua	GetWindowContentRegionMin
+	@text	See ImGui.
+
+	@out	number x
+	@out	number y
+*/
+int MOAIImGui::_GetWindowContentRegionMin(lua_State* L)
+{
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "");
+
+	ImVec2 ret = ImGui::GetWindowContentRegionMin();
+	state.Push(ret.x);
+	state.Push(ret.y);
+
+	return 2;
+}
+
+//----------------------------------------------------------------//
+/**	@lua	GetWindowContentRegionMax
+	@text	See ImGui.
+
+	@out	number x
+	@out	number y
+*/
+int MOAIImGui::_GetWindowContentRegionMax(lua_State* L)
+{
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "");
+
+	ImVec2 ret = ImGui::GetWindowContentRegionMax();
+	state.Push(ret.x);
+	state.Push(ret.y);
+
+	return 2;
+}
+
+//----------------------------------------------------------------//
+/**	@lua	GetWindowContentRegionWidth
+	@text	See ImGui.
+
+	@out	number width
+*/
+int MOAIImGui::_GetWindowContentRegionWidth(lua_State* L)
+{
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "");
+
+	float width = ImGui::GetWindowContentRegionWidth();
+	state.Push(width);
+
+	return 1;
+}
+
+//----------------------------------------------------------------//
+/**	@lua	GetWindowPos
+	@text	See ImGui.
+
+	@out	number x
+	@out	number y
+*/
+int MOAIImGui::_GetWindowPos(lua_State* L)
+{
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "");
+
+	ImVec2 ret = ImGui::GetWindowPos();
+	state.Push(ret.x);
+	state.Push(ret.y);
+
+	return 2;
+}
+
+//----------------------------------------------------------------//
+/**	@lua	GetWindowSize
+	@text	See ImGui.
+
+	@out	number x
+	@out	number y
+*/
+int MOAIImGui::_GetWindowSize(lua_State* L)
+{
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "");
+
+	ImVec2 ret = ImGui::GetWindowSize();
+	state.Push(ret.x);
+	state.Push(ret.y);
+
+	return 2;
+}
+
+//----------------------------------------------------------------//
+/**	@lua	GetWindowWidth
+	@text	See ImGui.
+
+	@out	number width
+*/
+int MOAIImGui::_GetWindowWidth(lua_State* L)
+{
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "");
+
+	float width = ImGui::GetWindowWidth();
+	state.Push(width);
+
+	return 1;
+}
+
+//----------------------------------------------------------------//
+/**	@lua	GetWindowHeight
+	@text	See ImGui.
+
+	@out	number height
+*/
+int MOAIImGui::_GetWindowHeight(lua_State* L)
+{
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "");
+
+	float height = ImGui::GetWindowHeight();
+	state.Push(height);
+
+	return 1;
+}
+
+//----------------------------------------------------------------//
+/**	@lua	IsWindowCollapsed
+	@text	See ImGui.
+
+	@out	bool collapsed
+*/
+int MOAIImGui::_IsWindowCollapsed(lua_State* L)
+{
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "");
+
+	bool collapsed = ImGui::IsWindowCollapsed();
+	state.Push(collapsed);
+
+	return 1;
+}
+
+//----------------------------------------------------------------//
+/**	@lua	SetWindowFontScale
+	@text	See ImGui.
+
+	@in		number scale
+*/
+int MOAIImGui::_SetWindowFontScale(lua_State* L)
+{
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "N");
+
+	float scale = state.GetValue < float >(1, 1.0f);
+	ImGui::SetWindowFontScale(scale);
+
+	return 0;
+}
+
+//----------------------------------------------------------------//
+/**	@lua	SetNextWindowPos
+	@text	See ImGui.
+
+	@in 	MOAIImVec2		pos
+	@opt 	number			cond
+*/
+int MOAIImGui::_SetNextWindowPos(lua_State* L)
+{
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "U");
+
+	MOAIImVec2* pos = state.GetLuaObject<MOAIImVec2>(1, true);
+	int cond = state.GetValue < int >(1, 0);
+
+	ImGui::SetNextWindowPos(pos->mVec2, cond);
+
+	return 0;
+}
+
+//----------------------------------------------------------------//
+/**	@lua	SetNextWindowPosCenter
+	@text	See ImGui.
+
+	@opt 	number			cond
+*/
+int MOAIImGui::_SetNextWindowPosCenter(lua_State* L)
+{
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "");
+
+	int cond = state.GetValue < int >(1, 0);
+
+	ImGui::SetNextWindowPosCenter(cond);
+
+	return 0;
+}
+
+//----------------------------------------------------------------//
+/**	@lua	SetNextWindowSize
+	@text	See ImGui.
+
+	@in 	MOAIImVec2		size
+	@opt 	number			cond
+*/
+int MOAIImGui::_SetNextWindowSize(lua_State* L)
+{
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "U");
+
+	MOAIImVec2* size = state.GetLuaObject<MOAIImVec2>(1, true);
+	int cond = state.GetValue < int >(1, 0);
+
+	ImGui::SetNextWindowSize(size->mVec2, cond);
+
+	return 0;
+}
+
+//----------------------------------------------------------------//
+/**	@lua	SetNextWindowSizeConstraint
+	@text	See ImGui.
+
+	@in 	MOAIImVec2		size_min
+	@in 	MOAIImVec2		size_max
+*/
+int MOAIImGui::_SetNextWindowSizeConstraint(lua_State* L)
+{
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "UU");
+
+	MOAIImVec2* size_min = state.GetLuaObject<MOAIImVec2>(1, true);
+	MOAIImVec2* size_max = state.GetLuaObject<MOAIImVec2>(2, true);
+
+	ImGui::SetNextWindowSizeConstraint(size_min->mVec2, size_max->mVec2);
+
+	return 0;
+}
+
+//----------------------------------------------------------------//
+/**	@lua	SetNextWindowContentSize
+	@text	See ImGui.
+
+	@in 	MOAIImVec2		size
+*/
+int MOAIImGui::_SetNextWindowContentSize(lua_State* L)
+{
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "U");
+
+	MOAIImVec2* size = state.GetLuaObject<MOAIImVec2>(1, true);
+
+	ImGui::SetNextWindowContentSize(size->mVec2);
+
+	return 0;
+}
+
+//----------------------------------------------------------------//
+/**	@lua	SetNextWindowContentWidth
+	@text	See ImGui.
+
+	@in 	number		width
+*/
+int MOAIImGui::_SetNextWindowContentWidth(lua_State* L)
+{
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "N");
+
+	int width = state.GetValue < int >(1, 0);
+
+	ImGui::SetNextWindowContentWidth(width);
+
+	return 0;
+}
+
+//----------------------------------------------------------------//
+/**	@lua	SetNextWindowCollapsed
+	@text	See ImGui.
+
+	@in 	bool		collapsed
+	@opt 	number		cond
+*/
+int MOAIImGui::_SetNextWindowCollapsed(lua_State* L)
+{
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "N");
+
+	bool collapsed = state.GetValue < bool >(1, 0);
+	int cond = state.GetValue < int >(2, 0);
+
+	ImGui::SetNextWindowCollapsed(collapsed, cond);
+
+	return 0;
+}
+
+//----------------------------------------------------------------//
+/**	@lua	SetNextWindowFocus
+	@text	See ImGui.
+*/
+int MOAIImGui::_SetNextWindowFocus(lua_State* L)
+{
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "");
+
+	ImGui::SetNextWindowFocus();
+
+	return 0;
+}
+
+//----------------------------------------------------------------//
+/**	@lua	SetWindowPos
+	@text	See ImGui.
+
+	@in 	string			name
+	@in 	MOAIImVec2		pos
+	@opt 	number			cond
+*/
+int MOAIImGui::_SetWindowPos(lua_State* L)
+{
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "SU");
+
+	cc8* name = state.GetValue < cc8* >(1, "");
+	MOAIImVec2* pos = state.GetLuaObject<MOAIImVec2>(2, true);
+	int cond = state.GetValue < int >(3, 0);
+
+	ImGui::SetWindowPos(name, pos->mVec2, cond);
+
+	return 0;
+}
+
+//----------------------------------------------------------------//
+/**	@lua	SetWindowSize
+	@text	See ImGui.
+
+	@in 	string			name
+	@in 	MOAIImVec2		size
+	@opt 	number			cond
+*/
+int MOAIImGui::_SetWindowSize(lua_State* L)
+{
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "SU");
+
+	cc8* name = state.GetValue < cc8* >(1, "");
+	MOAIImVec2* size = state.GetLuaObject<MOAIImVec2>(2, true);
+	int cond = state.GetValue < int >(3, 0);
+
+	ImGui::SetWindowSize(name, size->mVec2, cond);
+
+	return 0;
+}
+
+//----------------------------------------------------------------//
+/**	@lua	SetWindowCollapsed
+	@text	See ImGui.
+
+	@in 	string			name
+	@in 	boolean			collapsed
+	@opt 	number			cond
+*/
+int MOAIImGui::_SetWindowCollapsed(lua_State* L)
+{
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "SB");
+
+	cc8* name = state.GetValue < cc8* >(1, "");
+	bool collapsed = state.GetValue < bool >(2, "");
+	int cond = state.GetValue < int >(3, 0);
+
+	ImGui::SetWindowCollapsed(name, collapsed, cond);
+
+	return 0;
+}
+
+//----------------------------------------------------------------//
+/**	@lua	SetWindowFocus
+	@text	See ImGui.
+
+	@in 	string			name
+*/
+int MOAIImGui::_SetWindowFocus(lua_State* L)
+{
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "S");
+
+	cc8* name = state.GetValue < cc8* >(1, "");
+
+	ImGui::SetWindowFocus(name);
+
+	return 0;
+}
+
+//----------------------------------------------------------------//
+/**	@lua	GetScrollX
+	@text	See ImGui.
+
+	@out	number x
+*/
+int MOAIImGui::_GetScrollX(lua_State* L)
+{
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "");
+
+	float ret = ImGui::GetScrollX();
+	state.Push(ret);
+
+	return 1;
+}
+
+//----------------------------------------------------------------//
+/**	@lua	GetScrollY
+	@text	See ImGui.
+
+	@out	number y
+*/
+int MOAIImGui::_GetScrollY(lua_State* L)
+{
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "");
+
+	float ret = ImGui::GetScrollY();
+	state.Push(ret);
+
+	return 1;
+}
+
+//----------------------------------------------------------------//
+/**	@lua	GetScrollMaxX
+	@text	See ImGui.
+
+	@out	number x
+*/
+int MOAIImGui::_GetScrollMaxX(lua_State* L)
+{
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "");
+
+	float ret = ImGui::GetScrollMaxX();
+	state.Push(ret);
+
+	return 1;
+}
+
+//----------------------------------------------------------------//
+/**	@lua	GetScrollMaxY
+	@text	See ImGui.
+
+	@out	number y
+*/
+int MOAIImGui::_GetScrollMaxY(lua_State* L)
+{
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "");
+
+	float ret = ImGui::GetScrollMaxY();
+	state.Push(ret);
+
+	return 1;
+}
+
+//----------------------------------------------------------------//
+/**	@lua	SetScrollX
+	@text	See ImGui.
+
+	@in 	number			scroll_x
+*/
+int MOAIImGui::_SetScrollX(lua_State* L)
+{
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "N");
+
+	float scroll_x = state.GetValue < float >(1, 0.0f);
+
+	ImGui::SetScrollX(scroll_x);
+
+	return 0;
+}
+
+//----------------------------------------------------------------//
+/**	@lua	SetScrollY
+	@text	See ImGui.
+
+	@in 	number			scroll_y
+*/
+int MOAIImGui::_SetScrollY(lua_State* L)
+{
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "N");
+
+	float scroll_y = state.GetValue < float >(1, 0.0f);
+
+	ImGui::SetScrollY(scroll_y);
+
+	return 0;
+}
+
+//----------------------------------------------------------------//
+/**	@lua	SetScrollHere
+	@text	See ImGui.
+
+	@opt 	number			center_y_ratio
+*/
+int MOAIImGui::_SetScrollHere(lua_State* L)
+{
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "");
+
+	float center_y_ratio = state.GetValue < float >(1, 0.5f);
+
+	ImGui::SetScrollHere(center_y_ratio);
+
+	return 0;
+}
+
+//----------------------------------------------------------------//
+/**	@lua	SetScrollFromPosY
+	@text	See ImGui.
+
+	@in 	number			pos_y
+	@opt 	number			center_y_ratio
+*/
+int MOAIImGui::_SetScrollFromPosY(lua_State* L)
+{
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "N");
+
+	float pos_y = state.GetValue < float >(1, 0.0f);
+	float center_y_ratio = state.GetValue < float >(2, 0.5f);
+
+	ImGui::SetScrollFromPosY(pos_y, center_y_ratio);
+
+	return 0;
+}
+
+//----------------------------------------------------------------//
+/**	@lua	SetKeyboardFocusHere
+	@text	See ImGui.
+
+	@opt 	number			offset
+*/
+int MOAIImGui::_SetKeyboardFocusHere(lua_State* L)
+{
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "");
+
+	int offset = state.GetValue < int >(1, 0);
+
+	ImGui::SetKeyboardFocusHere(offset);
 
 	return 0;
 }
@@ -622,6 +1264,188 @@ int MOAIImGui::_GetItemsLineHeightWithSpacing(lua_State* L)
 	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "");
 
 	float ret = ImGui::GetItemsLineHeightWithSpacing();
+	state.Push(ret);
+
+	return 1;
+}
+
+//----------------------------------------------------------------//
+/**	@lua	Columns
+	@text	See ImGui.
+
+	@opt		number count
+	@opt		string id
+	@opt		boolean border
+*/
+int MOAIImGui::_Columns(lua_State* L)
+{
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "");
+
+	int count = state.GetValue < int >(1, 1);
+	cc8* id = state.GetValue < cc8* >(2, "");
+	if (*id == '\0')
+	{
+		id = NULL;
+	}
+	bool border = state.GetValue < bool >(3, true);
+
+	ImGui::Columns(count, id, border);
+
+	return 0;
+}
+
+//----------------------------------------------------------------//
+/**	@lua	NextColumn
+	@text	See ImGui.
+*/
+int MOAIImGui::_NextColumn(lua_State* L)
+{
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "");
+
+	ImGui::NextColumn();
+
+	return 0;
+}
+
+//----------------------------------------------------------------//
+/**	@lua	GetColumnIndex
+	@text	See ImGui.
+
+	@out	number current column index
+*/
+int MOAIImGui::_GetColumnIndex(lua_State* L)
+{
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "");
+
+	float ret = (float)ImGui::GetColumnIndex();
+	state.Push(ret);
+
+	return 1;
+}
+
+//----------------------------------------------------------------//
+/**	@lua	GetColumnOffset
+	@text	See ImGui.
+
+	@opt	number column_index
+	@out	number column offset
+*/
+int MOAIImGui::_GetColumnOffset(lua_State* L)
+{
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "");
+
+	int column_index = state.GetValue < int >(1, -1);
+	float ret = (float)ImGui::GetColumnOffset(column_index);
+	state.Push(ret);
+
+	return 1;
+}
+
+//----------------------------------------------------------------//
+/**	@lua	SetColumnOffset
+	@text	See ImGui.
+
+	@in		number column_index
+	@in		number offset_x
+*/
+int MOAIImGui::_SetColumnOffset(lua_State* L)
+{
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "NN");
+
+	int column_index = state.GetValue < int >(1, 0);
+	float offset_x = state.GetValue < float >(2, 0.0f);
+	ImGui::SetColumnOffset(column_index, offset_x);
+
+	return 0;
+}
+
+//----------------------------------------------------------------//
+/**	@lua	GetColumnWidth
+	@text	See ImGui.
+
+	@opt	number column_index
+	@out	number column width
+*/
+int MOAIImGui::_GetColumnWidth(lua_State* L)
+{
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "");
+
+	int column_index = state.GetValue < int >(1, -1);
+	float ret = (float)ImGui::GetColumnWidth(column_index);
+	state.Push(ret);
+
+	return 1;
+}
+
+//----------------------------------------------------------------//
+/**	@lua	GetColumnsCount
+	@text	See ImGui.
+
+	@out	number columns count
+*/
+int MOAIImGui::_GetColumnsCount(lua_State* L)
+{
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "");
+
+	float ret = (float)ImGui::GetColumnsCount();
+	state.Push(ret);
+
+	return 1;
+}
+
+//----------------------------------------------------------------//
+/**	@lua	PushID
+	@text	See ImGui. char* and int versions.
+
+	@in		number or string  id
+*/
+int MOAIImGui::_PushID(lua_State* L)
+{
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "@");
+
+	if (state.IsType(1, LUA_TSTRING))
+	{
+		cc8* id = state.GetValue < cc8* >(1, "");
+		ImGui::PushID(id);
+		return 0;
+	}
+
+	if (state.IsType(1, LUA_TNUMBER))
+	{
+		int id = state.GetValue < int >(1, 0);
+		ImGui::PushID(id);
+		return 0;
+	}
+
+	return 0;
+}
+
+//----------------------------------------------------------------//
+/**	@lua	PopID
+	@text	See ImGui.
+*/
+int MOAIImGui::_PopID(lua_State* L)
+{
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "");
+
+	ImGui::PopID();
+
+	return 0;
+}
+
+//----------------------------------------------------------------//
+/**	@lua	GetID
+	@text	See ImGui.
+
+	@in		string id
+	@out	number id
+*/
+int MOAIImGui::_GetID(lua_State* L)
+{
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "S");
+
+	cc8* column_index = state.GetValue < cc8* >(1, "");
+	unsigned int ret = ImGui::GetID(column_index);
 	state.Push(ret);
 
 	return 1;

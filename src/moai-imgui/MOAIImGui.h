@@ -18,10 +18,51 @@ class MOAIImGui :
 protected:
 
 	static int _ShowTestWindow(lua_State* L);
+	static int _ShowMetricsWindow(lua_State* L);
+
 	static int _Begin(lua_State* L);
 	static int _End(lua_State* L);
 	static int _BeginChild(lua_State* L);
 	static int _EndChild(lua_State* L);
+
+	static int _GetContentRegionMax(lua_State* L);
+	static int _GetContentRegionAvail(lua_State* L);
+	static int _GetContentRegionAvailWidth(lua_State* L);
+	static int _GetWindowContentRegionMin(lua_State* L);
+	static int _GetWindowContentRegionMax(lua_State* L);
+	static int _GetWindowContentRegionWidth(lua_State* L);
+	// static int _GetWindowDrawList(lua_State* L);  // skipping, tricky to bind
+	static int _GetWindowPos(lua_State* L);
+	static int _GetWindowSize(lua_State* L);
+	static int _GetWindowWidth(lua_State* L);
+	static int _GetWindowHeight(lua_State* L);
+	static int _IsWindowCollapsed(lua_State* L);
+	static int _SetWindowFontScale(lua_State* L);
+
+	static int _SetNextWindowPos(lua_State* L);
+	static int _SetNextWindowPosCenter(lua_State* L);
+	static int _SetNextWindowSize(lua_State* L);
+	static int _SetNextWindowSizeConstraint(lua_State* L);
+	static int _SetNextWindowContentSize(lua_State* L);
+	static int _SetNextWindowContentWidth(lua_State* L);
+	static int _SetNextWindowCollapsed(lua_State* L);
+	static int _SetNextWindowFocus(lua_State* L);
+	static int _SetWindowPos(lua_State* L);
+	static int _SetWindowSize(lua_State* L);
+	static int _SetWindowCollapsed(lua_State* L);
+	static int _SetWindowFocus(lua_State* L);
+	
+	static int _GetScrollX(lua_State* L);
+	static int _GetScrollY(lua_State* L);
+	static int _GetScrollMaxX(lua_State* L);
+	static int _GetScrollMaxY(lua_State* L);
+	static int _SetScrollX(lua_State* L);
+	static int _SetScrollY(lua_State* L);
+	static int _SetScrollHere(lua_State* L);
+	static int _SetScrollFromPosY(lua_State* L);
+	static int _SetKeyboardFocusHere(lua_State* L);
+	// static int _SetStateStorage(lua_State* L);
+	// static int _GetStateStorage(lua_State* L);
 
 	static int _Separator(lua_State* L);
 	static int _SameLine(lua_State* L);
@@ -45,6 +86,18 @@ protected:
 	static int _GetTextLineHeight(lua_State* L);
 	static int _GetTextLineHeightWithSpacing(lua_State* L);
 	static int _GetItemsLineHeightWithSpacing(lua_State* L);
+	
+	static int _Columns(lua_State* L);
+	static int _NextColumn(lua_State* L);
+	static int _GetColumnIndex(lua_State* L);
+	static int _GetColumnOffset(lua_State* L);
+	static int _SetColumnOffset(lua_State* L);
+	static int _GetColumnWidth(lua_State* L);
+	static int _GetColumnsCount(lua_State* L);
+
+	static int _PushID(lua_State* L);
+	static int _PopID(lua_State* L);
+	static int _GetID(lua_State* L);
 
 	static int _Text(lua_State* L);
 	static int _TextColored(lua_State* L);
