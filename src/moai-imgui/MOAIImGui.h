@@ -51,7 +51,7 @@ protected:
 	static int _SetWindowSize(lua_State* L);
 	static int _SetWindowCollapsed(lua_State* L);
 	static int _SetWindowFocus(lua_State* L);
-	
+
 	static int _GetScrollX(lua_State* L);
 	static int _GetScrollY(lua_State* L);
 	static int _GetScrollMaxX(lua_State* L);
@@ -63,6 +63,29 @@ protected:
 	static int _SetKeyboardFocusHere(lua_State* L);
 	// static int _SetStateStorage(lua_State* L);
 	// static int _GetStateStorage(lua_State* L);
+
+	// static int _PushFont(lua_State* L);
+	// static int _PopFont(lua_State* L);
+	// static int _PushStyleColor(lua_State* L);
+	// static int _PopStyleColor(lua_State* L);
+	// static int _PushStyleVar(lua_State* L);
+	// static int _PushStyleVar(lua_State* L);
+	// static int _PopStyleVar(lua_State* L);
+	// static int _GetFont(lua_State* L);
+	// static int _GetFontSize(lua_State* L);
+	// static int _GetFontTexUvWhitePixel(lua_State* L);
+	// static int _GetColorU32(lua_State* L);
+	// static int _GetColorU32(lua_State* L);
+
+	// static int _PushItemWidth(lua_State* L);
+	// static int _PopItemWidth(lua_State* L);
+	// static int _CalcItemWidth(lua_State* L);
+	// static int _PushTextWrapPos(lua_State* L);
+	// static int _PopTextWrapPos(lua_State* L);
+	// static int _PushAllowKeyboardFocus(lua_State* L);
+	// static int _PopAllowKeyboardFocus(lua_State* L);
+	// static int _PushButtonRepeat(lua_State* L);
+	// static int _PopButtonRepeat(lua_State* L);
 
 	static int _Separator(lua_State* L);
 	static int _SameLine(lua_State* L);
@@ -162,6 +185,9 @@ protected:
 	static int _SetNextTreeNodeOpen(lua_State* L);
 	static int _GetTreeNodeToLabelSpacing(lua_State* L);
 	static int _CollapsingHeader(lua_State* L);
+	
+	static int _Selectable(lua_State* L);
+	static int _ListBox(lua_State* L);
 
 public:
 

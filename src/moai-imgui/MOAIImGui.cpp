@@ -208,6 +208,9 @@ void MOAIImGui::RegisterLuaClass(MOAILuaState& state) {
 		{ "SetNextTreeNodeOpen",			_SetNextTreeNodeOpen },
 		{ "GetTreeNodeToLabelSpacing",		_GetTreeNodeToLabelSpacing },
 		{ "CollapsingHeader",				_CollapsingHeader },
+
+		{ "Selectable",						_Selectable },
+		{ "ListBox",						_ListBox },
 		{ NULL, NULL }
 	};
 
@@ -1706,7 +1709,7 @@ int MOAIImGui::_RadioButton(lua_State* L)
 	return 2;
 }
 
-// item getter for Combo()
+// item getter for Combo() and ListBox()
 bool items_getter(void* data, int idx, const char** out_text)
 {
 	MOAILuaState* state = (MOAILuaState*)data;
@@ -2958,4 +2961,69 @@ int MOAIImGui::_CollapsingHeader(lua_State* L)
 	state.Push(ret);
 
 	return 1;
+}
+
+//----------------------------------------------------------------//
+/**	@lua	Selectable
+	@text	See ImGui.
+
+	@in		string	 	label
+	@opt 	boolean		selected
+	@opt	number	 	flags
+	@opt	ImVec2	 	size
+	@out	boolean		selected
+	@out	boolean		pressed
+*/
+int MOAIImGui::_Selectable(lua_State* L)
+{
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "S");
+
+	cc8* label = state.GetValue < cc8* >(1, "");
+	bool selected = state.GetValue < bool >(2, false);
+	int flags = state.GetValue < int >(3, 0);
+
+	bool ret = false;
+
+	if (state.IsType(4, LUA_TUSERDATA))
+	{
+		MOAIImVec2* size = state.GetLuaObject<MOAIImVec2>(4, true);	
+		ret = ImGui::Selectable(label, &selected, flags, size->mVec2);
+	}
+	else
+	{
+		ret = ImGui::Selectable(label, &selected, flags);
+	}
+	state.Push(selected);
+	state.Push(ret);
+
+	return 2;
+}
+
+//----------------------------------------------------------------//
+/**	@lua	ListBox
+	@text	See ImGui.
+
+	@in		string 			lbl
+	@in		number			currentitem
+	@in		table			items
+	@opt	number			height
+	@out	boolean			selected
+	@out	number			currentitem
+*/
+int MOAIImGui::_ListBox(lua_State* L)
+{
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "SNT");
+
+	cc8* lbl = state.GetValue < cc8* >(1, "");
+	int currentitem = state.GetValue < int >(2, 0);
+	int numitems = (int)lua_objlen(L, 3);
+	int height = state.GetValue < int >(4, -1);
+
+	// lua array to c array translation
+	--currentitem;
+	bool ret = ImGui::ListBox(lbl, &currentitem, items_getter, &state, numitems, height);
+	state.Push(currentitem + 1); // c array to lua array translation
+	state.Push(ret);
+
+	return 2;
 }
