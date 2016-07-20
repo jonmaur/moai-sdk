@@ -185,9 +185,40 @@ protected:
 	static int _SetNextTreeNodeOpen(lua_State* L);
 	static int _GetTreeNodeToLabelSpacing(lua_State* L);
 	static int _CollapsingHeader(lua_State* L);
-	
+
 	static int _Selectable(lua_State* L);
 	static int _ListBox(lua_State* L);
+	// static int _ListBoxHeader(lua_State* L);
+	// static int _ListBoxFooter(lua_State* L);
+	
+	static int _Value(lua_State* L);
+	static int _ValueColor(lua_State* L);
+
+	static int _SetTooltip(lua_State* L);
+	static int _BeginTooltip(lua_State* L);
+	static int _EndTooltip(lua_State* L);
+
+	static int _BeginMainMenuBar(lua_State* L);
+	static int _EndMainMenuBar(lua_State* L);
+	static int _BeginMenuBar(lua_State* L);
+	static int _EndMenuBar(lua_State* L);
+	static int _BeginMenu(lua_State* L);
+	static int _EndMenu(lua_State* L);
+	static int _MenuItem(lua_State* L);
+	
+	static int _OpenPopup(lua_State* L);
+	static int _BeginPopup(lua_State* L);
+	static int _BeginPopupModal(lua_State* L);
+	static int _BeginPopupContextItem(lua_State* L);
+	static int _BeginPopupContextWindow(lua_State* L);
+	static int _BeginPopupContextVoid(lua_State* L);
+	static int _EndPopup(lua_State* L);
+	static int _CloseCurrentPopup(lua_State* L);
+
+	// gap
+	static int _IsItemHovered(lua_State* L);
+	static int _IsItemHoveredRect(lua_State* L);
+	static int _IsItemActive(lua_State* L);
 
 public:
 

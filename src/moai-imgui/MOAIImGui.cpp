@@ -211,6 +211,37 @@ void MOAIImGui::RegisterLuaClass(MOAILuaState& state) {
 
 		{ "Selectable",						_Selectable },
 		{ "ListBox",						_ListBox },
+		// { "ListBoxHeader",					_ListBoxHeader },
+		// { "ListBoxFooter",					_ListBoxFooter },
+		
+		{ "Value",							_Value },
+		{ "ValueColor",						_ValueColor },
+
+		{ "SetTooltip",						_SetTooltip },
+		{ "BeginTooltip",					_BeginTooltip },
+		{ "EndTooltip",						_EndTooltip },
+
+		{ "BeginMainMenuBar",				_BeginMainMenuBar },
+		{ "EndMainMenuBar",					_EndMainMenuBar },
+		{ "BeginMenuBar",					_BeginMenuBar },
+		{ "EndMenuBar",						_EndMenuBar },
+		{ "BeginMenu",						_BeginMenu },
+		{ "EndMenu",						_EndMenu },
+		{ "MenuItem",						_MenuItem },
+
+		{ "OpenPopup",						_OpenPopup },
+		{ "BeginPopup",						_BeginPopup },
+		{ "BeginPopupModal",				_BeginPopupModal },
+		{ "BeginPopupContextItem",			_BeginPopupContextItem },
+		{ "BeginPopupContextWindow",		_BeginPopupContextWindow },
+		{ "BeginPopupContextVoid",			_BeginPopupContextVoid },
+		{ "EndPopup",						_EndPopup },
+		{ "CloseCurrentPopup",				_CloseCurrentPopup },
+
+		{ "IsItemHovered",					_IsItemHovered },
+		{ "IsItemHoveredRect",				_IsItemHoveredRect },
+		{ "IsItemActive",					_IsItemActive },
+
 		{ NULL, NULL }
 	};
 
@@ -661,7 +692,7 @@ int MOAIImGui::_SetNextWindowContentWidth(lua_State* L)
 {
 	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "N");
 
-	int width = state.GetValue < int >(1, 0);
+	float width = state.GetValue < float >(1, 0.0f);
 
 	ImGui::SetNextWindowContentWidth(width);
 
@@ -677,9 +708,9 @@ int MOAIImGui::_SetNextWindowContentWidth(lua_State* L)
 */
 int MOAIImGui::_SetNextWindowCollapsed(lua_State* L)
 {
-	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "N");
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "B");
 
-	bool collapsed = state.GetValue < bool >(1, 0);
+	bool collapsed = state.GetValue < bool >(1, true);
 	int cond = state.GetValue < int >(2, 0);
 
 	ImGui::SetNextWindowCollapsed(collapsed, cond);
@@ -755,7 +786,7 @@ int MOAIImGui::_SetWindowCollapsed(lua_State* L)
 	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "SB");
 
 	cc8* name = state.GetValue < cc8* >(1, "");
-	bool collapsed = state.GetValue < bool >(2, "");
+	bool collapsed = state.GetValue < bool >(2, true);
 	int cond = state.GetValue < int >(3, 0);
 
 	ImGui::SetWindowCollapsed(name, collapsed, cond);
@@ -3026,4 +3057,471 @@ int MOAIImGui::_ListBox(lua_State* L)
 	state.Push(ret);
 
 	return 2;
+}
+
+//----------------------------------------------------------------//
+/**	@lua	Value
+	@text	See ImGui. No point in using format strings here, construct the string in lua.
+
+	@in		string prefix
+	@opt 	value
+*/
+int MOAIImGui::_Value(lua_State* L)
+{
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "S@");
+
+	cc8* prefix = state.GetValue < cc8* >(1, "");
+
+	int type = lua_type ( L, 2 );
+
+	// Print value, if possible
+	switch ( type )
+	{
+		case LUA_TNIL:
+			ImGui::Text("%s: %s", prefix, state.GetLuaTypeName(type));
+			break;
+		case LUA_TBOOLEAN:
+		{
+			bool val = state.GetValue < bool >(2, false);
+			ImGui::Value(prefix, val);
+			break;
+		}
+		case LUA_TNUMBER:
+		{
+			float val = state.GetValue < float >(2, 0.0f);
+			ImGui::Value(prefix, val);
+			break;
+		}
+		case LUA_TSTRING:
+		{
+			cc8* val = state.GetValue < cc8* >(2, "");
+			ImGui::Text("%s: %s", prefix, val);
+			break;
+		}
+		case LUA_TUSERDATA:
+		{
+			// Moai uses userdata exclusively for pointers to MOAILuaObject instances.
+			// This code will most likely crash if it encounters userdata that is used differently.
+			MOAILuaObject* luaObject = (MOAILuaObject*)state.GetPtrUserData(2);
+			if (luaObject)
+			{
+				ImGui::Text("%s: <%s %p>", prefix, luaObject->TypeName(), lua_topointer(L, 2));
+			}
+			else
+			{
+				ImGui::Text("%s: <%s %p>", prefix, "NON-MOAI USERDATA?", lua_topointer(L, 2));
+			}
+			break;
+		}
+		case LUA_TLIGHTUSERDATA:
+		{
+			void* val = state.GetValue < void* >(2, false);
+			break;
+		}
+		case LUA_TTABLE:
+		case LUA_TFUNCTION:
+		case LUA_TTHREAD:
+			// anything with an address
+			ImGui::Text("%s: <%s %p>", prefix, state.GetLuaTypeName(type), lua_topointer(L, 2));
+			break;
+	}
+
+	return 0;
+}
+
+//----------------------------------------------------------------//
+/**	@lua	ValueColor
+	@text	See ImGui.
+
+	@in	string 			prefix
+	@in MOAIImVec4		color
+*/
+int MOAIImGui::_ValueColor(lua_State* L)
+{
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "SU");
+
+	cc8* prefix = state.GetValue < cc8* >(1, "");
+	MOAIImVec4* color = state.GetLuaObject<MOAIImVec4>(2, true);
+
+	ImGui::ValueColor(prefix, color->mVec4);
+
+	return 0;
+}
+
+//----------------------------------------------------------------//
+/**	@lua	SetTooltip
+	@text	See ImGui.
+
+	@in	string 			txt
+*/
+int MOAIImGui::_SetTooltip(lua_State* L)
+{
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "S");
+
+	cc8* txt = state.GetValue < cc8* >(1, "");
+
+	ImGui::SetTooltip(txt);
+
+	return 0;
+}
+
+//----------------------------------------------------------------//
+/**	@lua	BeginTooltip
+	@text	See ImGui.
+*/
+int MOAIImGui::_BeginTooltip(lua_State* L)
+{
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "");
+
+	ImGui::BeginTooltip();
+
+	return 0;
+}
+
+//----------------------------------------------------------------//
+/**	@lua	EndTooltip
+	@text	See ImGui.
+*/
+int MOAIImGui::_EndTooltip(lua_State* L)
+{
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "");
+
+	ImGui::EndTooltip();
+
+	return 0;
+}
+
+//----------------------------------------------------------------//
+/**	@lua	BeginMainMenuBar
+	@text	See ImGui.
+
+	@out	boolean	success
+*/
+int MOAIImGui::_BeginMainMenuBar(lua_State* L)
+{
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "");
+
+	bool ret = ImGui::BeginMainMenuBar();
+	state.Push(ret);
+
+	return 1;
+}
+
+//----------------------------------------------------------------//
+/**	@lua	EndMainMenuBar
+	@text	See ImGui.
+*/
+int MOAIImGui::_EndMainMenuBar(lua_State* L)
+{
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "");
+
+	ImGui::EndMainMenuBar();
+
+	return 0;
+}
+
+//----------------------------------------------------------------//
+/**	@lua	BeginMenuBar
+	@text	See ImGui.
+
+	@out	boolean	success
+*/
+int MOAIImGui::_BeginMenuBar(lua_State* L)
+{
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "");
+
+	bool ret = ImGui::BeginMenuBar();
+	state.Push(ret);
+
+	return 1;
+}
+
+//----------------------------------------------------------------//
+/**	@lua	EndMenuBar
+	@text	See ImGui.
+*/
+int MOAIImGui::_EndMenuBar(lua_State* L)
+{
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "");
+
+	ImGui::EndMenuBar();
+
+	return 0;
+}
+
+//----------------------------------------------------------------//
+/**	@lua	BeginMenu
+	@text	See ImGui.
+
+	@in 	string 	label
+	@opt 	boolean	enabled
+
+	@out	boolean	success
+*/
+int MOAIImGui::_BeginMenu(lua_State* L)
+{
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "");
+
+	cc8* label = state.GetValue < cc8* >(1, "");
+	bool enabled = state.GetValue < bool >(2, true);
+
+	bool ret = ImGui::BeginMenu(label, enabled);
+	state.Push(ret);
+
+	return 1;
+}
+
+//----------------------------------------------------------------//
+/**	@lua	EndMenu
+	@text	See ImGui.
+*/
+int MOAIImGui::_EndMenu(lua_State* L)
+{
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "");
+
+	ImGui::EndMenu();
+
+	return 0;
+}
+
+//----------------------------------------------------------------//
+/**	@lua	MenuItem
+	@text	See ImGui.
+
+	@in 	string 	label
+	@opt 	string 	shortcut
+	@opt 	boolean	selected
+	@opt 	boolean	enabled
+
+	@out	boolean	selected
+	@out	boolean	success
+*/
+int MOAIImGui::_MenuItem(lua_State* L)
+{
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "S");
+
+	cc8* label = state.GetValue < cc8* >(1, "");
+	cc8* shortcut = state.GetValue < cc8* >(2, NULL);
+	bool selected = state.GetValue < bool >(3, false);
+	bool enabled = state.GetValue < bool >(4, true);
+
+	bool success = ImGui::MenuItem(label, shortcut, &selected, enabled);
+	state.Push(selected);
+	state.Push(success);
+
+	return 2;
+}
+
+//----------------------------------------------------------------//
+/**	@lua	OpenPopup
+	@text	See ImGui.
+
+	@in 	string 	str_id
+*/
+int MOAIImGui::_OpenPopup(lua_State* L)
+{
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "S");
+
+	cc8* str_id = state.GetValue < cc8* >(1, "");
+
+	ImGui::OpenPopup(str_id);
+
+	return 0;
+}
+
+//----------------------------------------------------------------//
+/**	@lua	BeginPopup
+	@text	See ImGui.
+
+	@in 	string 		str_id
+
+	@out 	boolean 	open
+*/
+int MOAIImGui::_BeginPopup(lua_State* L)
+{
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "S");
+
+	cc8* str_id = state.GetValue < cc8* >(1, "");
+
+	bool ret = ImGui::BeginPopup(str_id);
+	state.Push(ret);
+
+	return 1;
+}
+
+//----------------------------------------------------------------//
+/**	@lua	BeginPopupModal
+	@text	See ImGui.
+
+	@in 	string 		name
+	@opt 	boolean		open
+	@opt 	number 		extra_flags
+
+	@out 	boolean 	is_open
+	@out 	boolean 	open
+*/
+int MOAIImGui::_BeginPopupModal(lua_State* L)
+{
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "S");
+
+	cc8* name = state.GetValue < cc8* >(1, "");
+	int extra_flags = state.GetValue < int >(3, 0);
+
+	if (state.IsType(2, LUA_TBOOLEAN))
+	{
+		bool open = state.GetValue < bool >(2, false);
+		bool ret = ImGui::BeginPopupModal(name, &open, extra_flags);
+
+		state.Push(open);
+		state.Push(ret);
+
+		return 2;
+	}
+
+	bool ret = ImGui::BeginPopupModal(name, NULL, extra_flags);
+	state.Push(ret);
+
+	return 1;
+}
+
+//----------------------------------------------------------------//
+/**	@lua	BeginPopupContextItem
+	@text	See ImGui.
+
+	@in 	string 		str_id
+	@opt 	number 		mouse_button
+
+	@out 	boolean 	open
+*/
+int MOAIImGui::_BeginPopupContextItem(lua_State* L)
+{
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "S");
+
+	cc8* str_id = state.GetValue < cc8* >(1, "");
+	int mouse_button = state.GetValue < int >(2, 1);
+
+	bool ret = ImGui::BeginPopupContextItem(str_id, mouse_button);
+	state.Push(ret);
+
+	return 1;
+}
+
+//----------------------------------------------------------------//
+/**	@lua	BeginPopupContextWindow
+	@text	See ImGui.
+
+	@opt 	boolean		also_over_items
+	@opt 	string 		str_id
+	@opt 	number 		mouse_button
+
+	@out 	boolean 	open
+*/
+int MOAIImGui::_BeginPopupContextWindow(lua_State* L)
+{
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "");
+
+	bool also_over_items = state.GetValue < bool >(1, true);
+	cc8* str_id = state.GetValue < cc8* >(2, NULL);
+	int mouse_button = state.GetValue < int >(3, 1);
+
+	bool ret = ImGui::BeginPopupContextWindow(also_over_items, str_id, mouse_button);
+	state.Push(ret);
+
+	return 1;
+}
+
+//----------------------------------------------------------------//
+/**	@lua	BeginPopupContextVoid
+	@text	See ImGui.
+
+	@opt 	string 		str_id
+	@opt 	number 		mouse_button
+
+	@out 	boolean 	open
+*/
+int MOAIImGui::_BeginPopupContextVoid(lua_State* L)
+{
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "");
+
+	cc8* str_id = state.GetValue < cc8* >(1, NULL);
+	int mouse_button = state.GetValue < int >(2, 1);
+
+	bool ret = ImGui::BeginPopupContextVoid(str_id, mouse_button);
+	state.Push(ret);
+
+	return 1;
+}
+
+//----------------------------------------------------------------//
+/**	@lua	EndPopup
+	@text	See ImGui.
+*/
+int MOAIImGui::_EndPopup(lua_State* L)
+{
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "");
+
+	ImGui::EndPopup();
+
+	return 0;
+}
+
+//----------------------------------------------------------------//
+/**	@lua	CloseCurrentPopup
+	@text	See ImGui.
+*/
+int MOAIImGui::_CloseCurrentPopup(lua_State* L)
+{
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "");
+
+	ImGui::CloseCurrentPopup();
+
+	return 0;
+}
+
+//----------------------------------------------------------------//
+/**	@lua	IsItemHovered
+	@text	See ImGui.
+
+	@out	boolean	hovered
+*/
+int MOAIImGui::_IsItemHovered(lua_State* L)
+{
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "");
+
+	bool ret = ImGui::IsItemHovered();
+	state.Push(ret);
+
+	return 1;
+}
+
+//----------------------------------------------------------------//
+/**	@lua	IsItemHoveredRect
+	@text	See ImGui.
+	
+	@out	boolean	hovered
+*/
+int MOAIImGui::_IsItemHoveredRect(lua_State* L)
+{
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "");
+
+	bool ret = ImGui::IsItemHoveredRect();
+	state.Push(ret);
+
+	return 1;
+}
+
+//----------------------------------------------------------------//
+/**	@lua	IsItemActive
+	@text	See ImGui.
+	
+	@out	boolean	hovered
+*/
+int MOAIImGui::_IsItemActive(lua_State* L)
+{
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "");
+
+	bool ret = ImGui::IsItemActive();
+	state.Push(ret);
+
+	return 1;
 }
