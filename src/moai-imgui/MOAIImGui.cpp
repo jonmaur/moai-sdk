@@ -238,9 +238,24 @@ void MOAIImGui::RegisterLuaClass(MOAILuaState& state) {
 		{ "EndPopup",						_EndPopup },
 		{ "CloseCurrentPopup",				_CloseCurrentPopup },
 
+		{ "LogToTTY",						_LogToTTY },
+		{ "LogToFile",						_LogToFile },
+		{ "LogToClipboard",					_LogToClipboard },
+		{ "LogFinish",						_LogFinish },
+		{ "LogButtons",						_LogButtons },
+		{ "LogText",						_LogText },
+
+		{ "PushClipRect",					_PushClipRect },
+		{ "PopClipRect",					_PopClipRect },
+
 		{ "IsItemHovered",					_IsItemHovered },
 		{ "IsItemHoveredRect",				_IsItemHoveredRect },
 		{ "IsItemActive",					_IsItemActive },
+
+		{ "IsItemClicked",					_IsItemClicked },
+		{ "IsItemVisible",					_IsItemVisible },
+		{ "IsAnyItemHovered",				_IsAnyItemHovered },
+		{ "IsAnyItemActive",				_IsAnyItemActive },
 
 		{ NULL, NULL }
 	};
@@ -3479,6 +3494,136 @@ int MOAIImGui::_CloseCurrentPopup(lua_State* L)
 }
 
 //----------------------------------------------------------------//
+/**	@lua	LogToTTY
+	@text	See ImGui.
+
+	@opt 	number 	max_depth
+*/
+int MOAIImGui::_LogToTTY(lua_State* L)
+{
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "");
+
+	int max_depth = state.GetValue < int >(1, -1);
+
+	ImGui::LogToTTY(max_depth);
+
+	return 0;
+}
+
+//----------------------------------------------------------------//
+/**	@lua	LogToFile
+	@text	See ImGui.
+
+	@opt 	number 	max_depth
+	@opt 	string 	filename
+*/
+int MOAIImGui::_LogToFile(lua_State* L)
+{
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "");
+
+	int max_depth = state.GetValue < int >(1, -1);
+	cc8* filename = state.GetValue < cc8* >(2, NULL);
+
+	ImGui::LogToFile(max_depth, filename);
+
+	return 0;
+}
+
+//----------------------------------------------------------------//
+/**	@lua	LogToClipboard
+	@text	See ImGui.
+
+	@opt 	number 	max_depth
+*/
+int MOAIImGui::_LogToClipboard(lua_State* L)
+{
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "");
+
+	int max_depth = state.GetValue < int >(1, -1);
+
+	ImGui::LogToClipboard(max_depth);
+
+	return 0;
+}
+
+//----------------------------------------------------------------//
+/**	@lua	LogFinish
+	@text	See ImGui.
+*/
+int MOAIImGui::_LogFinish(lua_State* L)
+{
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "");
+
+	ImGui::LogFinish();
+
+	return 0;
+}
+
+//----------------------------------------------------------------//
+/**	@lua	LogButtons
+	@text	See ImGui.
+*/
+int MOAIImGui::_LogButtons(lua_State* L)
+{
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "");
+
+	ImGui::LogButtons();
+
+	return 0;
+}
+
+//----------------------------------------------------------------//
+/**	@lua	LogText
+	@text	See ImGui.
+
+	@in 	string 	txt
+*/
+int MOAIImGui::_LogText(lua_State* L)
+{
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "S");
+
+	cc8* txt = state.GetValue < cc8* >(1, "");
+
+	ImGui::LogText(txt);
+
+	return 0;
+}
+
+//----------------------------------------------------------------//
+/**	@lua	PushClipRect
+	@text	See ImGui.
+
+	@in 	MOAIImVec2		clip_rect_min
+	@in 	MOAIImVec2		clip_rect_max
+	@in 	boolean			intersect_with_current_clip_rect
+*/
+int MOAIImGui::_PushClipRect(lua_State* L)
+{
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "UUB");
+
+	MOAIImVec2* clip_rect_min = state.GetLuaObject<MOAIImVec2>(1, true);
+	MOAIImVec2* clip_rect_max = state.GetLuaObject<MOAIImVec2>(2, true);
+	bool intersect_with_current_clip_rect = state.GetValue < bool >(3, true);
+
+	ImGui::PushClipRect(clip_rect_min->mVec2, clip_rect_max->mVec2, intersect_with_current_clip_rect);
+
+	return 0;
+}
+
+//----------------------------------------------------------------//
+/**	@lua	PopClipRect
+	@text	See ImGui.
+*/
+int MOAIImGui::_PopClipRect(lua_State* L)
+{
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "");
+
+	ImGui::PopClipRect();
+
+	return 0;
+}
+
+//----------------------------------------------------------------//
 /**	@lua	IsItemHovered
 	@text	See ImGui.
 
@@ -3521,6 +3666,74 @@ int MOAIImGui::_IsItemActive(lua_State* L)
 	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "");
 
 	bool ret = ImGui::IsItemActive();
+	state.Push(ret);
+
+	return 1;
+}
+
+//----------------------------------------------------------------//
+/**	@lua	IsItemClicked
+	@text	See ImGui.
+	
+	@opt	number	mouse_button
+
+	@out	boolean	clicked
+*/
+int MOAIImGui::_IsItemClicked(lua_State* L)
+{
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "");
+
+	int mouse_button = state.GetValue < int >(1, 0);
+
+	bool ret = ImGui::IsItemClicked(mouse_button);
+	state.Push(ret);
+
+	return 1;
+}
+
+//----------------------------------------------------------------//
+/**	@lua	IsItemVisible
+	@text	See ImGui.
+	
+	@out	boolean	visible
+*/
+int MOAIImGui::_IsItemVisible(lua_State* L)
+{
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "");
+
+	bool ret = ImGui::IsItemVisible();
+	state.Push(ret);
+
+	return 1;
+}
+
+//----------------------------------------------------------------//
+/**	@lua	IsAnyItemHovered
+	@text	See ImGui.
+	
+	@out	boolean	hovered
+*/
+int MOAIImGui::_IsAnyItemHovered(lua_State* L)
+{
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "");
+
+	bool ret = ImGui::IsAnyItemHovered();
+	state.Push(ret);
+
+	return 1;
+}
+
+//----------------------------------------------------------------//
+/**	@lua	IsAnyItemActive
+	@text	See ImGui.
+	
+	@out	boolean	active
+*/
+int MOAIImGui::_IsAnyItemActive(lua_State* L)
+{
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "");
+
+	bool ret = ImGui::IsAnyItemActive();
 	state.Push(ret);
 
 	return 1;

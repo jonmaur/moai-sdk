@@ -215,10 +215,24 @@ protected:
 	static int _EndPopup(lua_State* L);
 	static int _CloseCurrentPopup(lua_State* L);
 
-	// gap
+	static int _LogToTTY(lua_State* L);
+	static int _LogToFile(lua_State* L);
+	static int _LogToClipboard(lua_State* L);
+	static int _LogFinish(lua_State* L);
+	static int _LogButtons(lua_State* L);
+	static int _LogText(lua_State* L);
+
+	static int _PushClipRect(lua_State* L);
+	static int _PopClipRect(lua_State* L);
+
 	static int _IsItemHovered(lua_State* L);
 	static int _IsItemHoveredRect(lua_State* L);
 	static int _IsItemActive(lua_State* L);
+	
+	static int _IsItemClicked(lua_State* L);
+	static int _IsItemVisible(lua_State* L);
+	static int _IsAnyItemHovered(lua_State* L);
+	static int _IsAnyItemActive(lua_State* L);
 
 public:
 
