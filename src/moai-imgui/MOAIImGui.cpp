@@ -256,6 +256,31 @@ void MOAIImGui::RegisterLuaClass(MOAILuaState& state) {
 		{ "IsItemVisible",					_IsItemVisible },
 		{ "IsAnyItemHovered",				_IsAnyItemHovered },
 		{ "IsAnyItemActive",				_IsAnyItemActive },
+		{ "GetItemRectMin",					_GetItemRectMin },
+		{ "GetItemRectMax",					_GetItemRectMax },
+		{ "GetItemRectSize",				_GetItemRectSize },
+		{ "SetItemAllowOverlap",			_SetItemAllowOverlap },
+		{ "IsWindowHovered",				_IsWindowHovered },
+		{ "IsWindowFocused",				_IsWindowFocused },
+		{ "IsRootWindowFocused",			_IsRootWindowFocused },
+		{ "IsRootWindowOrAnyChildFocused",	_IsRootWindowOrAnyChildFocused },
+		{ "IsRootWindowOrAnyChildHovered",	_IsRootWindowOrAnyChildHovered },
+		{ "IsRectVisible",					_IsRectVisible },
+		{ "IsPosHoveringAnyWindow",			_IsPosHoveringAnyWindow },
+		{ "GetTime",						_GetTime },
+		{ "GetFrameCount",					_GetFrameCount },
+		{ "GetStyleColName",				_GetStyleColName },
+		{ "CalcItemRectClosestPoint",		_CalcItemRectClosestPoint },
+		{ "CalcTextSize",					_CalcTextSize },
+		// { "CalcListClipping",				_CalcListClipping },
+
+		{ "BeginChildFrame",				_BeginChildFrame },
+		{ "EndChildFrame",					_EndChildFrame },
+
+		{ "ColorConvertU32ToFloat4",		_ColorConvertU32ToFloat4 },
+		{ "ColorConvertFloat4ToU32",		_ColorConvertFloat4ToU32 },
+		{ "ColorConvertRGBtoHSV",			_ColorConvertRGBtoHSV },
+		{ "ColorConvertHSVtoRGB",			_ColorConvertHSVtoRGB },
 
 		{ NULL, NULL }
 	};
@@ -3737,4 +3762,440 @@ int MOAIImGui::_IsAnyItemActive(lua_State* L)
 	state.Push(ret);
 
 	return 1;
+}
+
+//----------------------------------------------------------------//
+/**	@lua	GetItemRectMin
+	@text	See ImGui.
+
+	@out	number x
+	@out	number y
+*/
+int MOAIImGui::_GetItemRectMin(lua_State* L)
+{
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "");
+
+	ImVec2 ret = ImGui::GetItemRectMin();
+	state.Push(ret.x);
+	state.Push(ret.y);
+
+	return 2;
+}
+
+//----------------------------------------------------------------//
+/**	@lua	GetItemRectMax
+	@text	See ImGui.
+
+	@out	number x
+	@out	number y
+*/
+int MOAIImGui::_GetItemRectMax(lua_State* L)
+{
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "");
+
+	ImVec2 ret = ImGui::GetItemRectMax();
+	state.Push(ret.x);
+	state.Push(ret.y);
+
+	return 2;
+}
+
+//----------------------------------------------------------------//
+/**	@lua	GetItemRectSize
+	@text	See ImGui.
+
+	@out	number x
+	@out	number y
+*/
+int MOAIImGui::_GetItemRectSize(lua_State* L)
+{
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "");
+
+	ImVec2 ret = ImGui::GetItemRectSize();
+	state.Push(ret.x);
+	state.Push(ret.y);
+
+	return 2;
+}
+
+//----------------------------------------------------------------//
+/**	@lua	SetItemAllowOverlap
+	@text	See ImGui.
+*/
+int MOAIImGui::_SetItemAllowOverlap(lua_State* L)
+{
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "");
+
+	ImGui::SetItemAllowOverlap();
+
+	return 0;
+}
+
+//----------------------------------------------------------------//
+/**	@lua	IsWindowHovered
+	@text	See ImGui.
+	
+	@out	boolean	hovered
+*/
+int MOAIImGui::_IsWindowHovered(lua_State* L)
+{
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "");
+
+	bool ret = ImGui::IsWindowHovered();
+	state.Push(ret);
+
+	return 1;
+}
+
+//----------------------------------------------------------------//
+/**	@lua	IsWindowFocused
+	@text	See ImGui.
+	
+	@out	boolean	focused
+*/
+int MOAIImGui::_IsWindowFocused(lua_State* L)
+{
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "");
+
+	bool ret = ImGui::IsWindowFocused();
+	state.Push(ret);
+
+	return 1;
+}
+
+//----------------------------------------------------------------//
+/**	@lua	IsRootWindowFocused
+	@text	See ImGui.
+	
+	@out	boolean	focused
+*/
+int MOAIImGui::_IsRootWindowFocused(lua_State* L)
+{
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "");
+
+	bool ret = ImGui::IsRootWindowFocused();
+	state.Push(ret);
+
+	return 1;
+}
+
+//----------------------------------------------------------------//
+/**	@lua	IsRootWindowOrAnyChildFocused
+	@text	See ImGui.
+	
+	@out	boolean	focused
+*/
+int MOAIImGui::_IsRootWindowOrAnyChildFocused(lua_State* L)
+{
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "");
+
+	bool ret = ImGui::IsRootWindowOrAnyChildFocused();
+	state.Push(ret);
+
+	return 1;
+}
+
+//----------------------------------------------------------------//
+/**	@lua	IsRootWindowOrAnyChildHovered
+	@text	See ImGui.
+	
+	@out	boolean	hovered
+*/
+int MOAIImGui::_IsRootWindowOrAnyChildHovered(lua_State* L)
+{
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "");
+
+	bool ret = ImGui::IsRootWindowOrAnyChildHovered();
+	state.Push(ret);
+
+	return 1;
+}
+
+//----------------------------------------------------------------//
+/**	@lua	IsRectVisible
+	@text	See ImGui.
+
+	@in 	MOAIImVec2		size
+	@out 	boolean			visible
+*/
+int MOAIImGui::_IsRectVisible(lua_State* L)
+{
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "U");
+
+	MOAIImVec2* size = state.GetLuaObject<MOAIImVec2>(1, true);
+
+	bool ret = ImGui::IsRectVisible(size->mVec2);
+	state.Push(ret);
+
+	return 1;
+}
+
+//----------------------------------------------------------------//
+/**	@lua	IsPosHoveringAnyWindow
+	@text	See ImGui.
+
+	@in 	MOAIImVec2		pos
+	@out 	boolean			hovering
+*/
+int MOAIImGui::_IsPosHoveringAnyWindow(lua_State* L)
+{
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "U");
+
+	MOAIImVec2* pos = state.GetLuaObject<MOAIImVec2>(1, true);
+
+	bool ret = ImGui::IsPosHoveringAnyWindow(pos->mVec2);
+	state.Push(ret);
+
+	return 1;
+}
+
+//----------------------------------------------------------------//
+/**	@lua	GetTime
+	@text	See ImGui.
+	
+	@out	number	time
+*/
+int MOAIImGui::_GetTime(lua_State* L)
+{
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "");
+
+	float ret = ImGui::GetTime();
+	state.Push(ret);
+
+	return 1;
+}
+
+//----------------------------------------------------------------//
+/**	@lua	GetFrameCount
+	@text	See ImGui.
+	
+	@out	number	framecount
+*/
+int MOAIImGui::_GetFrameCount(lua_State* L)
+{
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "");
+
+	int ret = ImGui::GetFrameCount();
+	state.Push(ret);
+
+	return 1;
+}
+
+//----------------------------------------------------------------//
+/**	@lua	GetStyleColName
+	@text	See ImGui.
+	
+	@opt	number	idx
+
+	@out	boolean	clicked
+*/
+int MOAIImGui::_GetStyleColName(lua_State* L)
+{
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "N");
+
+	int idx = state.GetValue < int >(1, 0);
+
+	cc8* ret = ImGui::GetStyleColName(idx);
+	state.Push(ret);
+
+	return 1;
+}
+
+//----------------------------------------------------------------//
+/**	@lua	CalcItemRectClosestPoint
+	@text	See ImGui.
+
+	@in		MOAIImVec2 	pos
+	@opt	boolean 	on_edge
+	@opt	number 		outward
+
+	@out	number x
+	@out	number y
+*/
+int MOAIImGui::_CalcItemRectClosestPoint(lua_State* L)
+{
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "U");
+
+	MOAIImVec2* pos = state.GetLuaObject<MOAIImVec2>(1, true);
+	bool on_edge = state.GetValue < bool >(2, false);
+	float outward = state.GetValue < float >(3, 0.0f);
+
+	ImVec2 ret = ImGui::CalcItemRectClosestPoint(pos->mVec2, on_edge, outward);
+	state.Push(ret.x);
+	state.Push(ret.y);
+
+	return 2;
+}
+
+//----------------------------------------------------------------//
+/**	@lua	CalcTextSize
+	@text	See ImGui.
+
+	@in		string 		text
+	@opt	bool 		hide_text_after_double_hash
+	@opt	number 		wrap_width
+
+	@out	number x
+	@out	number y
+*/
+int MOAIImGui::_CalcTextSize(lua_State* L)
+{
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "S");
+
+	cc8* text = state.GetValue < cc8* >(1, "");
+	bool hide_text_after_double_hash = state.GetValue < bool >(2, false);
+	float wrap_width = state.GetValue < float >(3, -1.0f);
+
+	ImVec2 ret = ImGui::CalcTextSize(text, NULL, hide_text_after_double_hash, wrap_width);
+	state.Push(ret.x);
+	state.Push(ret.y);
+
+	return 2;
+}
+
+//----------------------------------------------------------------//
+/**	@lua	BeginChildFrame
+	@text	See ImGui.
+
+	@in		number 		id
+	@in		MOAIImVec2 	size
+	@opt	number 		extra_flags
+
+	@out	boolean 	ok
+*/
+int MOAIImGui::_BeginChildFrame(lua_State* L)
+{
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "NU");
+
+	int id = state.GetValue < int >(1, 0);
+	MOAIImVec2* size = state.GetLuaObject<MOAIImVec2>(2, true);
+	int extra_flags = state.GetValue < int >(3, 0);
+
+	bool ret = ImGui::BeginChildFrame(id, size->mVec2, extra_flags);
+	state.Push(ret);
+
+	return 1;
+}
+
+//----------------------------------------------------------------//
+/**	@lua	EndChildFrame
+	@text	See ImGui.
+*/
+int MOAIImGui::_EndChildFrame(lua_State* L)
+{
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "");
+
+	ImGui::EndChildFrame();
+
+	return 0;
+}
+
+//----------------------------------------------------------------//
+/**	@lua	ColorConvertU32ToFloat4
+	@text	See ImGui.
+
+	@in		number 		in
+
+	@out	number r
+	@out	number g
+	@out	number b
+	@out	number a
+*/
+int MOAIImGui::_ColorConvertU32ToFloat4(lua_State* L)
+{
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "N");
+
+	unsigned int in = state.GetValue < unsigned int >(1, 0);
+
+	ImVec4 ret = ImGui::ColorConvertU32ToFloat4(in);
+	state.Push(ret.x);
+	state.Push(ret.y);
+	state.Push(ret.z);
+	state.Push(ret.w);
+
+	return 4;
+}
+
+//----------------------------------------------------------------//
+/**	@lua	ColorConvertFloat4ToU32
+	@text	See ImGui.
+
+	@in		MOAIImVec4	in
+
+	@out	number 		out
+*/
+int MOAIImGui::_ColorConvertFloat4ToU32(lua_State* L)
+{
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "U");
+
+	MOAIImVec4* in = state.GetLuaObject<MOAIImVec4>(1, true);
+
+	ImU32 ret = ImGui::ColorConvertFloat4ToU32(in->mVec4);
+	state.Push(ret);
+
+	return 1;
+}
+
+//----------------------------------------------------------------//
+/**	@lua	ColorConvertRGBtoHSV
+	@text	See ImGui.
+
+	@in		number 	r
+	@in		number 	g
+	@in		number 	b
+
+	@out	number 	h
+	@out	number 	s
+	@out	number 	v
+*/
+int MOAIImGui::_ColorConvertRGBtoHSV(lua_State* L)
+{
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "NNN");
+
+	float r = state.GetValue < float >(1, 0.0f);
+	float g = state.GetValue < float >(2, 0.0f);
+	float b = state.GetValue < float >(3, 0.0f);
+
+	float h = 0.0f;
+	float s = 0.0f;
+	float v = 0.0f;
+
+	ImGui::ColorConvertRGBtoHSV(r, g, b, h, s, v);
+	state.Push(h);
+	state.Push(s);
+	state.Push(v);
+
+	return 3;
+}
+
+//----------------------------------------------------------------//
+/**	@lua	ColorConvertHSVtoRGB
+	@text	See ImGui.
+
+	@in		number 	h
+	@in		number 	s
+	@in		number 	v
+
+	@out	number 	r
+	@out	number 	g
+	@out	number 	b
+*/
+int MOAIImGui::_ColorConvertHSVtoRGB(lua_State* L)
+{
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "NNN");
+
+	float h = state.GetValue < float >(1, 0.0f);
+	float s = state.GetValue < float >(2, 0.0f);
+	float v = state.GetValue < float >(3, 0.0f);
+
+	float r = 0.0f;
+	float g = 0.0f;
+	float b = 0.0f;
+
+	ImGui::ColorConvertHSVtoRGB(h, s, v, r, g, b);
+	state.Push(r);
+	state.Push(g);
+	state.Push(b);
+
+	return 3;
 }

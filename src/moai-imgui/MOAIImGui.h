@@ -221,7 +221,7 @@ protected:
 	static int _LogFinish(lua_State* L);
 	static int _LogButtons(lua_State* L);
 	static int _LogText(lua_State* L);
-
+	
 	static int _PushClipRect(lua_State* L);
 	static int _PopClipRect(lua_State* L);
 
@@ -233,6 +233,31 @@ protected:
 	static int _IsItemVisible(lua_State* L);
 	static int _IsAnyItemHovered(lua_State* L);
 	static int _IsAnyItemActive(lua_State* L);
+	static int _GetItemRectMin(lua_State* L);
+	static int _GetItemRectMax(lua_State* L);
+	static int _GetItemRectSize(lua_State* L);
+	static int _SetItemAllowOverlap(lua_State* L);
+	static int _IsWindowHovered(lua_State* L);
+	static int _IsWindowFocused(lua_State* L);
+	static int _IsRootWindowFocused(lua_State* L);
+	static int _IsRootWindowOrAnyChildFocused(lua_State* L);
+	static int _IsRootWindowOrAnyChildHovered(lua_State* L);
+	static int _IsRectVisible(lua_State* L);
+	static int _IsPosHoveringAnyWindow(lua_State* L);
+	static int _GetTime(lua_State* L);
+	static int _GetFrameCount(lua_State* L);
+	static int _GetStyleColName(lua_State* L);
+	static int _CalcItemRectClosestPoint(lua_State* L);
+	static int _CalcTextSize(lua_State* L);
+	// static int _CalcListClipping(lua_State* L);
+	
+	static int _BeginChildFrame(lua_State* L);
+	static int _EndChildFrame(lua_State* L);
+	
+	static int _ColorConvertU32ToFloat4(lua_State* L);
+	static int _ColorConvertFloat4ToU32(lua_State* L);
+	static int _ColorConvertRGBtoHSV(lua_State* L);
+	static int _ColorConvertHSVtoRGB(lua_State* L);
 
 public:
 
