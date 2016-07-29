@@ -51,11 +51,6 @@ void MOAIImGui::RegisterLuaClass(MOAILuaState& state) {
 	state.SetField(-1, "InputTextFlags_ReadOnly",            	 	1 << 14);  // Read-only mode
 	state.SetField(-1, "InputTextFlags_Password",            	 	1 << 15);  // Password mode, display all characters as '*'
 
-	state.SetField(-1, "SetCond_Always",        					1 << 0);	// Set the variable
-	state.SetField(-1, "SetCond_Once",          					1 << 1);	// Only set the variable on the first call per runtime session
-	state.SetField(-1, "SetCond_FirstUseEver",  					1 << 2);	// Only set the variable if the window doesn't exist in the .ini file
-	state.SetField(-1, "SetCond_Appearing",     					1 << 3);	// Only set the variable if the window is appearing after being inactive (or the first time)
-
 	state.SetField(-1, "TreeNodeFlags_Selected",             		1 << 0);   // Draw as selected
 	state.SetField(-1, "TreeNodeFlags_Framed",               		1 << 1);   // Full colored frame (e.g. for CollapsingHeader)
 	state.SetField(-1, "TreeNodeFlags_AllowOverlapMode",     		1 << 2);   // Hit testing to allow subsequent widgets to overlap this one
@@ -67,220 +62,342 @@ void MOAIImGui::RegisterLuaClass(MOAILuaState& state) {
 	state.SetField(-1, "TreeNodeFlags_AlwaysOpen",           		1 << 8);   // No collapsing, no arrow (use as a convenience for leaf nodes). 
 	state.SetField(-1, "TreeNodeFlags_CollapsingHeader",     		ImGuiTreeNodeFlags_Framed | ImGuiTreeNodeFlags_NoAutoOpenOnLog);
 
+	state.SetField(-1, "SelectableFlags_DontClosePopups",			1 << 0);   // Clicking this don't close parent popup window
+	state.SetField(-1, "SelectableFlags_SpanAllColumns",			1 << 1);   // Selectable frame can span all columns (text will still fit in current column)
+	state.SetField(-1, "SelectableFlags_AllowDoubleClick",			1 << 2);   // Generate press events on double clicks too
+
+	state.SetField(-1, "Key_Tab",									0);
+	state.SetField(-1, "Key_LeftArrow",								1);
+	state.SetField(-1, "Key_RightArrow",							2);
+	state.SetField(-1, "Key_UpArrow",								3);
+	state.SetField(-1, "Key_DownArrow",								4);
+	state.SetField(-1, "Key_PageUp",								5);
+	state.SetField(-1, "Key_PageDown",								6);
+	state.SetField(-1, "Key_Home",									7);
+	state.SetField(-1, "Key_End",									8);
+	state.SetField(-1, "Key_Delete",								9);
+	state.SetField(-1, "Key_Backspace",								10);
+	state.SetField(-1, "Key_Enter",									11);
+	state.SetField(-1, "Key_Escape",								12);
+	state.SetField(-1, "Key_A",										13);
+	state.SetField(-1, "Key_C",										14);
+	state.SetField(-1, "Key_V",										15);
+	state.SetField(-1, "Key_X",										16);
+	state.SetField(-1, "Key_Y",										17);
+	state.SetField(-1, "Key_Z",										18);
+
+	state.SetField(-1, "Col_Text",									0);
+	state.SetField(-1, "Col_TextDisabled",							1);
+	state.SetField(-1, "Col_WindowBg",								2);
+	state.SetField(-1, "Col_ChildWindowBg",							3);
+	state.SetField(-1, "Col_PopupBg",								4);
+	state.SetField(-1, "Col_Border",								5);
+	state.SetField(-1, "Col_BorderShadow",							6);
+	state.SetField(-1, "Col_FrameBg",								7);
+	state.SetField(-1, "Col_FrameBgHovered",						8);
+	state.SetField(-1, "Col_FrameBgActive",							9);
+	state.SetField(-1, "Col_TitleBg",								10);
+	state.SetField(-1, "Col_TitleBgCollapsed",						11);
+	state.SetField(-1, "Col_TitleBgActive",							12);
+	state.SetField(-1, "Col_MenuBarBg",								13);
+	state.SetField(-1, "Col_ScrollbarBg",							14);
+	state.SetField(-1, "Col_ScrollbarGrab",							15);
+	state.SetField(-1, "Col_ScrollbarGrabHovered",					16);
+	state.SetField(-1, "Col_ScrollbarGrabActive",					17);	
+	state.SetField(-1, "Col_ComboBg",								18);
+	state.SetField(-1, "Col_CheckMark",								19);
+	state.SetField(-1, "Col_SliderGrab",							20);
+	state.SetField(-1, "Col_SliderGrabActive",						21);
+	state.SetField(-1, "Col_Button",								22);
+	state.SetField(-1, "Col_ButtonHovered",							23);
+	state.SetField(-1, "Col_ButtonActive",							24);
+	state.SetField(-1, "Col_Header",								25);
+	state.SetField(-1, "Col_HeaderHovered",							26);
+	state.SetField(-1, "Col_HeaderActive",							27);
+	state.SetField(-1, "Col_Column",								28);
+	state.SetField(-1, "Col_ColumnHovered",							29);
+	state.SetField(-1, "Col_ColumnActive",							30);
+	state.SetField(-1, "Col_ResizeGrip",							31);
+	state.SetField(-1, "Col_ResizeGripHovered",						32);	
+	state.SetField(-1, "Col_ResizeGripActive",						33);
+	state.SetField(-1, "Col_CloseButton",							34);
+	state.SetField(-1, "Col_CloseButtonHovered",					35);		
+	state.SetField(-1, "Col_CloseButtonActive",						36);
+	state.SetField(-1, "Col_PlotLines",								37);
+	state.SetField(-1, "Col_PlotLinesHovered",						38);	
+	state.SetField(-1, "Col_PlotHistogram",							39);
+	state.SetField(-1, "Col_PlotHistogramHovered",					40);	
+	state.SetField(-1, "Col_TextSelectedBg",						41);
+	state.SetField(-1, "Col_ModalWindowDarkening",					42);
+
+	state.SetField(-1, "Align_Left",     							1 << 0);
+	state.SetField(-1, "Align_Center",   							1 << 1);
+	state.SetField(-1, "Align_Right",    							1 << 2);
+	state.SetField(-1, "Align_Top",      							1 << 3);
+	state.SetField(-1, "Align_VCenter",  							1 << 4);
+	state.SetField(-1, "Align_Default",  							ImGuiAlign_Left | ImGuiAlign_Top);
+
+	state.SetField(-1, "ColorEditMode_UserSelect",					-2);
+	state.SetField(-1, "ColorEditMode_UserSelectShowButton",		-1);
+	state.SetField(-1, "ColorEditMode_RGB",							0);
+	state.SetField(-1, "ColorEditMode_HSV",							1);
+	state.SetField(-1, "ColorEditMode_HEX",							2);
+
+	state.SetField(-1, "MouseCursor_Arrow",							0);
+	state.SetField(-1, "MouseCursor_TextInput",						1);
+	state.SetField(-1, "MouseCursor_Move",							2);
+	state.SetField(-1, "MouseCursor_ResizeNS",						3);
+	state.SetField(-1, "MouseCursor_ResizeEW",						4);
+	state.SetField(-1, "MouseCursor_ResizeNESW",					5);	
+	state.SetField(-1, "MouseCursor_ResizeNWSE",					6);	
+	state.SetField(-1, "MouseCursor_Count_",						7);
+
+	state.SetField(-1, "SetCond_Always",        					1 << 0);	// Set the variable
+	state.SetField(-1, "SetCond_Once",          					1 << 1);	// Only set the variable on the first call per runtime session
+	state.SetField(-1, "SetCond_FirstUseEver",  					1 << 2);	// Only set the variable if the window doesn't exist in the .ini file
+	state.SetField(-1, "SetCond_Appearing",     					1 << 3);	// Only set the variable if the window is appearing after being inactive (or the first time)
+
+
 	luaL_Reg regTable[] = {
-		{ "ShowTestWindow",					_ShowTestWindow },
-		{ "ShowMetricsWindow",				_ShowMetricsWindow },
+		{ "ShowTestWindow",						_ShowTestWindow },
+		{ "ShowMetricsWindow",					_ShowMetricsWindow },
 
-		{ "Begin",							_Begin },
-		{ "End",							_End },
-		{ "BeginChild",						_BeginChild },
-		{ "EndChild",						_EndChild },
+		{ "Begin",								_Begin },
+		{ "End",								_End },
+		{ "BeginChild",							_BeginChild },
+		{ "EndChild",							_EndChild },
 
-		{ "GetContentRegionMax",			_GetContentRegionMax },
-		{ "GetContentRegionAvail",			_GetContentRegionAvail },
-		{ "GetContentRegionAvailWidth",		_GetContentRegionAvailWidth },
-		{ "GetWindowContentRegionMin",		_GetWindowContentRegionMin },
-		{ "GetWindowContentRegionMax",		_GetWindowContentRegionMax },
-		{ "GetWindowContentRegionWidth",	_GetWindowContentRegionWidth },
-		{ "GetWindowPos",					_GetWindowPos },
-		{ "GetWindowSize",					_GetWindowSize },
-		{ "GetWindowWidth",					_GetWindowWidth },
-		{ "GetWindowHeight",				_GetWindowHeight },
+		{ "GetContentRegionMax",				_GetContentRegionMax },
+		{ "GetContentRegionAvail",				_GetContentRegionAvail },
+		{ "GetContentRegionAvailWidth",			_GetContentRegionAvailWidth },
+		{ "GetWindowContentRegionMin",			_GetWindowContentRegionMin },
+		{ "GetWindowContentRegionMax",			_GetWindowContentRegionMax },
+		{ "GetWindowContentRegionWidth",		_GetWindowContentRegionWidth },
+		{ "GetWindowPos",						_GetWindowPos },
+		{ "GetWindowSize",						_GetWindowSize },
+		{ "GetWindowWidth",						_GetWindowWidth },
+		{ "GetWindowHeight",					_GetWindowHeight },
 
-		{ "SetNextWindowPos",				_SetNextWindowPos },
-		{ "SetNextWindowPosCenter",			_SetNextWindowPosCenter },
-		{ "SetNextWindowSize",				_SetNextWindowSize },
-		{ "SetNextWindowSizeConstraint",	_SetNextWindowSizeConstraint },
-		{ "SetNextWindowContentSize",		_SetNextWindowContentSize },
-		{ "SetNextWindowContentWidth",		_SetNextWindowContentWidth },
-		{ "SetNextWindowCollapsed",			_SetNextWindowCollapsed },
-		{ "SetNextWindowFocus",				_SetNextWindowFocus },
-		{ "SetWindowPos",					_SetWindowPos },
-		{ "SetWindowSize",					_SetWindowSize },
-		{ "SetWindowCollapsed",				_SetWindowCollapsed },
-		{ "SetWindowFocus",					_SetWindowFocus },
+		{ "SetNextWindowPos",					_SetNextWindowPos },
+		{ "SetNextWindowPosCenter",				_SetNextWindowPosCenter },
+		{ "SetNextWindowSize",					_SetNextWindowSize },
+		{ "SetNextWindowSizeConstraint",		_SetNextWindowSizeConstraint },
+		{ "SetNextWindowContentSize",			_SetNextWindowContentSize },
+		{ "SetNextWindowContentWidth",			_SetNextWindowContentWidth },
+		{ "SetNextWindowCollapsed",				_SetNextWindowCollapsed },
+		{ "SetNextWindowFocus",					_SetNextWindowFocus },
+		{ "SetWindowPos",						_SetWindowPos },
+		{ "SetWindowSize",						_SetWindowSize },
+		{ "SetWindowCollapsed",					_SetWindowCollapsed },
+		{ "SetWindowFocus",						_SetWindowFocus },
 
-		{ "GetScrollX",						_GetScrollX },
-		{ "GetScrollY",						_GetScrollY },
-		{ "GetScrollMaxX",					_GetScrollMaxX },
-		{ "GetScrollMaxY",					_GetScrollMaxY },
-		{ "SetScrollX",						_SetScrollX },
-		{ "SetScrollY",						_SetScrollY },
-		{ "SetScrollHere",					_SetScrollHere },
-		{ "SetScrollFromPosY",				_SetScrollFromPosY },
-		{ "SetKeyboardFocusHere",			_SetKeyboardFocusHere },
-		// { "SetStateStorage",				_SetStateStorage },
-		// { "GetStateStorage",				_GetStateStorage },
+		{ "GetScrollX",							_GetScrollX },
+		{ "GetScrollY",							_GetScrollY },
+		{ "GetScrollMaxX",						_GetScrollMaxX },
+		{ "GetScrollMaxY",						_GetScrollMaxY },
+		{ "SetScrollX",							_SetScrollX },
+		{ "SetScrollY",							_SetScrollY },
+		{ "SetScrollHere",						_SetScrollHere },
+		{ "SetScrollFromPosY",					_SetScrollFromPosY },
+		{ "SetKeyboardFocusHere",				_SetKeyboardFocusHere },
+		// { "SetStateStorage",					_SetStateStorage },
+		// { "GetStateStorage",					_GetStateStorage },
 
-		{ "Separator",						_Separator },
-		{ "SameLine",						_SameLine },
-		{ "NewLine",						_NewLine },
-		{ "Spacing",						_Spacing },
-		{ "Dummy",							_Dummy },
-		{ "Indent",							_Indent },
-		{ "Unindent",						_Unindent },
-		{ "BeginGroup",						_BeginGroup },
-		{ "EndGroup",						_EndGroup },
-		{ "GetCursorPos",					_GetCursorPos },
-		{ "GetCursorPosX",					_GetCursorPosX },
-		{ "GetCursorPosY",					_GetCursorPosY },
-		{ "SetCursorPos",					_SetCursorPos },
-		{ "SetCursorPosX",					_SetCursorPosX },
-		{ "SetCursorPosY",					_SetCursorPosY },
-		{ "GetCursorStartPos",				_GetCursorStartPos },
-		{ "GetCursorScreenPos",				_GetCursorScreenPos },
-		{ "SetCursorScreenPos",				_SetCursorScreenPos },
-		{ "AlignFirstTextHeightToWidgets",	_AlignFirstTextHeightToWidgets },
-		{ "GetTextLineHeight",				_GetTextLineHeight },
-		{ "GetTextLineHeightWithSpacing",	_GetTextLineHeightWithSpacing },
-		{ "GetItemsLineHeightWithSpacing",	_GetItemsLineHeightWithSpacing },
+		{ "Separator",							_Separator },
+		{ "SameLine",							_SameLine },
+		{ "NewLine",							_NewLine },
+		{ "Spacing",							_Spacing },
+		{ "Dummy",								_Dummy },
+		{ "Indent",								_Indent },
+		{ "Unindent",							_Unindent },
+		{ "BeginGroup",							_BeginGroup },
+		{ "EndGroup",							_EndGroup },
+		{ "GetCursorPos",						_GetCursorPos },
+		{ "GetCursorPosX",						_GetCursorPosX },
+		{ "GetCursorPosY",						_GetCursorPosY },
+		{ "SetCursorPos",						_SetCursorPos },
+		{ "SetCursorPosX",						_SetCursorPosX },
+		{ "SetCursorPosY",						_SetCursorPosY },
+		{ "GetCursorStartPos",					_GetCursorStartPos },
+		{ "GetCursorScreenPos",					_GetCursorScreenPos },
+		{ "SetCursorScreenPos",					_SetCursorScreenPos },
+		{ "AlignFirstTextHeightToWidgets",		_AlignFirstTextHeightToWidgets },
+		{ "GetTextLineHeight",					_GetTextLineHeight },
+		{ "GetTextLineHeightWithSpacing",		_GetTextLineHeightWithSpacing },
+		{ "GetItemsLineHeightWithSpacing",		_GetItemsLineHeightWithSpacing },
 
-		{ "Columns",						_Columns },
-		{ "NextColumn",						_NextColumn },
-		{ "GetColumnIndex",					_GetColumnIndex },
-		{ "GetColumnOffset",				_GetColumnOffset },
-		{ "SetColumnOffset",				_SetColumnOffset },
-		{ "GetColumnWidth",					_GetColumnWidth },
-		{ "GetColumnsCount",				_GetColumnsCount },
+		{ "Columns",							_Columns },
+		{ "NextColumn",							_NextColumn },
+		{ "GetColumnIndex",						_GetColumnIndex },
+		{ "GetColumnOffset",					_GetColumnOffset },
+		{ "SetColumnOffset",					_SetColumnOffset },
+		{ "GetColumnWidth",						_GetColumnWidth },
+		{ "GetColumnsCount",					_GetColumnsCount },
 		
-		{ "PushID",							_PushID },
-		{ "PopID",							_PopID },
-		{ "GetID",							_GetID },
+		{ "PushID",								_PushID },
+		{ "PopID",								_PopID },
+		{ "GetID",								_GetID },
 		
-		{ "Text",							_Text },
-		{ "TextColored",					_TextColored },
-		{ "TextDisabled",					_TextDisabled },
-		{ "TextWrapped",					_TextWrapped },
-		{ "TextUnformatted",				_TextUnformatted },
-		{ "LabelText",						_LabelText },
-		{ "Bullet",							_Bullet },
-		{ "BulletText",						_BulletText },
-		{ "Button",							_Button },
-		{ "SmallButton",					_SmallButton },
-		{ "InvisibleButton",				_InvisibleButton },
-		{ "Checkbox",						_Checkbox },
-		{ "RadioButton",					_RadioButton },
-		{ "Combo",							_Combo },
-		{ "ColorButton",					_ColorButton },
-		{ "ColorEdit3",						_ColorEdit3 },
-		{ "ColorEdit4",						_ColorEdit4 },
-		// { "PlotLines",					_PlotLines },
-		// { "PlotHistogram",				_PlotHistogram },
-		{ "ProgressBar",					_ProgressBar },
+		{ "Text",								_Text },
+		{ "TextColored",						_TextColored },
+		{ "TextDisabled",						_TextDisabled },
+		{ "TextWrapped",						_TextWrapped },
+		{ "TextUnformatted",					_TextUnformatted },
+		{ "LabelText",							_LabelText },
+		{ "Bullet",								_Bullet },
+		{ "BulletText",							_BulletText },
+		{ "Button",								_Button },
+		{ "SmallButton",						_SmallButton },
+		{ "InvisibleButton",					_InvisibleButton },
+		{ "Checkbox",							_Checkbox },
+		{ "RadioButton",						_RadioButton },
+		{ "Combo",								_Combo },
+		{ "ColorButton",						_ColorButton },
+		{ "ColorEdit3",							_ColorEdit3 },
+		{ "ColorEdit4",							_ColorEdit4 },
+		{ "PlotLines",							_PlotLines },
+		{ "PlotHistogram",						_PlotHistogram },
+		{ "ProgressBar",						_ProgressBar },
 		
-		{ "DragFloat",						_DragFloat },
-		{ "DragFloat2",						_DragFloat2 },
-		{ "DragFloat3",						_DragFloat3 },
-		{ "DragFloat4",						_DragFloat4 },
-		{ "DragFloatRange2",				_DragFloatRange2 },
-		{ "DragInt",						_DragInt },
-		{ "DragInt2",						_DragInt2 },
-		{ "DragInt3",						_DragInt3 },
-		{ "DragInt4",						_DragInt4 },
-		{ "DragIntRange2",					_DragIntRange2 },
+		{ "DragFloat",							_DragFloat },
+		{ "DragFloat2",							_DragFloat2 },
+		{ "DragFloat3",							_DragFloat3 },
+		{ "DragFloat4",							_DragFloat4 },
+		{ "DragFloatRange2",					_DragFloatRange2 },
+		{ "DragInt",							_DragInt },
+		{ "DragInt2",							_DragInt2 },
+		{ "DragInt3",							_DragInt3 },
+		{ "DragInt4",							_DragInt4 },
+		{ "DragIntRange2",						_DragIntRange2 },
 
-		{ "InputText",						_InputText },
-		{ "InputFloat",						_InputFloat },
-		{ "InputFloat2",					_InputFloat2 },
-		{ "InputFloat3",					_InputFloat3 },
-		{ "InputFloat4",					_InputFloat4 },
-		{ "InputInt",						_InputInt },
-		{ "InputInt2",						_InputInt2 },
-		{ "InputInt3",						_InputInt3 },
-		{ "InputInt4",						_InputInt4 },
+		{ "InputText",							_InputText },
+		{ "InputFloat",							_InputFloat },
+		{ "InputFloat2",						_InputFloat2 },
+		{ "InputFloat3",						_InputFloat3 },
+		{ "InputFloat4",						_InputFloat4 },
+		{ "InputInt",							_InputInt },
+		{ "InputInt2",							_InputInt2 },
+		{ "InputInt3",							_InputInt3 },
+		{ "InputInt4",							_InputInt4 },
 
-		{ "SliderFloat",					_SliderFloat },
-		{ "SliderFloat2",					_SliderFloat2 },
-		{ "SliderFloat3",					_SliderFloat3 },
-		{ "SliderFloat4",					_SliderFloat4 },
-		{ "SliderAngle",					_SliderAngle },
-		{ "SliderInt",						_SliderInt },
-		{ "SliderInt2",						_SliderInt2 },
-		{ "SliderInt3",						_SliderInt3 },
-		{ "SliderInt4",						_SliderInt4 },
-		{ "VSliderFloat",					_VSliderFloat },
-		{ "VSliderInt",						_VSliderInt },
+		{ "SliderFloat",						_SliderFloat },
+		{ "SliderFloat2",						_SliderFloat2 },
+		{ "SliderFloat3",						_SliderFloat3 },
+		{ "SliderFloat4",						_SliderFloat4 },
+		{ "SliderAngle",						_SliderAngle },
+		{ "SliderInt",							_SliderInt },
+		{ "SliderInt2",							_SliderInt2 },
+		{ "SliderInt3",							_SliderInt3 },
+		{ "SliderInt4",							_SliderInt4 },
+		{ "VSliderFloat",						_VSliderFloat },
+		{ "VSliderInt",							_VSliderInt },
 		
-		{ "TreeNode",						_TreeNode },
-		{ "TreeNodeEx",						_TreeNodeEx },
-		{ "TreePop",						_TreePop },
-		{ "TreePush",						_TreePush },
-		{ "SetNextTreeNodeOpen",			_SetNextTreeNodeOpen },
-		{ "GetTreeNodeToLabelSpacing",		_GetTreeNodeToLabelSpacing },
-		{ "CollapsingHeader",				_CollapsingHeader },
+		{ "TreeNode",							_TreeNode },
+		{ "TreeNodeEx",							_TreeNodeEx },
+		{ "TreePop",							_TreePop },
+		{ "TreePush",							_TreePush },
+		{ "SetNextTreeNodeOpen",				_SetNextTreeNodeOpen },
+		{ "GetTreeNodeToLabelSpacing",			_GetTreeNodeToLabelSpacing },
+		{ "CollapsingHeader",					_CollapsingHeader },
 
-		{ "Selectable",						_Selectable },
-		{ "ListBox",						_ListBox },
-		// { "ListBoxHeader",					_ListBoxHeader },
-		// { "ListBoxFooter",					_ListBoxFooter },
+		{ "Selectable",							_Selectable },
+		{ "ListBox",							_ListBox },
+		{ "ListBoxHeader",						_ListBoxHeader },
+		{ "ListBoxFooter",						_ListBoxFooter },
 		
-		{ "Value",							_Value },
-		{ "ValueColor",						_ValueColor },
+		{ "Value",								_Value },
+		{ "ValueColor",							_ValueColor },
 
-		{ "SetTooltip",						_SetTooltip },
-		{ "BeginTooltip",					_BeginTooltip },
-		{ "EndTooltip",						_EndTooltip },
+		{ "SetTooltip",							_SetTooltip },
+		{ "BeginTooltip",						_BeginTooltip },
+		{ "EndTooltip",							_EndTooltip },
 
-		{ "BeginMainMenuBar",				_BeginMainMenuBar },
-		{ "EndMainMenuBar",					_EndMainMenuBar },
-		{ "BeginMenuBar",					_BeginMenuBar },
-		{ "EndMenuBar",						_EndMenuBar },
-		{ "BeginMenu",						_BeginMenu },
-		{ "EndMenu",						_EndMenu },
-		{ "MenuItem",						_MenuItem },
+		{ "BeginMainMenuBar",					_BeginMainMenuBar },
+		{ "EndMainMenuBar",						_EndMainMenuBar },
+		{ "BeginMenuBar",						_BeginMenuBar },
+		{ "EndMenuBar",							_EndMenuBar },
+		{ "BeginMenu",							_BeginMenu },
+		{ "EndMenu",							_EndMenu },
+		{ "MenuItem",							_MenuItem },
 
-		{ "OpenPopup",						_OpenPopup },
-		{ "BeginPopup",						_BeginPopup },
-		{ "BeginPopupModal",				_BeginPopupModal },
-		{ "BeginPopupContextItem",			_BeginPopupContextItem },
-		{ "BeginPopupContextWindow",		_BeginPopupContextWindow },
-		{ "BeginPopupContextVoid",			_BeginPopupContextVoid },
-		{ "EndPopup",						_EndPopup },
-		{ "CloseCurrentPopup",				_CloseCurrentPopup },
+		{ "OpenPopup",							_OpenPopup },
+		{ "BeginPopup",							_BeginPopup },
+		{ "BeginPopupModal",					_BeginPopupModal },
+		{ "BeginPopupContextItem",				_BeginPopupContextItem },
+		{ "BeginPopupContextWindow",			_BeginPopupContextWindow },
+		{ "BeginPopupContextVoid",				_BeginPopupContextVoid },
+		{ "EndPopup",							_EndPopup },
+		{ "CloseCurrentPopup",					_CloseCurrentPopup },
 
-		{ "LogToTTY",						_LogToTTY },
-		{ "LogToFile",						_LogToFile },
-		{ "LogToClipboard",					_LogToClipboard },
-		{ "LogFinish",						_LogFinish },
-		{ "LogButtons",						_LogButtons },
-		{ "LogText",						_LogText },
+		{ "LogToTTY",							_LogToTTY },
+		{ "LogToFile",							_LogToFile },
+		{ "LogToClipboard",						_LogToClipboard },
+		{ "LogFinish",							_LogFinish },
+		{ "LogButtons",							_LogButtons },
+		{ "LogText",							_LogText },
 
-		{ "PushClipRect",					_PushClipRect },
-		{ "PopClipRect",					_PopClipRect },
+		{ "PushClipRect",						_PushClipRect },
+		{ "PopClipRect",						_PopClipRect },
 
-		{ "IsItemHovered",					_IsItemHovered },
-		{ "IsItemHoveredRect",				_IsItemHoveredRect },
-		{ "IsItemActive",					_IsItemActive },
+		{ "IsItemHovered",						_IsItemHovered },
+		{ "IsItemHoveredRect",					_IsItemHoveredRect },
+		{ "IsItemActive",						_IsItemActive },
 
-		{ "IsItemClicked",					_IsItemClicked },
-		{ "IsItemVisible",					_IsItemVisible },
-		{ "IsAnyItemHovered",				_IsAnyItemHovered },
-		{ "IsAnyItemActive",				_IsAnyItemActive },
-		{ "GetItemRectMin",					_GetItemRectMin },
-		{ "GetItemRectMax",					_GetItemRectMax },
-		{ "GetItemRectSize",				_GetItemRectSize },
-		{ "SetItemAllowOverlap",			_SetItemAllowOverlap },
-		{ "IsWindowHovered",				_IsWindowHovered },
-		{ "IsWindowFocused",				_IsWindowFocused },
-		{ "IsRootWindowFocused",			_IsRootWindowFocused },
-		{ "IsRootWindowOrAnyChildFocused",	_IsRootWindowOrAnyChildFocused },
-		{ "IsRootWindowOrAnyChildHovered",	_IsRootWindowOrAnyChildHovered },
-		{ "IsRectVisible",					_IsRectVisible },
-		{ "IsPosHoveringAnyWindow",			_IsPosHoveringAnyWindow },
-		{ "GetTime",						_GetTime },
-		{ "GetFrameCount",					_GetFrameCount },
-		{ "GetStyleColName",				_GetStyleColName },
-		{ "CalcItemRectClosestPoint",		_CalcItemRectClosestPoint },
-		{ "CalcTextSize",					_CalcTextSize },
-		// { "CalcListClipping",				_CalcListClipping },
+		{ "IsItemClicked",						_IsItemClicked },
+		{ "IsItemVisible",						_IsItemVisible },
+		{ "IsAnyItemHovered",					_IsAnyItemHovered },
+		{ "IsAnyItemActive",					_IsAnyItemActive },
+		{ "GetItemRectMin",						_GetItemRectMin },
+		{ "GetItemRectMax",						_GetItemRectMax },
+		{ "GetItemRectSize",					_GetItemRectSize },
+		{ "SetItemAllowOverlap",				_SetItemAllowOverlap },
+		{ "IsWindowHovered",					_IsWindowHovered },
+		{ "IsWindowFocused",					_IsWindowFocused },
+		{ "IsRootWindowFocused",				_IsRootWindowFocused },
+		{ "IsRootWindowOrAnyChildFocused",		_IsRootWindowOrAnyChildFocused },
+		{ "IsRootWindowOrAnyChildHovered",		_IsRootWindowOrAnyChildHovered },
+		{ "IsRectVisible",						_IsRectVisible },
+		{ "IsPosHoveringAnyWindow",				_IsPosHoveringAnyWindow },
+		{ "GetTime",							_GetTime },
+		{ "GetFrameCount",						_GetFrameCount },
+		{ "GetStyleColName",					_GetStyleColName },
+		{ "CalcItemRectClosestPoint",			_CalcItemRectClosestPoint },
+		{ "CalcTextSize",						_CalcTextSize },
+		// { "CalcListClipping",					_CalcListClipping },
 
-		{ "BeginChildFrame",				_BeginChildFrame },
-		{ "EndChildFrame",					_EndChildFrame },
+		{ "BeginChildFrame",					_BeginChildFrame },
+		{ "EndChildFrame",						_EndChildFrame },
 
-		{ "ColorConvertU32ToFloat4",		_ColorConvertU32ToFloat4 },
-		{ "ColorConvertFloat4ToU32",		_ColorConvertFloat4ToU32 },
-		{ "ColorConvertRGBtoHSV",			_ColorConvertRGBtoHSV },
-		{ "ColorConvertHSVtoRGB",			_ColorConvertHSVtoRGB },
+		{ "ColorConvertU32ToFloat4",			_ColorConvertU32ToFloat4 },
+		{ "ColorConvertFloat4ToU32",			_ColorConvertFloat4ToU32 },
+		{ "ColorConvertRGBtoHSV",				_ColorConvertRGBtoHSV },
+		{ "ColorConvertHSVtoRGB",				_ColorConvertHSVtoRGB },
+
+		{ "GetKeyIndex",						_GetKeyIndex },
+		{ "IsKeyDown",							_IsKeyDown },
+		{ "IsKeyPressed",						_IsKeyPressed },
+		{ "IsKeyReleased",						_IsKeyReleased },
+		{ "IsMouseDown",						_IsMouseDown },
+		{ "IsMouseClicked",						_IsMouseClicked },
+		{ "IsMouseDoubleClicked",				_IsMouseDoubleClicked },
+		{ "IsMouseReleased",					_IsMouseReleased },
+		{ "IsMouseHoveringWindow",				_IsMouseHoveringWindow },
+		{ "IsMouseHoveringAnyWindow",			_IsMouseHoveringAnyWindow },
+		{ "IsMouseHoveringRect",				_IsMouseHoveringRect },
+		{ "IsMouseDragging",					_IsMouseDragging },
+		{ "GetMousePos",						_GetMousePos },
+		{ "GetMousePosOnOpeningCurrentPopup",	_GetMousePosOnOpeningCurrentPopup },
+		{ "GetMouseDragDelta",					_GetMouseDragDelta },
+		{ "ResetMouseDragDelta",				_ResetMouseDragDelta },
+		{ "GetMouseCursor",						_GetMouseCursor },
+		{ "SetMouseCursor",						_SetMouseCursor },
+		{ "CaptureKeyboardFromApp",				_CaptureKeyboardFromApp },
+		{ "CaptureMouseFromApp",				_CaptureMouseFromApp },
+
+		{ "GetClipboardText",					_GetClipboardText },
+		{ "SetClipboardText",					_SetClipboardText },
+
+		{ "GetVersion",							_GetVersion },
 
 		{ NULL, NULL }
 	};
@@ -1527,7 +1644,7 @@ int MOAIImGui::_GetID(lua_State* L)
 
 //----------------------------------------------------------------//
 /**	@lua	Text
-	@text	See ImGui. No point in using format strings here, construct the string in lua.
+	@text	See ImGui.
 
 	@in		string txt
 */
@@ -1543,7 +1660,7 @@ int MOAIImGui::_Text(lua_State* L)
 
 //----------------------------------------------------------------//
 /**	@lua	TextColored
-	@text	See ImGui. No point in using format strings here, construct the string in lua.
+	@text	See ImGui.
 
 	@in MOAIImVec4		color
 	@in	string 			txt
@@ -1562,7 +1679,7 @@ int MOAIImGui::_TextColored(lua_State* L)
 
 //----------------------------------------------------------------//
 /**	@lua	TextDisabled
-	@text	See ImGui. No point in using format strings here, construct the string in lua.
+	@text	See ImGui.
 
 	@in	string 			txt
 */
@@ -1579,7 +1696,7 @@ int MOAIImGui::_TextDisabled(lua_State* L)
 
 //----------------------------------------------------------------//
 /**	@lua	TextWrapped
-	@text	See ImGui. No point in using format strings here, construct the string in lua.
+	@text	See ImGui.
 
 	@in	string 			txt
 */
@@ -1596,7 +1713,7 @@ int MOAIImGui::_TextWrapped(lua_State* L)
 
 //----------------------------------------------------------------//
 /**	@lua	TextUnformatted
-	@text	See ImGui. No point in using format strings here, construct the string in lua.
+	@text	See ImGui.
 
 	@in	string 			txt
 */
@@ -1614,7 +1731,7 @@ int MOAIImGui::_TextUnformatted(lua_State* L)
 
 //----------------------------------------------------------------//
 /**	@lua	LabelText
-	@text	See ImGui. No point in using format strings here, construct the string in lua.
+	@text	See ImGui.
 
 	@in	string 			label
 	@in	string 			txt
@@ -1646,7 +1763,7 @@ int MOAIImGui::_Bullet(lua_State* L)
 
 //----------------------------------------------------------------//
 /**	@lua	BulletText
-	@text	See ImGui. No point in using format strings here, construct the string in lua.
+	@text	See ImGui.
 
 	@in	string 			txt
 */
@@ -1663,7 +1780,7 @@ int MOAIImGui::_BulletText(lua_State* L)
 
 //----------------------------------------------------------------//
 /**	@lua	Button
-	@text	See ImGui. No point in using format strings here, construct the string in lua.
+	@text	See ImGui.
 
 	@in		string 			lbl
 	@opt 	MOAIImVec2		size
@@ -1690,7 +1807,7 @@ int MOAIImGui::_Button(lua_State* L)
 
 //----------------------------------------------------------------//
 /**	@lua	SmallButton
-	@text	See ImGui. No point in using format strings here, construct the string in lua.
+	@text	See ImGui.
 
 	@in		string 			lbl
 	@out	boolean			pressed
@@ -1709,7 +1826,7 @@ int MOAIImGui::_SmallButton(lua_State* L)
 
 //----------------------------------------------------------------//
 /**	@lua	InvisibleButton
-	@text	See ImGui. No point in using format strings here, construct the string in lua.
+	@text	See ImGui.
 
 	@in		string 			id
 	@in 	MOAIImVec2		size
@@ -1893,10 +2010,90 @@ int MOAIImGui::_ColorEdit4(lua_State* L)
 	return 1;
 }
 
-//void          PlotLines(const char* label, float (*values_getter)(void* data, int idx), void* data, int values_count, int values_offset = 0, const char* overlay_text = NULL, float scale_min = FLT_MAX, float scale_max = FLT_MAX, ImVec2 graph_size = ImVec2(0,0));
+// value getter for plot lines
+float values_getter(void* data, int idx)
+{
+	MOAILuaState* state = (MOAILuaState*)data;
+	state->GetField ( 2, idx+1 );
+	float value = state->GetValue < float >( -1, 0.0f );
+	lua_pop ( *state, 1 );
+	
+	return value;
+}
 
-// void          PlotHistogram(const char* label, float (*values_getter)(void* data, int idx), void* data, int values_count, int values_offset = 0, const char* overlay_text = NULL, float scale_min = FLT_MAX, float scale_max = FLT_MAX, ImVec2 graph_size = ImVec2(0,0));
+//----------------------------------------------------------------//
+/**	@lua	PlotLines
+	@text	See ImGui.
 
+	@in		string 			label
+	@in		table			items
+	@opt	number			values_offset
+	@opt	string			overlay_text
+	@opt	number			scale_min
+	@opt	number			scale_max
+	@opt 	MOAIImVec2		graph_size
+*/
+int MOAIImGui::_PlotLines(lua_State* L)
+{
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "ST");
+
+	cc8* label = state.GetValue < cc8* >(1, "");
+	int values_count = (int)lua_objlen(L, 2);
+	int values_offset = state.GetValue < int >(3, 1);
+	cc8* overlay_text = state.GetValue < cc8* >(4, NULL);
+	float scale_min = state.GetValue < float >(5, FLT_MAX);
+	float scale_max = state.GetValue < float >(6, FLT_MAX);
+
+	MOAIImVec2 graph_size;
+
+	if (state.IsType(2, LUA_TUSERDATA))
+	{
+		graph_size = *state.GetLuaObject<MOAIImVec2>(2, true);
+	}
+
+	// lua array to c array translation
+	--values_offset;
+	ImGui::PlotLines(label, values_getter, &state, values_count, values_offset, overlay_text, scale_min, scale_max, graph_size.mVec2);
+
+	return 0;
+}
+
+//----------------------------------------------------------------//
+/**	@lua	PlotHistogram
+	@text	See ImGui.
+
+	@in		string 			label
+	@in		table			items
+	@opt	number			values_offset
+	@opt	string			overlay_text
+	@opt	number			scale_min
+	@opt	number			scale_max
+	@opt 	MOAIImVec2		graph_size
+*/
+int MOAIImGui::_PlotHistogram(lua_State* L)
+{
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "ST");
+
+	cc8* label = state.GetValue < cc8* >(1, "");
+	int values_count = (int)lua_objlen(L, 2);
+	int values_offset = state.GetValue < int >(3, 1);
+	cc8* overlay_text = state.GetValue < cc8* >(4, NULL);
+	float scale_min = state.GetValue < float >(5, FLT_MAX);
+	float scale_max = state.GetValue < float >(6, FLT_MAX);
+
+	MOAIImVec2 graph_size;
+
+	if (state.IsType(2, LUA_TUSERDATA))
+	{
+		graph_size = *state.GetLuaObject<MOAIImVec2>(2, true);
+	}
+
+	// lua array to c array translation
+	--values_offset;
+	ImGui::PlotHistogram(label, values_getter, &state, values_count, values_offset, overlay_text, scale_min, scale_max, graph_size.mVec2);
+
+	return 0;
+}
 
 //----------------------------------------------------------------//
 /**	@lua	ProgressBar
@@ -2904,7 +3101,7 @@ int MOAIImGui::_TreeNode(lua_State* L)
 
 //----------------------------------------------------------------//
 /**	@lua	TreeNodeEx
-	@text	See ImGui. No point in using format strings here, construct the string in lua.
+	@text	See ImGui.
 
 	@in		string 		id
 	@in		number		flags
@@ -2928,7 +3125,7 @@ int MOAIImGui::_TreeNodeEx(lua_State* L)
 
 //----------------------------------------------------------------//
 /**	@lua	TreePop
-	@text	See ImGui. No point in using format strings here, construct the string in lua.
+	@text	See ImGui.
 
 */
 int MOAIImGui::_TreePop(lua_State* L)
@@ -3100,8 +3297,54 @@ int MOAIImGui::_ListBox(lua_State* L)
 }
 
 //----------------------------------------------------------------//
+/**	@lua	ListBoxHeader
+	@text	See ImGui.
+
+	@in		string	 				label
+	@in		MOAIImVec2 or number	size or items_count
+	@opt 	number height_in_items
+*/
+int MOAIImGui::_ListBoxHeader(lua_State* L)
+{
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "S@");
+
+	cc8* label = state.GetValue < cc8* >(1, "");
+
+	bool ret;
+
+	if (state.IsType(2, LUA_TUSERDATA))
+	{
+		MOAIImVec2* size = state.GetLuaObject<MOAIImVec2>(2, true);
+		ret = ImGui::ListBoxHeader(label, size->mVec2);
+	}
+	else if (state.IsType(2, LUA_TNUMBER))
+	{
+		int items_count = state.GetValue < int >(2, 0);
+		int height_in_items = state.GetValue < int >(3, -1);
+		ret = ImGui::ListBoxHeader(label, items_count, height_in_items);
+	}
+
+	state.Push(ret);
+
+	return 1;
+}
+
+//----------------------------------------------------------------//
+/**	@lua	ListBoxFooter
+	@text	See ImGui.
+*/
+int MOAIImGui::_ListBoxFooter(lua_State* L)
+{
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "");
+
+	ImGui::ListBoxFooter();
+
+	return 0;
+}
+
+//----------------------------------------------------------------//
 /**	@lua	Value
-	@text	See ImGui. No point in using format strings here, construct the string in lua.
+	@text	See ImGui.
 
 	@in		string prefix
 	@opt 	value
@@ -4198,4 +4441,435 @@ int MOAIImGui::_ColorConvertHSVtoRGB(lua_State* L)
 	state.Push(b);
 
 	return 3;
+}
+
+//----------------------------------------------------------------//
+/**	@lua	GetKeyIndex
+	@text	See ImGui.
+
+	@in		number 	key
+
+	@out	number 	idx
+*/
+int MOAIImGui::_GetKeyIndex(lua_State* L)
+{
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "N");
+
+	int key = state.GetValue < int >(1, 0);
+
+	int ret = ImGui::GetKeyIndex(key);
+	state.Push(ret);
+
+	return 1;
+}
+
+//----------------------------------------------------------------//
+/**	@lua	IsKeyDown
+	@text	See ImGui.
+
+	@in		number 	key_index
+
+	@out	boolean	down
+*/
+int MOAIImGui::_IsKeyDown(lua_State* L)
+{
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "N");
+
+	int key_index = state.GetValue < int >(1, 0);
+
+	bool ret = ImGui::IsKeyDown(key_index);
+	state.Push(ret);
+
+	return 1;
+}
+
+//----------------------------------------------------------------//
+/**	@lua	IsKeyPressed
+	@text	See ImGui.
+
+	@in		number 		key_index
+	@opt	boolean 	repeat
+
+	@out	boolean 	down
+*/
+int MOAIImGui::_IsKeyPressed(lua_State* L)
+{
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "N");
+
+	int key_index = state.GetValue < int >(1, 0);
+	bool repeat = state.GetValue < bool >(2, true);
+
+	bool ret = ImGui::IsKeyPressed(key_index, repeat);
+	state.Push(ret);
+
+	return 1;
+}
+
+//----------------------------------------------------------------//
+/**	@lua	IsKeyReleased
+	@text	See ImGui.
+
+	@in		number 	key_index
+
+	@out	boolean	released
+*/
+int MOAIImGui::_IsKeyReleased(lua_State* L)
+{
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "N");
+
+	int key_index = state.GetValue < int >(1, 0);
+
+	bool ret = ImGui::IsKeyReleased(key_index);
+	state.Push(ret);
+
+	return 1;
+}
+
+//----------------------------------------------------------------//
+/**	@lua	IsMouseDown
+	@text	See ImGui.
+
+	@in		number 	button
+
+	@out	boolean	down
+*/
+int MOAIImGui::_IsMouseDown(lua_State* L)
+{
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "N");
+
+	int button = state.GetValue < int >(1, 0);
+
+	bool ret = ImGui::IsMouseDown(button);
+	state.Push(ret);
+
+	return 1;
+}
+
+//----------------------------------------------------------------//
+/**	@lua	IsMouseClicked
+	@text	See ImGui.
+
+	@in		number 	button
+
+	@out	boolean	clicked
+*/
+int MOAIImGui::_IsMouseClicked(lua_State* L)
+{
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "N");
+
+	int button = state.GetValue < int >(1, 0);
+	bool repeat = state.GetValue < bool >(2, false);
+
+	bool ret = ImGui::IsMouseClicked(button, repeat);
+	state.Push(ret);
+
+	return 1;
+}
+
+//----------------------------------------------------------------//
+/**	@lua	IsMouseDoubleClicked
+	@text	See ImGui.
+
+	@in		number 	button
+
+	@out	boolean	doubleclicked
+*/
+int MOAIImGui::_IsMouseDoubleClicked(lua_State* L)
+{
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "N");
+
+	int button = state.GetValue < int >(1, 0);
+
+	bool ret = ImGui::IsMouseDoubleClicked(button);
+	state.Push(ret);
+
+	return 1;
+}
+
+//----------------------------------------------------------------//
+/**	@lua	IsMouseReleased
+	@text	See ImGui.
+
+	@in		number 	button
+
+	@out	boolean	released
+*/
+int MOAIImGui::_IsMouseReleased(lua_State* L)
+{
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "N");
+
+	int button = state.GetValue < int >(1, 0);
+
+	bool ret = ImGui::IsMouseReleased(button);
+	state.Push(ret);
+
+	return 1;
+}
+
+//----------------------------------------------------------------//
+/**	@lua	IsMouseHoveringWindow
+	@text	See ImGui.
+
+	@out	boolean	hovering
+*/
+int MOAIImGui::_IsMouseHoveringWindow(lua_State* L)
+{
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "");
+
+	bool ret = ImGui::IsMouseHoveringWindow();
+	state.Push(ret);
+
+	return 1;
+}
+
+//----------------------------------------------------------------//
+/**	@lua	IsMouseHoveringAnyWindow
+	@text	See ImGui.
+
+	@out	boolean	hovering
+*/
+int MOAIImGui::_IsMouseHoveringAnyWindow(lua_State* L)
+{
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "");
+
+	bool ret = ImGui::IsMouseHoveringAnyWindow();
+	state.Push(ret);
+
+	return 1;
+}
+
+//----------------------------------------------------------------//
+/**	@lua	IsMouseHoveringRect
+	@text	See ImGui.
+
+	@in		MOAIImVec2	r_min
+	@in		MOAIImVec2	r_max
+	@opt	boolean		clip
+
+	@out	boolean		hovering
+*/
+int MOAIImGui::_IsMouseHoveringRect(lua_State* L)
+{
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "UU");
+
+	MOAIImVec2* r_min = state.GetLuaObject<MOAIImVec2>(1, true);
+	MOAIImVec2* r_max = state.GetLuaObject<MOAIImVec2>(2, true);
+	bool clip = state.GetValue < bool >(1, 0);
+
+	bool ret = ImGui::IsMouseHoveringRect(r_min->mVec2, r_min->mVec2, clip);
+	state.Push(ret);
+
+	return 1;
+}
+
+//----------------------------------------------------------------//
+/**	@lua	IsMouseDragging
+	@text	See ImGui.
+
+	@opt	number 	button
+	@opt	number 	lock_threshold
+
+	@out	boolean	dragging
+*/
+int MOAIImGui::_IsMouseDragging(lua_State* L)
+{
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "");
+
+	int button = state.GetValue < int >(1, 0);
+	float lock_threshold = state.GetValue < float >(2, -1.0f);
+
+	bool ret = ImGui::IsMouseDragging(button, lock_threshold);
+	state.Push(ret);
+
+	return 1;
+}
+
+//----------------------------------------------------------------//
+/**	@lua	GetMousePos
+	@text	See ImGui.
+
+	@out	number 	x
+	@out	number 	y
+*/
+int MOAIImGui::_GetMousePos(lua_State* L)
+{
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "");
+
+	ImVec2 ret = ImGui::GetMousePos();
+	state.Push(ret.x);
+	state.Push(ret.y);
+
+	return 2;
+}
+
+//----------------------------------------------------------------//
+/**	@lua	GetMousePosOnOpeningCurrentPopup
+	@text	See ImGui.
+
+	@out	number 	x
+	@out	number 	y
+*/
+int MOAIImGui::_GetMousePosOnOpeningCurrentPopup(lua_State* L)
+{
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "");
+
+	ImVec2 ret = ImGui::GetMousePosOnOpeningCurrentPopup();
+	state.Push(ret.x);
+	state.Push(ret.y);
+
+	return 2;
+}
+
+//----------------------------------------------------------------//
+/**	@lua	GetMouseDragDelta
+	@text	See ImGui.
+
+	@out	number 	x
+	@out	number 	y
+*/
+int MOAIImGui::_GetMouseDragDelta(lua_State* L)
+{
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "");
+
+	int button = state.GetValue < int >(1, 0);
+	float lock_threshold = state.GetValue < float >(2, -1.0f);
+
+	ImVec2 ret = ImGui::GetMouseDragDelta(button, lock_threshold);
+	state.Push(ret.x);
+	state.Push(ret.y);
+
+	return 2;
+}
+
+//----------------------------------------------------------------//
+/**	@lua	ResetMouseDragDelta
+	@text	See ImGui.
+
+	@opt	number 	button
+*/
+int MOAIImGui::_ResetMouseDragDelta(lua_State* L)
+{
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "");
+
+	int button = state.GetValue < int >(1, 0);
+
+	ImGui::ResetMouseDragDelta(button);
+
+	return 0;
+}
+
+//----------------------------------------------------------------//
+/**	@lua	GetMouseCursor
+	@text	See ImGui.
+
+	@out	number	mousecursor
+*/
+int MOAIImGui::_GetMouseCursor(lua_State* L)
+{
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "");
+
+	ImGuiMouseCursor ret = ImGui::GetMouseCursor();
+	state.Push(ret);
+
+	return 1;
+}
+
+//----------------------------------------------------------------//
+/**	@lua	SetMouseCursor
+	@text	See ImGui.
+
+	@in		number 	type
+*/
+int MOAIImGui::_SetMouseCursor(lua_State* L)
+{
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "N");
+
+	int type = state.GetValue < int >(1, 0);
+
+	ImGui::SetMouseCursor(type);
+
+	return 0;
+}
+
+//----------------------------------------------------------------//
+/**	@lua	CaptureKeyboardFromApp
+	@text	See ImGui.
+
+	@opt	boolean 	capture
+*/
+int MOAIImGui::_CaptureKeyboardFromApp(lua_State* L)
+{
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "");
+
+	bool capture = state.GetValue < bool >(1, true);
+
+	ImGui::CaptureKeyboardFromApp(capture);
+
+	return 0;
+}
+
+//----------------------------------------------------------------//
+/**	@lua	CaptureMouseFromApp
+	@text	See ImGui.
+
+	@opt	boolean 	capture
+*/
+int MOAIImGui::_CaptureMouseFromApp(lua_State* L)
+{
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "");
+
+	bool capture = state.GetValue < bool >(1, true);
+
+	ImGui::CaptureMouseFromApp(capture);
+
+	return 0;
+}
+
+//----------------------------------------------------------------//
+/**	@lua	GetClipboardText
+	@text	See ImGui.
+
+	@out	string	text
+*/
+int MOAIImGui::_GetClipboardText(lua_State* L)
+{
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "");
+
+	cc8* ret = ImGui::GetClipboardText();
+	state.Push(ret);
+
+	return 1;
+}
+
+//----------------------------------------------------------------//
+/**	@lua	SetClipboardText
+	@text	See ImGui.
+
+	@in		string 	text
+*/
+int MOAIImGui::_SetClipboardText(lua_State* L)
+{
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "S");
+
+	cc8* text = state.GetValue < cc8* >(1, "");
+
+	ImGui::SetClipboardText(text);
+
+	return 0;
+}
+
+//----------------------------------------------------------------//
+/**	@lua	GetVersion
+	@text	See ImGui.
+
+	@out	string	version
+*/
+int MOAIImGui::_GetVersion(lua_State* L)
+{
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "");
+
+	cc8* ret = ImGui::GetVersion();
+	state.Push(ret);
+
+	return 1;
 }

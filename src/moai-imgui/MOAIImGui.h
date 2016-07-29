@@ -141,8 +141,8 @@ protected:
 	static int _ColorButton(lua_State* L);
 	static int _ColorEdit3(lua_State* L);
 	static int _ColorEdit4(lua_State* L);
-	// static int _PlotLines(lua_State* L);
-	// static int _PlotHistogram(lua_State* L);
+	static int _PlotLines(lua_State* L);
+	static int _PlotHistogram(lua_State* L);
 	static int _ProgressBar(lua_State* L);
 
 	static int _DragFloat(lua_State* L);
@@ -188,8 +188,8 @@ protected:
 
 	static int _Selectable(lua_State* L);
 	static int _ListBox(lua_State* L);
-	// static int _ListBoxHeader(lua_State* L);
-	// static int _ListBoxFooter(lua_State* L);
+	static int _ListBoxHeader(lua_State* L);
+	static int _ListBoxFooter(lua_State* L);
 	
 	static int _Value(lua_State* L);
 	static int _ValueColor(lua_State* L);
@@ -258,6 +258,32 @@ protected:
 	static int _ColorConvertFloat4ToU32(lua_State* L);
 	static int _ColorConvertRGBtoHSV(lua_State* L);
 	static int _ColorConvertHSVtoRGB(lua_State* L);
+	
+	static int _GetKeyIndex(lua_State* L);
+	static int _IsKeyDown(lua_State* L);
+	static int _IsKeyPressed(lua_State* L);
+	static int _IsKeyReleased(lua_State* L);
+	static int _IsMouseDown(lua_State* L);
+	static int _IsMouseClicked(lua_State* L);
+	static int _IsMouseDoubleClicked(lua_State* L);
+	static int _IsMouseReleased(lua_State* L);
+	static int _IsMouseHoveringWindow(lua_State* L);
+	static int _IsMouseHoveringAnyWindow(lua_State* L);
+	static int _IsMouseHoveringRect(lua_State* L);
+	static int _IsMouseDragging(lua_State* L);
+	static int _GetMousePos(lua_State* L);
+	static int _GetMousePosOnOpeningCurrentPopup(lua_State* L);
+	static int _GetMouseDragDelta(lua_State* L);
+	static int _ResetMouseDragDelta(lua_State* L);
+	static int _GetMouseCursor(lua_State* L);
+	static int _SetMouseCursor(lua_State* L);
+	static int _CaptureKeyboardFromApp(lua_State* L);
+	static int _CaptureMouseFromApp(lua_State* L);
+
+	static int _GetClipboardText(lua_State* L);
+	static int _SetClipboardText(lua_State* L);
+	
+	static int _GetVersion(lua_State* L);
 
 public:
 
