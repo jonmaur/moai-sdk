@@ -405,9 +405,8 @@ void MOAIImGui::RegisterLuaClass(MOAILuaState& state) {
 	luaL_register(state, 0, regTable);
 }
 
-// Helper for grabbing different types of MOAIImVec from lua
+// Helper for grabbing different types of MOAIImVec2 from lua
 // It might be MOAIImVec2 or 2 number params or a table/object with x and y fields or a table array with 2 numbers
-
 bool imvec2_getter(MOAILuaState& state, int& idx, ImVec2** out_vec2)
 {
 
@@ -470,6 +469,92 @@ bool imvec2_getter(MOAILuaState& state, int& idx, ImVec2** out_vec2)
 
 		(*out_vec2)->x = x;
 		(*out_vec2)->y = y;
+		return true;
+	}
+
+	return false;
+}
+
+// Helper for grabbing different types of MOAIImVec4 from lua
+// It might be MOAIImVec4 or 4 number params or a table/object with x, y, z, w fields or a table array with 4 numbers
+bool imvec4_getter(MOAILuaState& state, int& idx, ImVec4** out_vec4)
+{
+
+	// is it a MOAI object?
+	MOAILuaObject* luaObject = (MOAILuaObject*)state.GetPtrUserData(idx);
+	if (luaObject)
+	{
+		MOAIImVec4* vec = state.GetLuaObject<MOAIImVec4>(idx, true);
+		if (vec)
+		{
+			*out_vec4 = &vec->mVec4;
+			++idx;
+			return true;
+		}
+		else if (state.HasField(idx, "x", LUA_TNUMBER) && state.HasField(idx, "y", LUA_TNUMBER) && state.HasField(idx, "z", LUA_TNUMBER) && state.HasField(idx, "z", LUA_TNUMBER))
+		{
+			// some other moai object? look for x and y
+			float x = state.GetField < float> ( idx, "x", 0.0f );
+			float y = state.GetField < float> ( idx, "y", 0.0f );
+			float z = state.GetField < float> ( idx, "z", 0.0f );
+			float w = state.GetField < float> ( idx, "w", 0.0f );
+
+			(*out_vec4)->x = x;
+			(*out_vec4)->y = y;
+			(*out_vec4)->y = z;
+			(*out_vec4)->y = w;
+			++idx;
+			return true;
+		}
+	}
+
+	// is it a table with x and y?
+	if (state.IsType(idx, LUA_TTABLE))
+	{
+		if (state.HasField(idx, 1, LUA_TNUMBER) && state.HasField(idx, 2, LUA_TNUMBER) && state.HasField(idx, 3, LUA_TNUMBER) && state.HasField(idx, 4, LUA_TNUMBER))
+		{
+			float x = state.GetField < float>(idx, 1, 0.0f);
+			float y = state.GetField < float>(idx, 2, 0.0f);
+			float z = state.GetField < float>(idx, 3, 0.0f);
+			float w = state.GetField < float>(idx, 4, 0.0f);
+
+			(*out_vec4)->x = x;
+			(*out_vec4)->y = y;
+			(*out_vec4)->z = z;
+			(*out_vec4)->w = w;
+			++idx;
+			return true;
+		}
+		else if (state.HasField(idx, "x", LUA_TNUMBER) && state.HasField(idx, "y", LUA_TNUMBER) && state.HasField(idx, "z", LUA_TNUMBER) && state.HasField(idx, "w", LUA_TNUMBER))
+		{
+			float x = state.GetField < float>(idx, "x", 0.0f);
+			float y = state.GetField < float>(idx, "y", 0.0f);
+			float z = state.GetField < float>(idx, "z", 0.0f);
+			float w = state.GetField < float>(idx, "w", 0.0f);
+
+			(*out_vec4)->x = x;
+			(*out_vec4)->y = y;
+			(*out_vec4)->z = z;
+			(*out_vec4)->w = w;
+			++idx;
+			return true;
+		}
+
+		return false;
+	}
+
+	// just numbers
+	if (state.IsType(idx, LUA_TNUMBER) && state.IsType(idx+1, LUA_TNUMBER) && state.IsType(idx+2, LUA_TNUMBER) && state.IsType(idx+3, LUA_TNUMBER))
+	{
+		float x = state.GetValue<float>(idx++, 0.0f);
+		float y = state.GetValue<float>(idx++, 0.0f);
+		float z = state.GetValue<float>(idx++, 0.0f);
+		float w = state.GetValue<float>(idx++, 0.0f);
+
+		(*out_vec4)->x = x;
+		(*out_vec4)->y = y;
+		(*out_vec4)->z = z;
+		(*out_vec4)->w = w;
 		return true;
 	}
 
@@ -1772,12 +1857,16 @@ int MOAIImGui::_Text(lua_State* L)
 */
 int MOAIImGui::_TextColored(lua_State* L)
 {
-	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "US");
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "@@");
 
-	MOAIImVec4* color = state.GetLuaObject<MOAIImVec4>(1, true);
-	cc8* txt = state.GetValue < cc8* >(2, "");
+	ImVec4 v;
+	ImVec4* pv = &v;
+	int idx = 1;
+	imvec4_getter(state, idx, &pv);
 
-	ImGui::TextColored(color->mVec4, txt);
+	cc8* txt = state.GetValue < cc8* >(idx++, "");
+
+	ImGui::TextColored(*pv, txt);
 
 	return 0;
 }
@@ -2054,22 +2143,30 @@ int MOAIImGui::_Combo(lua_State* L)
 	@text	See ImGui.
 
 	@in 	MOAIImVec4		color
-	@in		boolean			small_height
-	@in		boolean			border
+	@opt	boolean			small_height
+	@opt	boolean			border
 	@out	boolean			pressed
 */
 int MOAIImGui::_ColorButton(lua_State* L)
 {
-	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "U");
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "@");
 
-	MOAIImVec4* color = state.GetLuaObject<MOAIImVec4>(1, true);
-	bool small_height = state.GetValue < bool >(2, false);
-	bool border = state.GetValue < bool >(3, true);
+	ImVec4 v;
+	ImVec4* pv = &v;
+	int idx = 1;
+	imvec4_getter(state, idx, &pv);
 
-	bool ret = ImGui::ColorButton(color->mVec4, small_height, border);
+	bool small_height = state.GetValue < bool >(idx++, false);
+	bool border = state.GetValue < bool >(idx++, true);
+
+	bool ret = ImGui::ColorButton(*pv, small_height, border);
 	state.Push(ret);
+	state.Push(pv->x);
+	state.Push(pv->y);
+	state.Push(pv->z);
+	state.Push(pv->w);
 
-	return 1;
+	return 5;
 }
 
 //----------------------------------------------------------------//
@@ -2082,15 +2179,24 @@ int MOAIImGui::_ColorButton(lua_State* L)
 */
 int MOAIImGui::_ColorEdit3(lua_State* L)
 {
-	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "SU");
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "S@");
 
 	cc8* lbl = state.GetValue < cc8* >(1, "");
-	MOAIImVec4* color = state.GetLuaObject<MOAIImVec4>(2, true);
 
-	bool ret = ImGui::ColorEdit3(lbl, &color->mVec4.x);
+	// TODO: some sort of array getter might make more sense here...
+	ImVec4 v;
+	ImVec4* pv = &v;
+	int idx = 2;
+	imvec4_getter(state, idx, &pv);
+
+	bool ret = ImGui::ColorEdit3(lbl, &(pv->x));
 	state.Push(ret);
+	state.Push(pv->x);
+	state.Push(pv->y);
+	state.Push(pv->z);
+	state.Push(1.0f);	// alpha is ignored but should be 1.0f always
 
-	return 1;
+	return 5;
 }
 
 //----------------------------------------------------------------//
@@ -2104,16 +2210,24 @@ int MOAIImGui::_ColorEdit3(lua_State* L)
 */
 int MOAIImGui::_ColorEdit4(lua_State* L)
 {
-	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "SU");
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "S@");
 
 	cc8* lbl = state.GetValue < cc8* >(1, "");
-	MOAIImVec4* color = state.GetLuaObject<MOAIImVec4>(2, true);
-	bool showalpha = state.GetValue < bool >(3, true);
+	ImVec4 v;
+	ImVec4* pv = &v;
+	int idx = 2;
+	imvec4_getter(state, idx, &pv);
 
-	bool ret = ImGui::ColorEdit4(lbl, &color->mVec4.x, showalpha);
+	bool showalpha = state.GetValue < bool >(idx++, false);
+
+	bool ret = ImGui::ColorEdit4(lbl, &(pv->x), showalpha);
 	state.Push(ret);
+	state.Push(pv->x);
+	state.Push(pv->y);
+	state.Push(pv->z);
+	state.Push(pv->w);
 
-	return 1;
+	return 5;
 }
 
 // value getter for plot lines
@@ -2319,7 +2433,7 @@ int MOAIImGui::_DragFloat2(lua_State* L)
 	@text	See ImGui.
 
 	@in		string 			label
-	@in		ImVec4			v
+	@in		MOAIImVec4		v
 	@opt	number			speed
 	@opt	number			min
 	@opt	number			max
@@ -2329,20 +2443,30 @@ int MOAIImGui::_DragFloat2(lua_State* L)
 */
 int MOAIImGui::_DragFloat3(lua_State* L)
 {
-	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "SU");
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "S@");
 
 	cc8* label = state.GetValue < cc8* >(1, "");
-	MOAIImVec4* v = state.GetLuaObject<MOAIImVec4>(2, true);
-	float speed = state.GetValue < float >(3, 1.0f);
-	float min = state.GetValue < float >(4, 0.0f);
-	float max = state.GetValue < float >(5, 0.0f);
-	cc8* display_format = state.GetValue < cc8* >(6, "%.3f");
-	float power = state.GetValue < float >(7, 1.0f);
 
-	bool ret = ImGui::DragFloat3(label, &v->mVec4.x, speed, min, max, display_format, power);
+	// TODO: some sort of 3 getter
+	ImVec4 v;
+	ImVec4* pv = &v;
+	int idx = 2;
+	imvec4_getter(state, idx, &pv);
+
+	float speed = state.GetValue < float >(idx++, 1.0f);
+	float min = state.GetValue < float >(idx++, 0.0f);
+	float max = state.GetValue < float >(idx++, 0.0f);
+	cc8* display_format = state.GetValue < cc8* >(idx++, "%.3f");
+	float power = state.GetValue < float >(idx++, 1.0f);
+
+	bool ret = ImGui::DragFloat3(label, &(pv->x), speed, min, max, display_format, power);
 	state.Push(ret);
+	state.Push(pv->x);
+	state.Push(pv->y);
+	state.Push(pv->z);
+	state.Push(pv->w);
 
-	return 1;
+	return 5;
 }
 
 //----------------------------------------------------------------//
@@ -2360,20 +2484,29 @@ int MOAIImGui::_DragFloat3(lua_State* L)
 */
 int MOAIImGui::_DragFloat4(lua_State* L)
 {
-	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "SU");
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "S@");
 
 	cc8* label = state.GetValue < cc8* >(1, "");
-	MOAIImVec4* v = state.GetLuaObject<MOAIImVec4>(2, true);
-	float speed = state.GetValue < float >(3, 1.0f);
-	float min = state.GetValue < float >(4, 0.0f);
-	float max = state.GetValue < float >(5, 0.0f);
-	cc8* display_format = state.GetValue < cc8* >(6, "%.3f");
-	float power = state.GetValue < float >(7, 1.0f);
 
-	bool ret = ImGui::DragFloat4(label, &v->mVec4.x, speed, min, max, display_format, power);
+	ImVec4 v;
+	ImVec4* pv = &v;
+	int idx = 2;
+	imvec4_getter(state, idx, &pv);
+
+	float speed = state.GetValue < float >(idx++, 1.0f);
+	float min = state.GetValue < float >(idx++, 0.0f);
+	float max = state.GetValue < float >(idx++, 0.0f);
+	cc8* display_format = state.GetValue < cc8* >(idx++, "%.3f");
+	float power = state.GetValue < float >(idx++, 1.0f);
+
+	bool ret = ImGui::DragFloat4(label, &(pv->x), speed, min, max, display_format, power);
 	state.Push(ret);
+	state.Push(pv->x);
+	state.Push(pv->y);
+	state.Push(pv->z);
+	state.Push(pv->w);
 
-	return 1;
+	return 5;
 }
 
 //----------------------------------------------------------------//
@@ -2495,7 +2628,7 @@ int MOAIImGui::_DragInt2(lua_State* L)
 	@text	See ImGui.
 
 	@in		string 			label
-	@in		ImVec4			v
+	@in		MOAIImVec4		v
 	@opt	number			speed
 	@opt	number			min
 	@opt	number			max
@@ -2504,27 +2637,37 @@ int MOAIImGui::_DragInt2(lua_State* L)
 */
 int MOAIImGui::_DragInt3(lua_State* L)
 {
-	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "SU");
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "S@");
 
 	cc8* label = state.GetValue < cc8* >(1, "");
-	MOAIImVec4* v = state.GetLuaObject<MOAIImVec4>(2, true);
-	float speed = state.GetValue < float >(3, 1.0f);
-	int min = state.GetValue < int >(4, 0);
-	int max = state.GetValue < int >(5, 0);
-	cc8* display_format = state.GetValue < cc8* >(6, "%.0f");
 
+	ImVec4 v;
+	ImVec4* pv = &v;
+	int idx = 2;
+	imvec4_getter(state, idx, &pv);
+
+	float speed = state.GetValue < float >(idx++, 1.0f);
+	int min = state.GetValue < int >(idx++, 0);
+	int max = state.GetValue < int >(idx++, 0);
+	cc8* display_format = state.GetValue < cc8* >(idx++, "%.0f");
+// here v
 	int integers[3];
-	integers[0] = (int)v->mVec4.x;
-	integers[1] = (int)v->mVec4.y;
-	integers[2] = (int)v->mVec4.z;
+	integers[0] = (int)pv->x;
+	integers[1] = (int)pv->y;
+	integers[2] = (int)pv->z;
 	bool ret = ImGui::DragInt3(label, integers, speed, min, max, display_format);
+
+	pv->x = (float)integers[0];
+	pv->y = (float)integers[1];
+	pv->z = (float)integers[2];
+
 	state.Push(ret);
-
-	v->mVec4.x = (float)integers[0];
-	v->mVec4.y = (float)integers[1];
-	v->mVec4.z = (float)integers[2];
-
-	return 1;
+	state.Push(pv->x);
+	state.Push(pv->y);
+	state.Push(pv->z);
+	state.Push(pv->w);
+	
+	return 5;
 }
 
 //----------------------------------------------------------------//
@@ -2532,7 +2675,7 @@ int MOAIImGui::_DragInt3(lua_State* L)
 	@text	See ImGui.
 
 	@in		string 			label
-	@in		ImVec4			v
+	@in		MOAIImVec4		v
 	@opt	number			speed
 	@opt	number			min
 	@opt	number			max
@@ -2541,28 +2684,39 @@ int MOAIImGui::_DragInt3(lua_State* L)
 */
 int MOAIImGui::_DragInt4(lua_State* L)
 {
-	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "SU");
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "S@");
 
 	cc8* label = state.GetValue < cc8* >(1, "");
-	MOAIImVec4* v = state.GetLuaObject<MOAIImVec4>(2, true);
-	float speed = state.GetValue < float >(3, 1.0f);
-	int min = state.GetValue < int >(4, 0);
-	int max = state.GetValue < int >(5, 0);
-	cc8* display_format = state.GetValue < cc8* >(6, "%.0f");
+
+	ImVec4 v;
+	ImVec4* pv = &v;
+	int idx = 2;
+	imvec4_getter(state, idx, &pv);
+
+	float speed = state.GetValue < float >(idx++, 1.0f);
+	int min = state.GetValue < int >(idx++, 0);
+	int max = state.GetValue < int >(idx++, 0);
+	cc8* display_format = state.GetValue < cc8* >(idx++, "%.0f");
 
 	int integers[4];
-	integers[0] = (int)v->mVec4.x;
-	integers[1] = (int)v->mVec4.y;
-	integers[2] = (int)v->mVec4.z;
-	integers[3] = (int)v->mVec4.w;
+	integers[0] = (int)pv->x;
+	integers[1] = (int)pv->y;
+	integers[2] = (int)pv->z;
+	integers[3] = (int)pv->w;
 	bool ret = ImGui::DragInt4(label, integers, speed, min, max, display_format);
-	state.Push(ret);
 
-	v->mVec4.x = (float)integers[0];
-	v->mVec4.y = (float)integers[1];
-	v->mVec4.z = (float)integers[2];
-	v->mVec4.w = (float)integers[3];
-	return 1;
+	pv->x = (float)integers[0];
+	pv->y = (float)integers[1];
+	pv->z = (float)integers[2];
+	pv->w = (float)integers[3];
+	
+	state.Push(ret);
+	state.Push(pv->x);
+	state.Push(pv->y);
+	state.Push(pv->z);
+	state.Push(pv->w);
+	
+	return 5;
 }
 
 //----------------------------------------------------------------//
@@ -2700,24 +2854,32 @@ int MOAIImGui::_InputFloat2(lua_State* L)
 @text	See ImGui.
 
 @in		string 			label
-@in		ImVec4			v
+@in		MOAIImVec4		v
 @opt	number			decimal_precision
 @opt	number			extra_flags
 @out	boolean			pressed
 */
 int MOAIImGui::_InputFloat3(lua_State* L)
 {
-	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "SU");
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "S@");
 
 	cc8* label = state.GetValue < cc8* >(1, "");
-	MOAIImVec4* v = state.GetLuaObject<MOAIImVec4>(2, true);
-	int decimal_precision = state.GetValue < int >(3, -1);
-	int extra_flags = state.GetValue < int >(4, 0);
+	ImVec4 v;
+	ImVec4* pv = &v;
+	int idx = 2;
+	imvec4_getter(state, idx, &pv);
 
-	bool ret = ImGui::InputFloat3(label, &v->mVec4.x, decimal_precision, extra_flags);
+	int decimal_precision = state.GetValue < int >(idx++, -1);
+	int extra_flags = state.GetValue < int >(idx++, 0);
+
+	bool ret = ImGui::InputFloat3(label, &(pv->x), decimal_precision, extra_flags);
 	state.Push(ret);
-
-	return 1;
+	state.Push(pv->x);
+	state.Push(pv->y);
+	state.Push(pv->z);
+	state.Push(pv->w);
+	
+	return 5;
 }
 
 //----------------------------------------------------------------//
@@ -2725,24 +2887,33 @@ int MOAIImGui::_InputFloat3(lua_State* L)
 @text	See ImGui.
 
 @in		string 			label
-@in		ImVec4			v
+@in		MOAIImVec4		v
 @opt	number			decimal_precision
 @opt	number			extra_flags
 @out	boolean			pressed
 */
 int MOAIImGui::_InputFloat4(lua_State* L)
 {
-	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "SU");
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "S@");
 
 	cc8* label = state.GetValue < cc8* >(1, "");
-	MOAIImVec4* v = state.GetLuaObject<MOAIImVec4>(2, true);
-	int decimal_precision = state.GetValue < int >(3, -1);
-	int extra_flags = state.GetValue < int >(4, 0);
 
-	bool ret = ImGui::InputFloat4(label, &v->mVec4.x, decimal_precision, extra_flags);
+	ImVec4 v;
+	ImVec4* pv = &v;
+	int idx = 2;
+	imvec4_getter(state, idx, &pv);
+
+	int decimal_precision = state.GetValue < int >(idx++, -1);
+	int extra_flags = state.GetValue < int >(idx++, 0);
+
+	bool ret = ImGui::InputFloat4(label, &(pv->x), decimal_precision, extra_flags);
 	state.Push(ret);
-
-	return 1;
+	state.Push(pv->x);
+	state.Push(pv->y);
+	state.Push(pv->z);
+	state.Push(pv->w);
+	
+	return 5;
 }
 
 //----------------------------------------------------------------//
@@ -2816,30 +2987,40 @@ int MOAIImGui::_InputInt2(lua_State* L)
 	@text	See ImGui.
 
 	@in		string 			label
-	@in		ImVec4			v
+	@in		MOAIImVec4		v
 	@opt	number			extra_flags
 	@out	boolean			pressed
 */
 int MOAIImGui::_InputInt3(lua_State* L)
 {
-	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "SU");
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "S@");
 
 	cc8* label = state.GetValue < cc8* >(1, "");
-	MOAIImVec4* v = state.GetLuaObject<MOAIImVec4>(2, true);
-	int extra_flags = state.GetValue < int >(3, 0);
+
+	ImVec4 v;
+	ImVec4* pv = &v;
+	int idx = 2;
+	imvec4_getter(state, idx, &pv);
+
+	int extra_flags = state.GetValue < int >(idx++, 0);
 	
 	int integers[3];
-	integers[0] = (int)v->mVec4.x;
-	integers[1] = (int)v->mVec4.y;
-	integers[2] = (int)v->mVec4.z;
+	integers[0] = (int)pv->x;
+	integers[1] = (int)pv->y;
+	integers[2] = (int)pv->z;
 	bool ret = ImGui::InputInt3(label, integers, extra_flags);
+
+	pv->x = (float)integers[0];
+	pv->y = (float)integers[1];
+	pv->z = (float)integers[2];
+	
 	state.Push(ret);
-
-	v->mVec4.x = (float)integers[0];
-	v->mVec4.y = (float)integers[1];
-	v->mVec4.z = (float)integers[2];
-
-	return 1;
+	state.Push(pv->x);
+	state.Push(pv->y);
+	state.Push(pv->z);
+	state.Push(pv->w);
+	
+	return 5;
 }
 
 //----------------------------------------------------------------//
@@ -2847,32 +3028,42 @@ int MOAIImGui::_InputInt3(lua_State* L)
 	@text	See ImGui.
 
 	@in		string 			label
-	@in		ImVec4			v
+	@in		MOAIImVec4		v
 	@opt	number			extra_flags
 	@out	boolean			pressed
 */
 int MOAIImGui::_InputInt4(lua_State* L)
 {
-	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "SU");
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "S@");
 
 	cc8* label = state.GetValue < cc8* >(1, "");
-	MOAIImVec4* v = state.GetLuaObject<MOAIImVec4>(2, true);
-	int extra_flags = state.GetValue < int >(3, 0);
+
+	ImVec4 v;
+	ImVec4* pv = &v;
+	int idx = 2;
+	imvec4_getter(state, idx, &pv);
+
+	int extra_flags = state.GetValue < int >(idx++, 0);
 	
 	int integers[4];
-	integers[0] = (int)v->mVec4.x;
-	integers[1] = (int)v->mVec4.y;
-	integers[2] = (int)v->mVec4.z;
-	integers[3] = (int)v->mVec4.w;
+	integers[0] = (int)pv->x;
+	integers[1] = (int)pv->y;
+	integers[2] = (int)pv->z;
+	integers[3] = (int)pv->w;
 	bool ret = ImGui::InputInt4(label, integers, extra_flags);
+
+	pv->x = (float)integers[0];
+	pv->y = (float)integers[1];
+	pv->z = (float)integers[2];
+	pv->w = (float)integers[3];
+
 	state.Push(ret);
-
-	v->mVec4.x = (float)integers[0];
-	v->mVec4.y = (float)integers[1];
-	v->mVec4.z = (float)integers[2];
-	v->mVec4.w = (float)integers[3];
-
-	return 1;
+	state.Push(pv->x);
+	state.Push(pv->y);
+	state.Push(pv->z);
+	state.Push(pv->w);
+	
+	return 5;
 }
 
 //----------------------------------------------------------------//
@@ -2947,7 +3138,7 @@ int MOAIImGui::_SliderFloat2(lua_State* L)
 	@text	See ImGui.
 
 	@in		string 			label
-	@in		ImVec4			v
+	@in		MOAIImVec4		v
 	@opt	number			min
 	@opt	number			max
 	@opt	string			display_format
@@ -2956,19 +3147,28 @@ int MOAIImGui::_SliderFloat2(lua_State* L)
 */
 int MOAIImGui::_SliderFloat3(lua_State* L)
 {
-	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "SU");
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "S@");
 
 	cc8* label = state.GetValue < cc8* >(1, "");
-	MOAIImVec4* v = state.GetLuaObject<MOAIImVec4>(2, true);
-	float min = state.GetValue < float >(3, 0.0f);
-	float max = state.GetValue < float >(4, 0.0f);
-	cc8* display_format = state.GetValue < cc8* >(5, "%.3f");
-	float power = state.GetValue < float >(6, 1.0f);
 
-	bool ret = ImGui::SliderFloat3(label, &v->mVec4.x, min, max, display_format, power);
+	ImVec4 v;
+	ImVec4* pv = &v;
+	int idx = 2;
+	imvec4_getter(state, idx, &pv);
+
+	float min = state.GetValue < float >(idx++, 0.0f);
+	float max = state.GetValue < float >(idx++, 0.0f);
+	cc8* display_format = state.GetValue < cc8* >(idx++, "%.3f");
+	float power = state.GetValue < float >(idx++, 1.0f);
+
+	bool ret = ImGui::SliderFloat3(label, &(pv->x), min, max, display_format, power);
 	state.Push(ret);
-
-	return 1;
+	state.Push(pv->x);
+	state.Push(pv->y);
+	state.Push(pv->z);
+	state.Push(pv->w);
+	
+	return 5;
 }
 
 //----------------------------------------------------------------//
@@ -2976,7 +3176,7 @@ int MOAIImGui::_SliderFloat3(lua_State* L)
 	@text	See ImGui.
 
 	@in		string 			label
-	@in		ImVec4			v
+	@in		MOAIImVec4		v
 	@opt	number			min
 	@opt	number			max
 	@opt	string			display_format
@@ -2985,19 +3185,27 @@ int MOAIImGui::_SliderFloat3(lua_State* L)
 */
 int MOAIImGui::_SliderFloat4(lua_State* L)
 {
-	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "SU");
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "S@");
 
 	cc8* label = state.GetValue < cc8* >(1, "");
-	MOAIImVec4* v = state.GetLuaObject<MOAIImVec4>(2, true);
-	float min = state.GetValue < float >(3, 0.0f);
-	float max = state.GetValue < float >(4, 0.0f);
-	cc8* display_format = state.GetValue < cc8* >(5, "%.3f");
-	float power = state.GetValue < float >(6, 1.0f);
+	ImVec4 v;
+	ImVec4* pv = &v;
+	int idx = 2;
+	imvec4_getter(state, idx, &pv);
 
-	bool ret = ImGui::SliderFloat4(label, &v->mVec4.x, min, max, display_format, power);
+	float min = state.GetValue < float >(idx++, 0.0f);
+	float max = state.GetValue < float >(idx++, 0.0f);
+	cc8* display_format = state.GetValue < cc8* >(idx++, "%.3f");
+	float power = state.GetValue < float >(idx++, 1.0f);
+
+	bool ret = ImGui::SliderFloat4(label, &(pv->x), min, max, display_format, power);
 	state.Push(ret);
-
-	return 1;
+	state.Push(pv->x);
+	state.Push(pv->y);
+	state.Push(pv->z);
+	state.Push(pv->w);
+	
+	return 5;
 }
 
 //----------------------------------------------------------------//
@@ -3102,7 +3310,7 @@ int MOAIImGui::_SliderInt2(lua_State* L)
 	@text	See ImGui.
 
 	@in		string 			label
-	@in		ImVec4			v
+	@in		MOAIImVec4		v
 	@opt	number			min
 	@opt	number			max
 	@opt	string			display_format
@@ -3110,26 +3318,36 @@ int MOAIImGui::_SliderInt2(lua_State* L)
 */
 int MOAIImGui::_SliderInt3(lua_State* L)
 {
-	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "SU");
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "S@");
 
 	cc8* label = state.GetValue < cc8* >(1, "");
-	MOAIImVec4* v = state.GetLuaObject<MOAIImVec4>(2, true);
-	int min = state.GetValue < int >(3, 0);
-	int max = state.GetValue < int >(4, 0);
-	cc8* display_format = state.GetValue < cc8* >(5, "%.0f");
+
+	ImVec4 v;
+	ImVec4* pv = &v;
+	int idx = 2;
+	imvec4_getter(state, idx, &pv);
+
+	int min = state.GetValue < int >(idx++, 0);
+	int max = state.GetValue < int >(idx++, 0);
+	cc8* display_format = state.GetValue < cc8* >(idx++, "%.0f");
 
 	int integers[3];
-	integers[0] = (int)v->mVec4.x;
-	integers[1] = (int)v->mVec4.y;
-	integers[2] = (int)v->mVec4.z;
+	integers[0] = (int)pv->x;
+	integers[1] = (int)pv->y;
+	integers[2] = (int)pv->z;
 	bool ret = ImGui::SliderInt3(label, integers, min, max, display_format);
+
+	pv->x = (float)integers[0];
+	pv->y = (float)integers[1];
+	pv->z = (float)integers[2];
+
 	state.Push(ret);
-
-	v->mVec4.x = (float)integers[0];
-	v->mVec4.y = (float)integers[1];
-	v->mVec4.z = (float)integers[2];
-
-	return 1;
+	state.Push(pv->x);
+	state.Push(pv->y);
+	state.Push(pv->z);
+	state.Push(pv->w);
+	
+	return 5;
 }
 
 bool          SliderInt4(const char* label, int v[4], int v_min, int v_max, const char* display_format = "%.0f");
@@ -3138,7 +3356,7 @@ bool          SliderInt4(const char* label, int v[4], int v_min, int v_max, cons
 	@text	See ImGui.
 
 	@in		string 			label
-	@in		ImVec4			v
+	@in		MOAIImVec4		v
 	@opt	number			min
 	@opt	number			max
 	@opt	string			display_format
@@ -3146,27 +3364,38 @@ bool          SliderInt4(const char* label, int v[4], int v_min, int v_max, cons
 */
 int MOAIImGui::_SliderInt4(lua_State* L)
 {
-	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "SU");
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "S@");
 
 	cc8* label = state.GetValue < cc8* >(1, "");
-	MOAIImVec4* v = state.GetLuaObject<MOAIImVec4>(2, true);
-	int min = state.GetValue < int >(3, 0);
-	int max = state.GetValue < int >(4, 0);
-	cc8* display_format = state.GetValue < cc8* >(5, "%.0f");
+
+	ImVec4 v;
+	ImVec4* pv = &v;
+	int idx = 2;
+	imvec4_getter(state, idx, &pv);
+
+	int min = state.GetValue < int >(idx++, 0);
+	int max = state.GetValue < int >(idx++, 0);
+	cc8* display_format = state.GetValue < cc8* >(idx++, "%.0f");
 
 	int integers[4];
-	integers[0] = (int)v->mVec4.x;
-	integers[1] = (int)v->mVec4.y;
-	integers[2] = (int)v->mVec4.z;
-	integers[3] = (int)v->mVec4.w;
+	integers[0] = (int)pv->x;
+	integers[1] = (int)pv->y;
+	integers[2] = (int)pv->z;
+	integers[3] = (int)pv->w;
 	bool ret = ImGui::SliderInt4(label, integers, min, max, display_format);
-	state.Push(ret);
 
-	v->mVec4.x = (float)integers[0];
-	v->mVec4.y = (float)integers[1];
-	v->mVec4.z = (float)integers[2];
-	v->mVec4.w = (float)integers[3];
-	return 1;
+	pv->x = (float)integers[0];
+	pv->y = (float)integers[1];
+	pv->z = (float)integers[2];
+	pv->w = (float)integers[3];
+	
+	state.Push(ret);
+	state.Push(pv->x);
+	state.Push(pv->y);
+	state.Push(pv->z);
+	state.Push(pv->w);
+	
+	return 5;
 }
 
 //----------------------------------------------------------------//
@@ -3588,12 +3817,16 @@ int MOAIImGui::_Value(lua_State* L)
 */
 int MOAIImGui::_ValueColor(lua_State* L)
 {
-	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "SU");
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "S@");
 
 	cc8* prefix = state.GetValue < cc8* >(1, "");
-	MOAIImVec4* color = state.GetLuaObject<MOAIImVec4>(2, true);
 
-	ImGui::ValueColor(prefix, color->mVec4);
+	ImVec4 v;
+	ImVec4* pv = &v;
+	int idx = 2;
+	imvec4_getter(state, idx, &pv);
+
+	ImGui::ValueColor(prefix, *pv);
 
 	return 0;
 }
@@ -4558,11 +4791,14 @@ int MOAIImGui::_ColorConvertU32ToFloat4(lua_State* L)
 */
 int MOAIImGui::_ColorConvertFloat4ToU32(lua_State* L)
 {
-	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "U");
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "@");
 
-	MOAIImVec4* in = state.GetLuaObject<MOAIImVec4>(1, true);
+	ImVec4 v;
+	ImVec4* pv = &v;
+	int idx = 2;
+	imvec4_getter(state, idx, &pv);
 
-	ImU32 ret = ImGui::ColorConvertFloat4ToU32(in->mVec4);
+	ImU32 ret = ImGui::ColorConvertFloat4ToU32(*pv);
 	state.Push(ret);
 
 	return 1;
