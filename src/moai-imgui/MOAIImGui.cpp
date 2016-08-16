@@ -2061,8 +2061,8 @@ int MOAIImGui::_Checkbox(lua_State* L)
 	bool checked = state.GetValue < bool >(2, false);
 
 	bool ret = ImGui::Checkbox(lbl, &checked);
-	state.Push(checked);
 	state.Push(ret);
+	state.Push(checked);
 
 	return 2;
 }
@@ -2086,8 +2086,8 @@ int MOAIImGui::_RadioButton(lua_State* L)
 	int buttonid = state.GetValue < int >(3, 0);
 
 	bool ret = ImGui::RadioButton(lbl, &activebutton, buttonid);
-	state.Push(activebutton);
 	state.Push(ret);
+	state.Push(activebutton);
 
 	return 2;
 }
@@ -2132,8 +2132,8 @@ int MOAIImGui::_Combo(lua_State* L)
 	// lua array to c array translation
 	--currentitem;
 	bool ret = ImGui::Combo(lbl, &currentitem, items_getter, &state, numitems, height);
-	state.Push(currentitem + 1); // c array to lua array translation
 	state.Push(ret);
+	state.Push(currentitem + 1); // c array to lua array translation
 
 	return 2;
 }
@@ -2382,8 +2382,8 @@ int MOAIImGui::_DragFloat(lua_State* L)
 	float power = state.GetValue < float >(7, 1.0f);
 
 	bool ret = ImGui::DragFloat(label, &v, speed, min, max, display_format, power);
-	state.Push(v);
 	state.Push(ret);
+	state.Push(v);
 
 	return 2;
 }
@@ -2540,9 +2540,9 @@ int MOAIImGui::_DragFloatRange2(lua_State* L)
 	float power = state.GetValue < float >(9, 1.0f);
 
 	bool ret = ImGui::DragFloatRange2(label, &v_min, &v_max, speed, min, max, display_format, display_format_max, power);
+	state.Push(ret);
 	state.Push(v_min);
 	state.Push(v_max);
-	state.Push(ret);
 
 	return 3;
 }
@@ -2572,8 +2572,8 @@ int MOAIImGui::_DragInt(lua_State* L)
 	cc8* display_format = state.GetValue < cc8* >(6, "%.0f");
 
 	bool ret = ImGui::DragInt(label, &v, speed, min, max, display_format);
-	state.Push(v);
 	state.Push(ret);
+	state.Push(v);
 
 	return 2;
 }
@@ -2748,9 +2748,9 @@ int MOAIImGui::_DragIntRange2(lua_State* L)
 	cc8* display_format_max = state.GetValue < cc8* >(8, display_format);
 
 	bool ret = ImGui::DragIntRange2(label, &v_min, &v_max, speed, min, max, display_format, display_format_max);
+	state.Push(ret);
 	state.Push(v_min);
 	state.Push(v_max);
-	state.Push(ret);
 
 	return 3;
 }
@@ -2780,8 +2780,8 @@ int MOAIImGui::_InputText(lua_State* L)
 	strncpy(temp, buf, buf_size);
 
 	bool ret = ImGui::InputText(label, temp, buf_size, flags);
-	state.Push(temp);
 	state.Push(ret);
+	state.Push(temp);
 
 	return 2;
 }
@@ -2811,8 +2811,8 @@ int MOAIImGui::_InputFloat(lua_State* L)
 	int extra_flags = state.GetValue < int >(6, 0);
 
 	bool ret = ImGui::InputFloat(label, &v, step, step_fast, decimal_precision, extra_flags);
-	state.Push(v);
 	state.Push(ret);
+	state.Push(v);
 
 	return 2;
 }
@@ -2939,8 +2939,8 @@ int MOAIImGui::_InputInt(lua_State* L)
 	int extra_flags = state.GetValue < int >(5, 0);
 
 	bool ret = ImGui::InputInt(label, &v, step, step_fast, extra_flags);
-	state.Push(v);
 	state.Push(ret);
+	state.Push(v);
 
 	return 2;
 }
@@ -3091,8 +3091,8 @@ int MOAIImGui::_SliderFloat(lua_State* L)
 	float power = state.GetValue < float >(6, 1.0f);
 
 	bool ret = ImGui::SliderFloat(label, &v, min, max, display_format, power);
-	state.Push(v);
 	state.Push(ret);
+	state.Push(v);
 
 	return 2;
 }
@@ -3229,8 +3229,8 @@ int MOAIImGui::_SliderAngle(lua_State* L)
 	float v_degrees_max = state.GetValue < float >(4, 360.0f);
 
 	bool ret = ImGui::SliderAngle(label, &v_rad, v_degrees_min, v_degrees_max);
-	state.Push(v_rad);
 	state.Push(ret);
+	state.Push(v_rad);
 
 	return 2;
 }
@@ -3258,8 +3258,8 @@ int MOAIImGui::_SliderInt(lua_State* L)
 	cc8* display_format = state.GetValue < cc8* >(5, "%.0f");
 
 	bool ret = ImGui::SliderInt(label, &v, min, max, display_format);
-	state.Push(v);
 	state.Push(ret);
+	state.Push(v);
 
 	return 2;
 }
@@ -3430,8 +3430,8 @@ int MOAIImGui::_VSliderFloat(lua_State* L)
 	float power = state.GetValue < float >(idx++, 1.0f);
 
 	bool ret = ImGui::VSliderFloat(label, *pv, &v, min, max, display_format, power);
-	state.Push(v);
 	state.Push(ret);
+	state.Push(v);
 
 	return 2;
 }
@@ -3466,8 +3466,8 @@ int MOAIImGui::_VSliderInt(lua_State* L)
 	cc8* display_format = state.GetValue < cc8* >(idx++, "%.0f");
 
 	bool ret = ImGui::VSliderInt(label, *pv, &v, min, max, display_format);
-	state.Push(v);
 	state.Push(ret);
+	state.Push(v);
 
 	return 2;
 }
@@ -3510,7 +3510,6 @@ int MOAIImGui::_TreeNodeEx(lua_State* L)
 	cc8* txt = state.GetValue < cc8* >(3, id);
 	
 	bool ret = ImGui::TreeNodeEx(id, flags, txt);
-
 	state.Push(ret);
 
 	return 1;
@@ -3612,8 +3611,8 @@ int MOAIImGui::_CollapsingHeader(lua_State* L)
 		bool p_open = state.GetValue < bool >(2, false);
 		int flags = state.GetValue < int >(3, 0);
 		bool ret = ImGui::CollapsingHeader(label, &p_open, flags);
-		state.Push(p_open);
 		state.Push(ret);
+		state.Push(p_open);
 
 		return 2;
 	}
@@ -3656,8 +3655,8 @@ int MOAIImGui::_Selectable(lua_State* L)
 	{
 		ret = ImGui::Selectable(label, &selected, flags);
 	}
-	state.Push(selected);
 	state.Push(ret);
+	state.Push(selected);
 
 	return 2;
 }
@@ -3685,8 +3684,8 @@ int MOAIImGui::_ListBox(lua_State* L)
 	// lua array to c array translation
 	--currentitem;
 	bool ret = ImGui::ListBox(lbl, &currentitem, items_getter, &state, numitems, height);
-	state.Push(currentitem + 1); // c array to lua array translation
 	state.Push(ret);
+	state.Push(currentitem + 1); // c array to lua array translation
 
 	return 2;
 }
@@ -4055,8 +4054,8 @@ int MOAIImGui::_BeginPopupModal(lua_State* L)
 		bool open = state.GetValue < bool >(2, false);
 		bool ret = ImGui::BeginPopupModal(name, &open, extra_flags);
 
-		state.Push(open);
 		state.Push(ret);
+		state.Push(open);
 
 		return 2;
 	}
