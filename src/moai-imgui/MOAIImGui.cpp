@@ -203,6 +203,9 @@ void MOAIImGui::RegisterLuaClass(MOAILuaState& state) {
 		// { "SetStateStorage",					_SetStateStorage },
 		// { "GetStateStorage",					_GetStateStorage },
 
+		{ "PushStyleColor", 					_PushStyleColor },
+		{ "PopStyleColor", 						_PopStyleColor },
+
 		{ "Separator",							_Separator },
 		{ "SameLine",							_SameLine },
 		{ "NewLine",							_NewLine },
@@ -1279,6 +1282,46 @@ int MOAIImGui::_SetScrollFromPosY(lua_State* L)
 	float center_y_ratio = state.GetValue < float >(2, 0.5f);
 
 	ImGui::SetScrollFromPosY(pos_y, center_y_ratio);
+
+	return 0;
+}
+
+//----------------------------------------------------------------//
+/**	@lua	PushStyleColor
+	@text	See ImGui.
+
+	@in	number 			idx
+	@in MOAIImVec4		color
+*/
+int MOAIImGui::_PushStyleColor(lua_State* L)
+{
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "@@");
+
+	int i = state.GetValue < int >(1, 0);
+
+	ImVec4 v;
+	ImVec4* pv = &v;
+	int idx = 2;
+	imvec4_getter(state, idx, &pv);
+
+	ImGui::PushStyleColor(i, *pv);
+
+	return 0;
+}
+
+//----------------------------------------------------------------//
+/**	@lua	PopStyleColor
+	@text	See ImGui.
+
+	@opt 	number			number to pop
+*/
+int MOAIImGui::_PopStyleColor(lua_State* L)
+{
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "");
+
+	int count = state.GetValue < int >(1, 1);
+
+	ImGui::PopStyleColor(count);
 
 	return 0;
 }

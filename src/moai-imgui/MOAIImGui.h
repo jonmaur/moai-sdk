@@ -66,8 +66,8 @@ protected:
 
 	// static int _PushFont(lua_State* L);
 	// static int _PopFont(lua_State* L);
-	// static int _PushStyleColor(lua_State* L);
-	// static int _PopStyleColor(lua_State* L);
+	static int _PushStyleColor(lua_State* L);
+	static int _PopStyleColor(lua_State* L);
 	// static int _PushStyleVar(lua_State* L);
 	// static int _PushStyleVar(lua_State* L);
 	// static int _PopStyleVar(lua_State* L);
