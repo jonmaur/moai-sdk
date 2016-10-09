@@ -1,6 +1,7 @@
 #include <moai-imgui/MOAIImGui.h>
 #include <moai-imgui/MOAIImVec2.h>
 #include <moai-imgui/MOAIImVec4.h>
+#include <moai-imgui/MOAIImDrawList.h>
 
 
 //----------------------------------------------------------------//
@@ -173,6 +174,7 @@ void MOAIImGui::RegisterLuaClass(MOAILuaState& state) {
 		{ "GetWindowContentRegionMin",			_GetWindowContentRegionMin },
 		{ "GetWindowContentRegionMax",			_GetWindowContentRegionMax },
 		{ "GetWindowContentRegionWidth",		_GetWindowContentRegionWidth },
+		{ "GetWindowDrawList",					_GetWindowDrawList },
 		{ "GetWindowPos",						_GetWindowPos },
 		{ "GetWindowSize",						_GetWindowSize },
 		{ "GetWindowWidth",						_GetWindowWidth },
@@ -205,6 +207,10 @@ void MOAIImGui::RegisterLuaClass(MOAILuaState& state) {
 
 		{ "PushStyleColor", 					_PushStyleColor },
 		{ "PopStyleColor", 						_PopStyleColor },
+
+		{ "PushItemWidth",						_PushItemWidth },
+		{ "PopItemWidth",						_PopItemWidth },
+		{ "CalcItemWidth",						_CalcItemWidth },
 
 		{ "Separator",							_Separator },
 		{ "SameLine",							_SameLine },
@@ -408,161 +414,6 @@ void MOAIImGui::RegisterLuaClass(MOAILuaState& state) {
 	luaL_register(state, 0, regTable);
 }
 
-// Helper for grabbing different types of MOAIImVec2 from lua
-// It might be MOAIImVec2 or 2 number params or a table/object with x and y fields or a table array with 2 numbers
-bool imvec2_getter(MOAILuaState& state, int& idx, ImVec2** out_vec2)
-{
-
-	// is it a MOAI object?
-	MOAILuaObject* luaObject = (MOAILuaObject*)state.GetPtrUserData(idx);
-	if (luaObject)
-	{
-		MOAIImVec2* vec = state.GetLuaObject<MOAIImVec2>(idx, true);
-		if (vec)
-		{
-			*out_vec2 = &vec->mVec2;
-			++idx;
-			return true;
-		}
-		else if (state.HasField(idx, "x", LUA_TNUMBER) && state.HasField(idx, "y", LUA_TNUMBER))
-		{
-			// some other moai object? look for x and y
-			float x = state.GetField < float> ( idx, "x", 0.0f );
-			float y = state.GetField < float> ( idx, "y", 0.0f );
-
-			(*out_vec2)->x = x;
-			(*out_vec2)->y = y;
-			++idx;
-			return true;
-		}
-	}
-
-	// is it a table with x and y?
-	if (state.IsType(idx, LUA_TTABLE))
-	{
-		if (state.HasField(idx, 1, LUA_TNUMBER) && state.HasField(idx, 2, LUA_TNUMBER))
-		{
-			float x = state.GetField < float>(idx, 1, 0.0f);
-			float y = state.GetField < float>(idx, 2, 0.0f);
-
-			(*out_vec2)->x = x;
-			(*out_vec2)->y = y;
-			++idx;
-			return true;
-		}
-		else if (state.HasField(idx, "x", LUA_TNUMBER) && state.HasField(idx, "y", LUA_TNUMBER))
-		{
-			float x = state.GetField < float>(idx, "x", 0.0f);
-			float y = state.GetField < float>(idx, "y", 0.0f);
-
-			(*out_vec2)->x = x;
-			(*out_vec2)->y = y;
-			++idx;
-			return true;
-		}
-
-		return false;
-	}
-
-	// just numbers
-	if (state.IsType(idx, LUA_TNUMBER) && state.IsType(idx+1, LUA_TNUMBER))
-	{
-		float x = state.GetValue<float>(idx++, 0.0f);
-		float y = state.GetValue<float>(idx++, 0.0f);
-
-		(*out_vec2)->x = x;
-		(*out_vec2)->y = y;
-		return true;
-	}
-
-	return false;
-}
-
-// Helper for grabbing different types of MOAIImVec4 from lua
-// It might be MOAIImVec4 or 4 number params or a table/object with x, y, z, w fields or a table array with 4 numbers
-bool imvec4_getter(MOAILuaState& state, int& idx, ImVec4** out_vec4)
-{
-
-	// is it a MOAI object?
-	MOAILuaObject* luaObject = (MOAILuaObject*)state.GetPtrUserData(idx);
-	if (luaObject)
-	{
-		MOAIImVec4* vec = state.GetLuaObject<MOAIImVec4>(idx, true);
-		if (vec)
-		{
-			*out_vec4 = &vec->mVec4;
-			++idx;
-			return true;
-		}
-		else if (state.HasField(idx, "x", LUA_TNUMBER) && state.HasField(idx, "y", LUA_TNUMBER) && state.HasField(idx, "z", LUA_TNUMBER) && state.HasField(idx, "z", LUA_TNUMBER))
-		{
-			// some other moai object? look for x and y
-			float x = state.GetField < float> ( idx, "x", 0.0f );
-			float y = state.GetField < float> ( idx, "y", 0.0f );
-			float z = state.GetField < float> ( idx, "z", 0.0f );
-			float w = state.GetField < float> ( idx, "w", 0.0f );
-
-			(*out_vec4)->x = x;
-			(*out_vec4)->y = y;
-			(*out_vec4)->y = z;
-			(*out_vec4)->y = w;
-			++idx;
-			return true;
-		}
-	}
-
-	// is it a table with x and y?
-	if (state.IsType(idx, LUA_TTABLE))
-	{
-		if (state.HasField(idx, 1, LUA_TNUMBER) && state.HasField(idx, 2, LUA_TNUMBER) && state.HasField(idx, 3, LUA_TNUMBER) && state.HasField(idx, 4, LUA_TNUMBER))
-		{
-			float x = state.GetField < float>(idx, 1, 0.0f);
-			float y = state.GetField < float>(idx, 2, 0.0f);
-			float z = state.GetField < float>(idx, 3, 0.0f);
-			float w = state.GetField < float>(idx, 4, 0.0f);
-
-			(*out_vec4)->x = x;
-			(*out_vec4)->y = y;
-			(*out_vec4)->z = z;
-			(*out_vec4)->w = w;
-			++idx;
-			return true;
-		}
-		else if (state.HasField(idx, "x", LUA_TNUMBER) && state.HasField(idx, "y", LUA_TNUMBER) && state.HasField(idx, "z", LUA_TNUMBER) && state.HasField(idx, "w", LUA_TNUMBER))
-		{
-			float x = state.GetField < float>(idx, "x", 0.0f);
-			float y = state.GetField < float>(idx, "y", 0.0f);
-			float z = state.GetField < float>(idx, "z", 0.0f);
-			float w = state.GetField < float>(idx, "w", 0.0f);
-
-			(*out_vec4)->x = x;
-			(*out_vec4)->y = y;
-			(*out_vec4)->z = z;
-			(*out_vec4)->w = w;
-			++idx;
-			return true;
-		}
-
-		return false;
-	}
-
-	// just numbers
-	if (state.IsType(idx, LUA_TNUMBER) && state.IsType(idx+1, LUA_TNUMBER) && state.IsType(idx+2, LUA_TNUMBER) && state.IsType(idx+3, LUA_TNUMBER))
-	{
-		float x = state.GetValue<float>(idx++, 0.0f);
-		float y = state.GetValue<float>(idx++, 0.0f);
-		float z = state.GetValue<float>(idx++, 0.0f);
-		float w = state.GetValue<float>(idx++, 0.0f);
-
-		(*out_vec4)->x = x;
-		(*out_vec4)->y = y;
-		(*out_vec4)->z = z;
-		(*out_vec4)->w = w;
-		return true;
-	}
-
-	return false;
-}
 
 //----------------------------------------------------------------//
 /**	@lua	ShowTestWindow
@@ -657,7 +508,7 @@ int MOAIImGui::_BeginChild(lua_State* L)
 
 	ImVec2 v;
 	ImVec2* pv = &v;
-	int idx = 2;
+	int idx = 1;
 	imvec2_getter(state, idx, &pv);
 
 	bool border = state.GetValue<bool>(idx++, false);
@@ -801,6 +652,25 @@ int MOAIImGui::_GetWindowContentRegionWidth(lua_State* L)
 
 	float width = ImGui::GetWindowContentRegionWidth();
 	state.Push(width);
+
+	return 1;
+}
+
+//----------------------------------------------------------------//
+/**	@lua	GetWindowDrawList
+	@text	See ImGui.
+
+	@out	MOAIImDrawList
+*/
+int MOAIImGui::_GetWindowDrawList(lua_State* L)
+{
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "");
+
+	MOAIImDrawList* dl = new MOAIImDrawList ();
+	
+	dl->mDrawList = ImGui::GetWindowDrawList();
+
+	state.Push(dl);
 
 	return 1;
 }
@@ -1324,6 +1194,52 @@ int MOAIImGui::_PopStyleColor(lua_State* L)
 	ImGui::PopStyleColor(count);
 
 	return 0;
+}
+
+//----------------------------------------------------------------//
+/**	@lua	PushItemWidth
+@text	See ImGui.
+
+@opt 	number			item_width
+*/
+int MOAIImGui::_PushItemWidth(lua_State* L)
+{
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "N");
+
+	float item_width = state.GetValue < float >(1, 0.0f);
+
+	ImGui::PushItemWidth(item_width);
+
+	return 0;
+}
+
+//----------------------------------------------------------------//
+/**	@lua	PopItemWidth
+	@text	See ImGui.
+*/
+int MOAIImGui::_PopItemWidth(lua_State* L)
+{
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "");
+
+	ImGui::PopItemWidth();
+
+	return 0;
+}
+
+//----------------------------------------------------------------//
+/**	@lua	CalcItemWidth
+	@text	See ImGui.
+
+	@out	number y
+*/
+int MOAIImGui::_CalcItemWidth(lua_State* L)
+{
+	MOAI_LUA_SETUP_SINGLE(MOAIImGui, "");
+
+	float ret = ImGui::CalcItemWidth();
+	state.Push(ret);
+
+	return 1;
 }
 
 //----------------------------------------------------------------//
@@ -4837,7 +4753,7 @@ int MOAIImGui::_ColorConvertFloat4ToU32(lua_State* L)
 
 	ImVec4 v;
 	ImVec4* pv = &v;
-	int idx = 2;
+	int idx = 1;
 	imvec4_getter(state, idx, &pv);
 
 	ImU32 ret = ImGui::ColorConvertFloat4ToU32(*pv);

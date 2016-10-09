@@ -23,6 +23,8 @@
 #include "SDLJoystick.h"
 #include "SDLKeyCodeMapping.h"
 
+#include <host-sdl/MOAIDisplaySDL.h>
+
 #include "imgui.h"
 #include "imgui_impl_sdl_gl3.h"
 
@@ -158,6 +160,8 @@ void _AKUOpenWindowFunc ( const char* title, int width, int height ) {
 	else {
 		SDL_SetWindowSize ( sWindow, width, height );
 	}
+
+	MOAIDisplaySDL::SetWindowHandle(sWindow);
 }
 
 //----------------------------------------------------------------//
@@ -253,6 +257,8 @@ void Init ( int argc, char** argv ) {
 	AKUSetFunc_OpenWindow ( _AKUOpenWindowFunc );
 	
 	AKUSetFunc_SetTextInputRect( _AKUSetTextInputRectFunc );
+
+	REGISTER_LUA_CLASS(MOAIDisplaySDL)
 	
 	#ifdef __APPLE__
 			//are we a bundle?

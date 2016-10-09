@@ -30,4 +30,6 @@ public:
 	void RegisterLuaFuncs(MOAILuaState& state);
 };
 
+bool imvec2_getter(MOAILuaState& state, int& idx, ImVec2** out_vec2);
+
 #endif

@@ -90,3 +90,73 @@ void MOAIImVec2::RegisterLuaFuncs(MOAILuaState& state) {
 	luaL_register(state, 0, regTable);
 
 }
+
+// Helper for grabbing different types of MOAIImVec2 from lua
+// It might be MOAIImVec2 or 2 number params or a table/object with x and y fields or a table array with 2 numbers
+bool imvec2_getter(MOAILuaState& state, int& idx, ImVec2** out_vec2)
+{
+
+	// is it a MOAI object?
+	MOAILuaObject* luaObject = (MOAILuaObject*)state.GetPtrUserData(idx);
+	if (luaObject)
+	{
+		MOAIImVec2* vec = state.GetLuaObject<MOAIImVec2>(idx, true);
+		if (vec)
+		{
+			*out_vec2 = &vec->mVec2;
+			++idx;
+			return true;
+		}
+		else if (state.HasField(idx, "x", LUA_TNUMBER) && state.HasField(idx, "y", LUA_TNUMBER))
+		{
+			// some other moai object? look for x and y
+			float x = state.GetField < float>(idx, "x", 0.0f);
+			float y = state.GetField < float>(idx, "y", 0.0f);
+
+			(*out_vec2)->x = x;
+			(*out_vec2)->y = y;
+			++idx;
+			return true;
+		}
+	}
+
+	// is it a table with x and y?
+	if (state.IsType(idx, LUA_TTABLE))
+	{
+		if (state.HasField(idx, 1, LUA_TNUMBER) && state.HasField(idx, 2, LUA_TNUMBER))
+		{
+			float x = state.GetField < float>(idx, 1, 0.0f);
+			float y = state.GetField < float>(idx, 2, 0.0f);
+
+			(*out_vec2)->x = x;
+			(*out_vec2)->y = y;
+			++idx;
+			return true;
+		}
+		else if (state.HasField(idx, "x", LUA_TNUMBER) && state.HasField(idx, "y", LUA_TNUMBER))
+		{
+			float x = state.GetField < float>(idx, "x", 0.0f);
+			float y = state.GetField < float>(idx, "y", 0.0f);
+
+			(*out_vec2)->x = x;
+			(*out_vec2)->y = y;
+			++idx;
+			return true;
+		}
+
+		return false;
+	}
+
+	// just numbers
+	if (state.IsType(idx, LUA_TNUMBER) && state.IsType(idx + 1, LUA_TNUMBER))
+	{
+		float x = state.GetValue<float>(idx++, 0.0f);
+		float y = state.GetValue<float>(idx++, 0.0f);
+
+		(*out_vec2)->x = x;
+		(*out_vec2)->y = y;
+		return true;
+	}
+
+	return false;
+}

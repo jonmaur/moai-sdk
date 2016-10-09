@@ -130,3 +130,90 @@ void MOAIImVec4::RegisterLuaFuncs(MOAILuaState& state) {
 	luaL_register(state, 0, regTable);
 
 }
+
+
+// Helper for grabbing different types of MOAIImVec4 from lua
+// It might be MOAIImVec4 or 4 number params or a table/object with x, y, z, w fields or a table array with 4 numbers
+bool imvec4_getter(MOAILuaState& state, int& idx, ImVec4** out_vec4)
+{
+
+	// is it a MOAI object?
+	MOAILuaObject* luaObject = (MOAILuaObject*)state.GetPtrUserData(idx);
+	if (luaObject)
+	{
+		MOAIImVec4* vec = state.GetLuaObject<MOAIImVec4>(idx, true);
+		if (vec)
+		{
+			*out_vec4 = &vec->mVec4;
+			++idx;
+			return true;
+		}
+		else if (state.HasField(idx, "x", LUA_TNUMBER) && state.HasField(idx, "y", LUA_TNUMBER) && state.HasField(idx, "z", LUA_TNUMBER) && state.HasField(idx, "z", LUA_TNUMBER))
+		{
+			// some other moai object? look for x and y
+			float x = state.GetField < float>(idx, "x", 0.0f);
+			float y = state.GetField < float>(idx, "y", 0.0f);
+			float z = state.GetField < float>(idx, "z", 0.0f);
+			float w = state.GetField < float>(idx, "w", 0.0f);
+
+			(*out_vec4)->x = x;
+			(*out_vec4)->y = y;
+			(*out_vec4)->y = z;
+			(*out_vec4)->y = w;
+			++idx;
+			return true;
+		}
+	}
+
+	// is it a table with x and y?
+	if (state.IsType(idx, LUA_TTABLE))
+	{
+		if (state.HasField(idx, 1, LUA_TNUMBER) && state.HasField(idx, 2, LUA_TNUMBER) && state.HasField(idx, 3, LUA_TNUMBER) && state.HasField(idx, 4, LUA_TNUMBER))
+		{
+			float x = state.GetField < float>(idx, 1, 0.0f);
+			float y = state.GetField < float>(idx, 2, 0.0f);
+			float z = state.GetField < float>(idx, 3, 0.0f);
+			float w = state.GetField < float>(idx, 4, 0.0f);
+
+			(*out_vec4)->x = x;
+			(*out_vec4)->y = y;
+			(*out_vec4)->z = z;
+			(*out_vec4)->w = w;
+			++idx;
+			return true;
+		}
+		else if (state.HasField(idx, "x", LUA_TNUMBER) && state.HasField(idx, "y", LUA_TNUMBER) && state.HasField(idx, "z", LUA_TNUMBER) && state.HasField(idx, "w", LUA_TNUMBER))
+		{
+			float x = state.GetField < float>(idx, "x", 0.0f);
+			float y = state.GetField < float>(idx, "y", 0.0f);
+			float z = state.GetField < float>(idx, "z", 0.0f);
+			float w = state.GetField < float>(idx, "w", 0.0f);
+
+			(*out_vec4)->x = x;
+			(*out_vec4)->y = y;
+			(*out_vec4)->z = z;
+			(*out_vec4)->w = w;
+			++idx;
+			return true;
+		}
+
+		return false;
+	}
+
+	// just numbers
+	if (state.IsType(idx, LUA_TNUMBER) && state.IsType(idx + 1, LUA_TNUMBER) && state.IsType(idx + 2, LUA_TNUMBER) && state.IsType(idx + 3, LUA_TNUMBER))
+	{
+		float x = state.GetValue<float>(idx++, 0.0f);
+		float y = state.GetValue<float>(idx++, 0.0f);
+		float z = state.GetValue<float>(idx++, 0.0f);
+		float w = state.GetValue<float>(idx++, 0.0f);
+
+		(*out_vec4)->x = x;
+		(*out_vec4)->y = y;
+		(*out_vec4)->z = z;
+		(*out_vec4)->w = w;
+		return true;
+	}
+
+	return false;
+}

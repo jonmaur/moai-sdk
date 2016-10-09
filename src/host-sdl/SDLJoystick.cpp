@@ -25,7 +25,7 @@ Joystick::~Joystick()
 // Opens the joystick controller
 void Joystick::Open()
 {
-	printf("Is Gamecontroller %d\n", SDL_IsGameController(m_index));
+	printf("Is %d Gamecontroller %d\n", m_index, SDL_IsGameController(m_index));
 	m_gamepad = SDL_GameControllerOpen(m_index);
 	if (!m_gamepad)
 	{

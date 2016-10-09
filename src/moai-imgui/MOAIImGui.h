@@ -31,7 +31,7 @@ protected:
 	static int _GetWindowContentRegionMin(lua_State* L);
 	static int _GetWindowContentRegionMax(lua_State* L);
 	static int _GetWindowContentRegionWidth(lua_State* L);
-	// static int _GetWindowDrawList(lua_State* L);  // skipping, tricky to bind
+	static int _GetWindowDrawList(lua_State* L);  // skipping, tricky to bind
 	static int _GetWindowPos(lua_State* L);
 	static int _GetWindowSize(lua_State* L);
 	static int _GetWindowWidth(lua_State* L);
@@ -77,9 +77,9 @@ protected:
 	// static int _GetColorU32(lua_State* L);
 	// static int _GetColorU32(lua_State* L);
 
-	// static int _PushItemWidth(lua_State* L);
-	// static int _PopItemWidth(lua_State* L);
-	// static int _CalcItemWidth(lua_State* L);
+	static int _PushItemWidth(lua_State* L);
+	static int _PopItemWidth(lua_State* L);
+	static int _CalcItemWidth(lua_State* L);
 	// static int _PushTextWrapPos(lua_State* L);
 	// static int _PopTextWrapPos(lua_State* L);
 	// static int _PushAllowKeyboardFocus(lua_State* L);

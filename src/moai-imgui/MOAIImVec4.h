@@ -34,4 +34,6 @@ public:
 	void RegisterLuaFuncs(MOAILuaState& state);
 };
 
+bool imvec4_getter(MOAILuaState& state, int& idx, ImVec4** out_vec4);
+
 #endif

@@ -5,6 +5,8 @@
 #================================================================#
 
 	LOCAL_PATH := $(call my-dir)
+	LOCAL_SHORT_COMMANDS := true
+	APP_SHORT_COMMANDS := true
 	
 	include $(CLEAR_VARS)
 	
