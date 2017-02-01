@@ -453,6 +453,8 @@ void MOAILuaRuntime::BuildHistogram ( HistMap& histogram, cc8* trackingGroup ) {
 	
 		MOAILuaObject* obj = trackingMapIt->first;
 		cc8* name = obj->TypeName ();
+
+		obj->PrintTracking();
 	
 		if ( !histogram.contains ( name )) {
 			histogram [ name ] = 1;
